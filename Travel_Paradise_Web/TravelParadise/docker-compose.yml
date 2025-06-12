@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL
+  database:
+    image: postgres:16
+    container_name: travel_paradise_db
+    environment:
+      POSTGRES_DB: travel_paradise
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - travel_network
+    restart: unless-stopped
+
+  # Application Symfony
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: travel_paradise_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - database
+    networks:
+      - travel_network
+    environment:
+      - DATABASE_URL=postgresql://admin:admin123@database:5432/travel_paradise?serverVersion=16&charset=utf8
+    restart: unless-stopped
+
+  # Adminer pour gérer la base de données (optionnel)
+  adminer:
+    image: adminer
+    container_name: travel_paradise_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      - travel_network
+    restart: unless-stopped
+
+networks:
+  travel_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
