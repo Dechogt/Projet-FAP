@@ -16,6 +16,11 @@ services:
     networks:
       - travel_network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d travel_paradise"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Application Symfony
   app:
@@ -27,13 +32,19 @@ services:
       - "8000:8000"
     volumes:
       - .:/var/www/html
+      - ./php.ini:/usr/local/etc/php/conf.d/custom.ini
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     networks:
       - travel_network
     environment:
       - DATABASE_URL=postgresql://admin:admin123@database:5432/travel_paradise?serverVersion=16&charset=utf8
+      - APP_ENV=dev
+      - APP_DEBUG=1
+      - PHP_MEMORY_LIMIT=512M
     restart: unless-stopped
+    working_dir: /var/www/html
 
   # Adminer pour gérer la base de données (optionnel)
   adminer:

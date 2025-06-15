@@ -12,15 +12,26 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
+        // Si l'utilisateur est déjà connecté, rediriger vers le dashboard
+        if ($this->getUser()) {
+            return $this->redirectToRoute('admin_dashboard');
+        }
 
-        // last username entered by the user
+        // Récupérer l'erreur de connexion s'il y en a une
+        $error = $authenticationUtils->getLastAuthenticationError();
+        
+        // Dernière adresse e-mail saisie par l'utilisateur
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
+    }
+
+    #[Route(path: '/logout', name: 'app_logout')]
+    public function logout(): void
+    {
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }
