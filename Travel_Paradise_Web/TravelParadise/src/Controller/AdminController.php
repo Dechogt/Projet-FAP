@@ -2,17 +2,75 @@
 
 namespace App\Controller;
 
+use App\Repository\GuideTouristiqueRepository;
+use App\Repository\VisiteRepository;
+use App\Repository\VisiteurRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-final class AdminController extends AbstractController
+#[Route('/admin')]
+#[IsGranted('ROLE_USER')]
+class AdminController extends AbstractController
 {
-    #[Route('/admin', name: 'app_admin')]
-    public function index(): Response
-    {
-        return $this->render('admin/index.html.twig', [
-            'controller_name' => 'AdminController',
+    #[Route('/', name: 'admin_dashboard')]
+    public function dashboard(
+        VisiteRepository $visiteRepo,
+        GuideTouristiqueRepository $guideRepo,
+        VisiteurRepository $visiteurRepo,
+        UserRepository $userRepo
+    ): Response {
+        // Statistiques générales
+        $totalVisites = $visiteRepo->count([]);
+        $totalGuides = $guideRepo->count([]);
+        $totalVisiteurs = $visiteurRepo->count([]);
+        $totalUsers = $userRepo->count([]);
+
+        // Statistiques détaillées
+        $guidesActifs = $guideRepo->count(['statut' => true]);
+        $visitesAujourdhui = $visiteRepo->getVisitesToday(); // renvoie un int
+        $visitesProchainement = $visiteRepo->getVisitesProchaines(7); // renvoie un tableau
+        $visitesParMois = $visiteRepo->getVisitesParMois(6);
+        $visitesParGuide = $visiteRepo->getVisitesParGuide(10);
+        $tauxPresence = $visiteurRepo->getTauxPresence(); // Maintenant cette méthode existe
+
+        return $this->render('admin/dashboard.html.twig', [
+            'stats' => [
+                'totalVisites' => $totalVisites,
+                'totalGuides' => $totalGuides,
+                'totalVisiteurs' => $totalVisiteurs,
+                'totalUsers' => $totalUsers,
+                'guidesActifs' => $guidesActifs,
+                'visitesAujourdhui' => $visitesAujourdhui,
+                'visitesProchainement' => count($visitesProchainement),
+                'tauxPresence' => $tauxPresence
+            ],
+            'visitesAujourdhui' => [], // car on n'a pas les détails ici
+            'visitesProchainement' => $visitesProchainement,
+            'visitesParMois' => $visitesParMois,
+            'visitesParGuide' => $visitesParGuide,
         ]);
+    }
+
+    #[Route('/guides', name: 'admin_guides')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function guides(): Response
+    {
+        return $this->render('admin/guides.html.twig');
+    }
+
+    #[Route('/visites', name: 'admin_visites')]
+    public function visites(): Response
+    {
+        return $this->render('admin/visites.html.twig');
+    }
+
+    #[Route('/users', name: 'admin_users')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function users(): Response
+    {
+        return $this->render('admin/users.html.twig');
     }
 }

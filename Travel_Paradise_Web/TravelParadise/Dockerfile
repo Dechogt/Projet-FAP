@@ -8,7 +8,14 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     curl \
-    && docker-php-ext-install pdo pdo_pgsql zip
+    nodejs \
+    npm \
+    bash \
+    procps \
+    net-tools \
+    && docker-php-ext-install pdo pdo_pgsql zip \
+    && npm install -g yarn \
+    && rm -rf /var/lib/apt/lists/*
 
 # Installation de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -18,6 +25,9 @@ WORKDIR /var/www/html
 
 # Copier les fichiers du projet
 COPY . .
+
+# Rendre le script exécutable
+RUN chmod +x start.sh
 
 # Corriger le warning git ownership dans Docker
 RUN git config --global --add safe.directory /var/www/html
@@ -29,4 +39,4 @@ RUN composer install --optimize-autoloader
 EXPOSE 8000
 
 # Commande par défaut
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+CMD ["./start.sh"]
