@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %} {# Assure-toi d'avoir un base.html.twig qui inclut les assets #}
+
+{% block title %}Bienvenue sur Travel Paradise !{% endblock %}
+
+{% block body %}
+<div class="bg-dark-primary text-light-secondary min-h-screen font-sans"> {# Conteneur principal avec un fond sombre et la police par défaut #}
+
+    {# Section Hero (avec image de fond et texte animé) #}
+    {# Adapte l'image de fond pour qu'elle corresponde à l'esthétique de tes maquettes si possible #}
+    <section class="relative h-screen bg-cover bg-center flex items-center justify-center text-white" style="background-image: url('{{ asset('images/hero-background-dark.jpg') }}');"> {# Remplace par le chemin de ton image #}
+        <div class="absolute inset-0 bg-black opacity-70"></div> {# Overlay sombre plus prononcé #}
+        <div class="text-center z-10 animate-fade-in-up"> {# Contenu centré avec animation #}
+            <h1 class="text-5xl md:text-7xl font-heading font-bold mb-4 drop-shadow-lg text-accent">Découvrez le Monde avec Travel Paradise</h1> {# Utilise la police heading et la couleur d'accent #}
+            <p class="text-xl md:text-2xl mb-8 drop-shadow-lg text-light-primary">Votre aventure commence ici.</p> {# Utilise une couleur claire pour le texte #}
+
+            {# Bouton de redirection vers la page d'authentification #}
+            {# Assure-toi que la route 'app_login' est définie dans ton fichier de routes Symfony #}
+            <a href="{{ path('app_login') }}" class="bg-accent hover:bg-accent-dark text-dark-primary font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                Se connecter
+            </a>
+        </div>
+    </section>
+
+    {# Section "À Propos" #}
+    <section class="py-16 px-4 md:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-heading font-bold mb-8 text-light-primary animate-slide-in-left">Qui sommes-nous ?</h2>
+            <p class="text-lg text-light-secondary leading-relaxed animate-slide-in-right">
+                Travel Paradise est une agence passionnée par les voyages, dédiée à vous offrir des expériences inoubliables aux quatre coins du globe. Nos guides experts sont prêts à vous faire découvrir des lieux exceptionnels.
+            </p>
+        </div>
+    </section>
+
+    {# Section "Nos Destinations Phares" (Adaptée au style sombre) #}
+    <section class="py-16 px-4 md:px-8 bg-dark-secondary"> {# Utilise une couleur secondaire sombre pour le fond #}
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-heading font-bold text-center mb-12 text-light-primary animate-fade-in">Nos Destinations Phares</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {# Exemple de carte de destination (Adaptée au style sombre) #}
+                <div class="bg-dark-tertiary rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 animate-zoom-in"> {# Utilise une couleur tertiaire sombre pour le fond de la carte #}
+                    <img src="{{ asset('images/destination-paris.jpg') }}" alt="Paris" class="w-full h-48 object-cover"> {# Remplace par ton image #}
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-light-primary">Paris, France</h3>
+                        <p class="text-light-secondary">Découvrez la ville lumière avec nos guides locaux.</p>
+                        <a href="#" class="mt-4 inline-block text-accent hover:underline">En savoir plus</a> {# Utilise la couleur d'accent pour le lien #}
+                    </div>
+                </div>
+                {# Répète cette structure pour d'autres destinations, en adaptant les images et les textes #}
+                 <div class="bg-dark-tertiary rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 animate-zoom-in delay-100">
+                    <img src="{{ asset('images/destination-tokyo.jpg') }}" alt="Tokyo" class="w-full h-48 object-cover"> {# Remplace par ton image #}
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-light-primary">Tokyo, Japon</h3>
+                        <p class="text-light-secondary">Immersion dans la culture fascinante du Japon.</p>
+                        <a href="#" class="mt-4 inline-block text-accent hover:underline">En savoir plus</a>
+                    </div>
+                </div>
+                 <div class="bg-dark-tertiary rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 animate-zoom-in delay-200">
+                    <img src="{{ asset('images/destination-rio.jpg') }}" alt="Rio de Janeiro" class="w-full h-48 object-cover"> {# Remplace par ton image #}
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-light-primary">Rio de Janeiro, Brésil</h3>
+                        <p class="text-light-secondary">Rythme et couleurs au pied du Corcovado.</p>
+                        <a href="#" class="mt-4 inline-block text-accent hover:underline">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Section "Pourquoi nous choisir ?" (Adaptée au style sombre) #}
+     <section class="py-16 px-4 md:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-heading font-bold mb-8 text-light-primary animate-slide-in-left">Pourquoi choisir Travel Paradise ?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                <div class="animate-fade-in delay-300">
+                    <h3 class="text-xl font-semibold mb-2 text-light-primary">Guides Experts Locaux</h3>
+                    <p class="text-light-secondary">Nos guides sont passionnés et connaissent les destinations sur le bout des doigts.</p>
+                </div>
+                 <div class="animate-fade-in delay-400">
+                    <h3 class="text-xl font-semibold mb-2 text-light-primary">Expériences Uniques</h3>
+                    <p class="text-light-secondary">Nous créons des itinéraires personnalisés pour des voyages authentiques.</p>
+                </div>
+                 <div class="animate-fade-in delay-500">
+                    <h3 class="text-xl font-semibold mb-2 text-light-primary">Support 24/7</h3>
+                    <p class="text-light-secondary">Notre équipe est disponible à tout moment pour vous assister.</p>
+                </div>
+                 <div class="animate-fade-in delay-600">
+                    <h3 class="text-xl font-semibold mb-2 text-light-primary">Engagement Durable</h3>
+                    <p class="text-light-secondary">Nous nous engageons pour un tourisme respectueux de l'environnement et des cultures locales.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Footer (pied de page - Adapté au style sombre) #}
+    <footer class="bg-dark-primary text-light-secondary py-8 text-center">
+        <div class="max-w-6xl mx-auto px-4">
+            <p>&copy; {{ "now"|date("Y") }} Travel Paradise. Tous droits réservés.</p>
+            {# Tu peux ajouter des liens vers les réseaux sociaux, mentions légales, etc. ici #}
+        </div>
+    </footer>
+
+</div>
+{% endblock %}
