@@ -10,9 +10,13 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     curl \
-    gnupg \
+    nodejs \
+    npm \
+    bash \
+    procps \
+    net-tools \
     && docker-php-ext-install pdo pdo_pgsql zip \
-    && apt-get clean \
+    && npm install -g yarn \
     && rm -rf /var/lib/apt/lists/*
 
 # Installation de Composer
@@ -29,6 +33,12 @@ RUN npm install
 # Copie du reste des fichiers
 COPY . .
 
+# Rendre le script exécutable
+RUN chmod +x start.sh
+
+# Corriger le warning git ownership dans Docker
+RUN git config --global --add safe.directory /var/www/html
+
 # Installation des dépendances PHP
 RUN composer install --optimize-autoloader --no-dev
 
@@ -37,4 +47,5 @@ RUN npm run build
 
 EXPOSE 8000
 
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+# Commande par défaut
+CMD ["./start.sh"]

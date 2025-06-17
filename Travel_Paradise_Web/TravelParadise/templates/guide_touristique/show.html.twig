@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}GuideTouristique{% endblock %}
+
+{% block body %}
+    <h1>GuideTouristique</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ guide_touristique.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ guide_touristique.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ guide_touristique.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Photo</th>
+                <td>{{ guide_touristique.photo }}</td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ guide_touristique.statut ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>PaysAffectation</th>
+                <td>{{ guide_touristique.paysAffectation }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_guide_touristique_index') }}">back to list</a>
+
+    <a href="{{ path('app_guide_touristique_edit', {'id': guide_touristique.id}) }}">edit</a>
+
+    {{ include('guide_touristique/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,276 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - TravelParadise{% endblock %}
+
+{% block body %}
+<div class="space-y-6">
+    <!-- En-tête -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">📊 Dashboard</h1>
+            <p class="text-gray-600">Vue d'ensemble de votre agence de voyage</p>
+        </div>
+        <div class="text-sm text-gray-500">
+            Dernière mise à jour : {{ "now"|date("d/m/Y H:i") }}
+        </div>
+    </div>
+
+    <!-- Statistiques principales -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="card bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+            <div class="flex items-center">
+                <div class="text-3xl mr-4">🎯</div>
+                <div>
+                    <p class="text-blue-100">Total Visites</p>
+                    <p class="text-3xl font-bold">{{ stats.totalVisites }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-gradient-to-r from-green-500 to-green-600 text-white">
+            <div class="flex items-center">
+                <div class="text-3xl mr-4">🗺️</div>
+                <div>
+                    <p class="text-green-100">Guides Actifs</p>
+                    <p class="text-3xl font-bold">{{ stats.guidesActifs }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+            <div class="flex items-center">
+                <div class="text-3xl mr-4">🧳</div>
+                <div>
+                    <p class="text-purple-100">Visiteurs</p>
+                    <p class="text-3xl font-bold">{{ stats.totalVisiteurs }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+            <div class="flex items-center">
+                <div class="text-3xl mr-4">👥</div>
+                <div>
+                    <p class="text-orange-100">Utilisateurs</p>
+                    <p class="text-3xl font-bold">{{ stats.totalUsers }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques supplémentaires -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card bg-gradient-to-r from-indigo-500 to-indigo-600 text-white">
+            <div class="flex items-center">
+                <div class="text-3xl mr-4">📅</div>
+                <div>
+                    <p class="text-indigo-100">Visites Aujourd'hui</p>
+                    <p class="text-3xl font-bold">{{ stats.visitesAujourdhui }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-gradient-to-r from-teal-500 to-teal-600 text-white">
+            <div class="flex items-center">
+                <div class="text-3xl mr-4">🔜</div>
+                <div>
+                    <p class="text-teal-100">Visites Prochaines (7j)</p>
+                    <p class="text-3xl font-bold">{{ stats.visitesProchainement }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-gradient-to-r from-pink-500 to-pink-600 text-white">
+            <div class="flex items-center">
+                <div class="text-3xl mr-4">📊</div>
+                <div>
+                    <p class="text-pink-100">Taux de Présence</p>
+                    <p class="text-3xl font-bold">{{ stats.tauxPresence|round }}%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques et tableaux -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Visites par mois -->
+        <div class="card">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">📈 Visites par mois</h3>
+            {% if visitesParMois and visitesParMois|length > 0 %}
+                <div class="space-y-2">
+                    {% set maxCount = 0 %}
+                    {% for mois in visitesParMois %}
+                        {% if mois.total > maxCount %}
+                            {% set maxCount = mois.total %}
+                        {% endif %}
+                    {% endfor %}
+                    {% for mois in visitesParMois %}
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">
+                                {% set moisNoms = ['', 'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'] %}
+                                {{ moisNoms[mois.mois] }} {{ mois.annee }}
+                            </span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-32 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-primary-600 h-2 rounded-full" 
+                                         style="width: {{ maxCount > 0 ? (mois.total / maxCount * 100)|round : 0 }}%"></div>
+                                </div>
+                                <span class="text-sm font-medium">{{ mois.total }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-500 text-center py-4">Aucune donnée disponible</p>
+            {% endif %}
+        </div>
+
+        <!-- Visites par guide -->
+        <div class="card">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">🗺️ Top guides</h3>
+            {% if visitesParGuide and visitesParGuide|length > 0 %}
+                <div class="space-y-3">
+                    {% for guide in visitesParGuide %}
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                                    <span class="text-primary-600 font-medium text-sm">{{ guide.guide|first|upper }}</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-900">{{ guide.guide }}</p>
+                                </div>
+                            </div>
+                            <span class="bg-primary-100 text-primary-800 px-2 py-1 rounded-full text-sm font-medium">
+                                {{ guide.total }} visites
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-500 text-center py-4">Aucun guide disponible</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Visites prochaines et taux de présence -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Visites prochaines -->
+        <div class="card lg:col-span-2">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">🕒 Visites prochaines</h3>
+            {% if visitesProchainement and visitesProchainement|length > 0 %}
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Lieu</th>
+                                <th>Guide</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for visite in visitesProchainement %}
+                                <tr>
+                                    <td>
+                                        <div class="text-sm text-gray-900">{{ visite.date|date('d/m/Y') }}</div>
+                                        {% if visite.heureDebut %}
+                                            <div class="text-sm text-gray-500">{{ visite.heureDebut|date('H:i') }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-sm text-gray-900">{{ visite.lieu ?? 'Non défini' }}</td>
+                                    <td class="text-sm text-gray-900">
+                                        {% if visite.guide %}
+                                            {{ visite.guide.nom }} {{ visite.guide.prenom }}
+                                        {% else %}
+                                            Non assigné
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% set today = "now"|date("Y-m-d") %}
+                                        {% set visiteDate = visite.date|date("Y-m-d") %}
+                                        {% if visiteDate < today %}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                Terminée
+                                            </span>
+                                        {% elseif visiteDate == today %}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                Aujourd'hui
+                                            </span>
+                                        {% else %}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                Programmée
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-gray-500 text-center py-4">Aucune visite programmée</p>
+            {% endif %}
+        </div>
+
+        <!-- Taux de présence -->
+        <div class="card">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">📊 Taux de présence</h3>
+            <div class="text-center">
+                <div class="relative inline-flex items-center justify-center w-32 h-32">
+                    <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
+                        <path class="text-gray-300" fill="none" stroke="currentColor" stroke-width="3"
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path class="text-primary-600" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                              stroke-dasharray="{{ stats.tauxPresence }}, 100"
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span class="text-2xl font-bold text-gray-900">{{ stats.tauxPresence|round }}%</span>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mt-4">Taux de présence moyen des visiteurs</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="card">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">⚡ Actions rapides</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <a href="#" class="flex items-center p-4 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors">
+                <div class="text-primary-600 text-2xl mr-3">➕</div>
+                <div>
+                    <p class="font-medium text-primary-900">Nouvelle visite</p>
+                    <p class="text-sm text-primary-600">Programmer une visite</p>
+                </div>
+            </a>
+            
+            <a href="#" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                <div class="text-green-600 text-2xl mr-3">🗺️</div>
+                <div>
+                    <p class="font-medium text-green-900">Nouveau guide</p>
+                    <p class="text-sm text-green-600">Ajouter un guide</p>
+                </div>
+            </a>
+            
+            <a href="#" class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                <div class="text-purple-600 text-2xl mr-3">🧳</div>
+                <div>
+                    <p class="font-medium text-purple-900">Nouveau visiteur</p>
+                    <p class="text-sm text-purple-600">Enregistrer un visiteur</p>
+                </div>
+            </a>
+            
+            {% if is_granted('ROLE_ADMIN') %}
+            <a href="#" class="flex items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                <div class="text-orange-600 text-2xl mr-3">👥</div>
+                <div>
+                    <p class="font-medium text-orange-900">Nouvel utilisateur</p>
+                    <p class="text-sm text-orange-600">Créer un compte</p>
+                </div>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
