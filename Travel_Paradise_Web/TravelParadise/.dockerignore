@@ -1,9 +1,2 @@
 node_modules/
 vendor/
-.env
-.env.local
-.env.test
-.env.dev
-.env.prod
-.idea/
-.vscode/
