@@ -83,6 +83,20 @@
                     {{ visite.guide ? visite.guide.prenom ~ ' ' ~ visite.guide.nom : 'N/A' }}
                 </dd>
             </div>
+            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Image
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {% if visite.imageFilename %}
+                        <img src="{{ asset('uploads/images/' ~ visite.imageFilename) }}" {# Adapte le chemin #}
+                            alt="Image de la visite {{ visite.nom }}"
+                            class="h-48 w-auto object-cover shadow-md rounded"> {# Classes Tailwind pour styliser l'image #}
+                    {% else %}
+                        Aucune image
+                    {% endif %}
+                </dd>
+            </div>
             {# Ajoute ici les autres champs de ton entité Visite #}
         </dl>
     </div>

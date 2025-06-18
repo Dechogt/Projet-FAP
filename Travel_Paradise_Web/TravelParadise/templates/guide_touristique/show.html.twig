@@ -55,6 +55,20 @@
                     {{ guide_touristique.telephone }}
                 </dd>
             </div>
+            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Photo
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {% if guide_touristique.photoFilename %}
+                        <img src="{{ asset('uploads/photos/' ~ guide_touristique.photoFilename) }}"
+                            alt="Photo de {{ guide_touristique.prenom }} {{ guide_touristique.nom }}"
+                            class="h-32 w-32 rounded-full object-cover shadow-md"> 
+                    {% else %}
+                        Aucune photo
+                    {% endif %}
+                </dd>
+            </div>
             {# Ajoute ici les autres champs de ton entité GuideTouristique #}
         </dl>
     </div>

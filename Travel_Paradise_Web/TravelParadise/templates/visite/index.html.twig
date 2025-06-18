@@ -45,6 +45,9 @@
                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Guide
                     </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Image
+                    </th>
                     {# Ajoute d'autres en-têtes si nécessaire #}
                     <th scope="col" class="relative px-6 py-3">
                         <span class="sr-only">Actions</span>
@@ -78,6 +81,16 @@
                         </td>
                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ visite.guide ? visite.guide.prenom ~ ' ' ~ visite.guide.nom : 'N/A' }} {# Affiche le nom du guide #}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {% if visite.imageFilename %}
+                                {# Utilise la fonction asset() pour générer l'URL de l'image #}
+                                <img src="{{ asset('uploads/images/' ~ visite.imageFilename) }}" {# Adapte le chemin #}
+                                    alt="Image de la visite {{ visite.nom }}"
+                                    class="h-10 w-10 rounded object-cover"> {# Classes Tailwind pour styliser l'image #}
+                            {% else %}
+                                Aucune image
+                            {% endif %}
                         </td>
                         {# Ajoute d'autres cellules si nécessaire #}
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

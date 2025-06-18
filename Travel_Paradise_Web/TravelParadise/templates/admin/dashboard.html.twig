@@ -1,32 +1,142 @@
-{% extends 'layout_app.html.twig' %}
+{% extends 'layout_app.html.twig' %} {# Étend le layout de l'application #}
 
-{% block app_title %}Dashboard - TravelParadise{% endblock %} {# Définit le titre de l'application dans la balise <title> #}
-{% block page_title %}Dashboard Overview{% endblock %} {# Définit le titre affiché dans le header #}
+{% block app_title %}Dashboard - TravelParadise{% endblock %} {# Titre dans la barre du navigateur #}
+{% block page_title %}Dashboard{% endblock %} {# Titre affiché dans le header #}
 
-{% block content %}
-    {# Ici, tu mets le contenu spécifique de la page du tableau de bord #}
+{% block content %} {# Renomme le bloc body en content #}
 
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Dashboard Overview</h2>
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Aperçu de l'Administration</h2>
 
-    {# Exemple de cartes d'information #}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {# Carte 1 #}
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Users</h3>
-            <p class="text-3xl font-bold text-teal-600">1,234</p> {# Remplace par des données dynamiques #}
+    {# Grille pour les cartes de statistiques #}
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {# Exemple de Carte 1 : Nombre d'Utilisateurs #}
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        {# Icône (exemple : utilisateurs) #}
+                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M12 20.991a7 7 0 007-7v-2a7 7 0 00-7-7m0 14a7 7 0 01-7-7v-2a7 7 0 017-7"></path></svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                Total Utilisateurs
+                            </dt>
+                            <dd class="flex items-baseline">
+                                {# Remplace 0 par la variable contenant le nombre d'utilisateurs #}
+                                <div class="text-2xl font-semibold text-gray-900">
+                                    {{ totalUsers|default(0) }} {# Assure-toi que cette variable est passée depuis le contrôleur #}
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-5 py-3">
+                <div class="text-sm">
+                    <a href="{{ path('app_user_index') }}" class="font-medium text-teal-600 hover:text-teal-900">
+                        Voir tous les utilisateurs
+                    </a>
+                </div>
+            </div>
         </div>
-        {# Carte 2 #}
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">New Bookings</h3>
-            <p class="text-3xl font-bold text-blue-600">56</p> {# Remplace par des données dynamiques #}
+
+        {# Exemple de Carte 2 : Nombre de Guides #}
+         <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        {# Icône (exemple : guides) #}
+                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                Total Guides
+                            </dt>
+                            <dd class="flex items-baseline">
+                                {# Remplace 0 par la variable contenant le nombre de guides #}
+                                <div class="text-2xl font-semibold text-gray-900">
+                                    {{ totalGuides|default(0) }} {# Assure-toi que cette variable est passée depuis le contrôleur #}
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-5 py-3">
+                <div class="text-sm">
+                    <a href="{{ path('app_guide_touristique_index') }}" class="font-medium text-teal-600 hover:text-teal-900">
+                        Voir tous les guides
+                    </a>
+                </div>
+            </div>
         </div>
-        {# Carte 3 #}
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Revenue</h3>
-            <p class="text-3xl font-bold text-green-600">$12,345</p> {# Remplace par des données dynamiques #}
+
+        {# Ajoute d'autres cartes pour les Visites, Visiteurs, etc. #}
+         <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        {# Icône (exemple : visites) #}
+                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                Total Visites
+                            </dt>
+                            <dd class="flex items-baseline">
+                                {# Remplace 0 par la variable contenant le nombre de visites #}
+                                <div class="text-2xl font-semibold text-gray-900">
+                                    {{ totalVisites|default(0) }} {# Assure-toi que cette variable est passée depuis le contrôleur #}
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-5 py-3">
+                <div class="text-sm">
+                    <a href="{{ path('app_visite_index') }}" class="font-medium text-teal-600 hover:text-teal-900">
+                        Voir toutes les visites
+                    </a>
+                </div>
+            </div>
+        </div>
+
+         <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        {# Icône (exemple : visiteurs) #}
+                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                Total Visiteurs
+                            </dt>
+                            <dd class="flex items-baseline">
+                                {# Remplace 0 par la variable contenant le nombre de visiteurs #}
+                                <div class="text-2xl font-semibold text-gray-900">
+                                    {{ totalVisiteurs|default(0) }} {# Assure-toi que cette variable est passée depuis le contrôleur #}
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-5 py-3">
+                <div class="text-sm">
+                    <a href="{{ path('app_visiteur_index') }}" class="font-medium text-teal-600 hover:text-teal-900">
+                        Voir tous les visiteurs
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
-    {# ... autres sections du tableau de bord (graphiques, listes récentes, etc.) ... #}
+    {# Tu peux ajouter d'autres sections ici, comme des listes des derniers éléments ajoutés, etc. #}
 
 {% endblock %}

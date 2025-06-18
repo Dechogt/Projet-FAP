@@ -1,38 +1,83 @@
-{% extends 'layout_app.html.twig' %}
+{# templates/visiteur/show.html.twig #}
+{% extends 'layout_app.html.twig' %} {# Étend le layout de l'application #}
 
-{% block title %}Visiteur{% endblock %}
+{% block app_title %}Détails du Visiteur - TravelParadise{% endblock %} {# Titre dans la barre du navigateur #}
+{% block page_title %}Détails du Visiteur{% endblock %} {# Titre affiché dans le header #}
 
-{% block body %}
-    <h1>Visiteur</h1>
+{% block content %} {# Renomme le bloc body en content #}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ visiteur.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ visiteur.nom }}</td>
-            </tr>
-            <tr>
-                <th>Prenom</th>
-                <td>{{ visiteur.prenom }}</td>
-            </tr>
-            <tr>
-                <th>Present</th>
-                <td>{{ visiteur.present ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Commentaire</th>
-                <td>{{ visiteur.commentaire }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Détails du Visiteur</h2>
 
-    <a href="{{ path('app_visiteur_index') }}">back to list</a>
+    {# Affichage des détails dans une structure stylisée #}
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <dl class="divide-y divide-gray-200">
+            {# Exemple pour l'ID #}
+            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    ID
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visiteur.id }} {# Assure-toi que la variable est correcte #}
+                </dd>
+            </div>
+            {# Exemple pour le Nom #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Nom
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visiteur.nom }}
+                </dd>
+            </div>
+             {# Exemple pour le Prénom #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Prénom
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visiteur.prenom }}
+                </dd>
+            </div>
+             {# Exemple pour l'Email #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Email
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visiteur.email }}
+                </dd>
+            </div>
+             {# Exemple pour le Téléphone #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Téléphone
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visiteur.telephone }}
+                </dd>
+            </div>
+            {# Ajoute ici les autres champs de ton entité Visiteur #}
+        </dl>
+    </div>
 
-    <a href="{{ path('app_visiteur_edit', {'id': visiteur.id}) }}">edit</a>
+    {# Boutons d'action (Edit, Back to list, Delete) #}
+    <div class="flex justify-end space-x-4">
+        {# Bouton Edit #}
+        <a href="{{ path('app_visiteur_edit', {'id': visiteur.id}) }}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+            Edit
+        </a>
 
-    {{ include('visiteur/_delete_form.html.twig') }}
+        {# Bouton Back to list #}
+        <a href="{{ path('app_visiteur_index') }}" {# Utilise la route de la liste des visiteurs #}
+           class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+            <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to list
+        </a>
+
+        {# Inclusion du formulaire de suppression #}
+        {% include 'visiteur/_delete_form.html.twig' with {'visiteur': visiteur} %}
+    </div>
+
 {% endblock %}
