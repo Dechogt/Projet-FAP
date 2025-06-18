@@ -1,43 +1,88 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout_app.html.twig' %} {# Étend le layout de l'application #}
 
-{% block title %}GuideTouristique index{% endblock %}
+{% block app_title %}Guides Touristiques - TravelParadise{% endblock %} {# Titre dans la barre du navigateur #}
+{% block page_title %}Guides Touristiques{% endblock %} {# Titre affiché dans le header #}
 
-{% block body %}
-    <h1>GuideTouristique index</h1>
+{% block content %} {# Renomme le bloc body en content #}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Prenom</th>
-                <th>Photo</th>
-                <th>Statut</th>
-                <th>PaysAffectation</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for guide_touristique in guide_touristiques %}
-            <tr>
-                <td>{{ guide_touristique.id }}</td>
-                <td>{{ guide_touristique.nom }}</td>
-                <td>{{ guide_touristique.prenom }}</td>
-                <td>{{ guide_touristique.photo }}</td>
-                <td>{{ guide_touristique.statut ? 'Yes' : 'No' }}</td>
-                <td>{{ guide_touristique.paysAffectation }}</td>
-                <td>
-                    <a href="{{ path('app_guide_touristique_show', {'id': guide_touristique.id}) }}">show</a>
-                    <a href="{{ path('app_guide_touristique_edit', {'id': guide_touristique.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {# Le contenu de la page commence ici #}
 
-    <a href="{{ path('app_guide_touristique_new') }}">Create new</a>
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Liste des Guides Touristiques</h2>
+        {# Bouton "Create New" #}
+        <a href="{{ path('app_guide_touristique_new') }}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            Créer un nouveau Guide
+        </a>
+    </div>
+
+    {# Tableau des guides #}
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    {# Adapte les en-têtes de colonne en fonction des propriétés de ton entité GuideTouristique #}
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        ID
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Nom
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Prénom
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Email
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Téléphone
+                    </th>
+                    {# Ajoute d'autres en-têtes si nécessaire #}
+                    <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for guide_touristique in guide_touristiques %} {# Assure-toi que le nom de la variable est correct #}
+                    <tr>
+                        {# Adapte l'affichage des données en fonction des propriétés de ton entité GuideTouristique #}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ guide_touristique.id }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ guide_touristique.nom }}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ guide_touristique.prenom }}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ guide_touristique.email }}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ guide_touristique.telephone }}
+                        </td>
+                        {# Ajoute d'autres cellules si nécessaire #}
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            {# Liens d'action #}
+                            <a href="{{ path('app_guide_touristique_show', {'id': guide_touristique.id}) }}"
+                               class="text-gray-600 hover:text-gray-900 mr-4">Show</a>
+                            <a href="{{ path('app_guide_touristique_edit', {'id': guide_touristique.id}) }}"
+                               class="text-teal-600 hover:text-teal-900 mr-4">Edit</a>
+                            {# Inclusion du formulaire de suppression (si tu veux le bouton ici) #}
+                            {% include 'guide_touristique/_delete_form.html.twig' with {'guide_touristique': guide_touristique} %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            Aucun guide touristique trouvé.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 {% endblock %}

@@ -67,10 +67,15 @@ class AdminController extends AbstractController
         return $this->render('admin/visites.html.twig');
     }
 
-    #[Route('/users', name: 'admin_users')]
-    #[IsGranted('ROLE_ADMIN')]
-    public function users(): Response
+    #[Route('/users', name: 'users')] // Nouvelle route pour la gestion des utilisateurs
+    #[IsGranted('ROLE_ADMIN')] // Exige le rôle ADMIN pour accéder à cette page
+    public function users(UserRepository $userRepository): Response // Injecte le UserRepository
     {
-        return $this->render('admin/users.html.twig');
+        // Récupère tous les utilisateurs depuis la base de données
+        $users = $userRepository->findAll();
+
+        return $this->render('admin/users.html.twig', [ // Rend un nouveau template
+            'users' => $users, // Passe la liste des utilisateurs au template
+        ]);
     }
 }

@@ -1,54 +1,110 @@
-{% extends 'base.html.twig' %}
+{# templates/visite/show.html.twig #}
+{% extends 'layout_app.html.twig' %} {# Étend le layout de l'application #}
 
-{% block title %}Visite{% endblock %}
+{% block app_title %}Détails de la Visite - TravelParadise{% endblock %} {# Titre dans la barre du navigateur #}
+{% block page_title %}Détails de la Visite{% endblock %} {# Titre affiché dans le header #}
 
-{% block body %}
-    <h1>Visite</h1>
+{% block content %} {# Renomme le bloc body en content #}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ visite.id }}</td>
-            </tr>
-            <tr>
-                <th>Photo</th>
-                <td>{{ visite.photo }}</td>
-            </tr>
-            <tr>
-                <th>Pays</th>
-                <td>{{ visite.pays }}</td>
-            </tr>
-            <tr>
-                <th>Lieu</th>
-                <td>{{ visite.lieu }}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{{ visite.date ? visite.date|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>HeureDebut</th>
-                <td>{{ visite.heureDebut ? visite.heureDebut|date('H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Duree</th>
-                <td>{{ visite.duree }}</td>
-            </tr>
-            <tr>
-                <th>HeureFin</th>
-                <td>{{ visite.heureFin ? visite.heureFin|date('H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Commentaire</th>
-                <td>{{ visite.commentaire }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Détails de la Visite</h2>
 
-    <a href="{{ path('app_visite_index') }}">back to list</a>
+    {# Affichage des détails dans une structure stylisée #}
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <dl class="divide-y divide-gray-200">
+            {# Exemple pour l'ID #}
+            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    ID
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visite.id }} {# Assure-toi que la variable est correcte #}
+                </dd>
+            </div>
+            {# Exemple pour le Nom #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Nom
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visite.nom }}
+                </dd>
+            </div>
+             {# Exemple pour la Description #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Description
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visite.description }}
+                </dd>
+            </div>
+             {# Exemple pour la Date #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Date
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visite.date ? visite.date|date('Y-m-d') : '' }}
+                </dd>
+            </div>
+             {# Exemple pour l'Heure #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Heure
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visite.heure ? visite.heure|date('H:i') : '' }}
+                </dd>
+            </div>
+             {# Exemple pour la Durée #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Durée (minutes)
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visite.dureeMinutes }}
+                </dd>
+            </div>
+             {# Exemple pour le Prix #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Prix
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visite.prix|format_currency('EUR') }}
+                </dd>
+            </div>
+             {# Exemple pour le Guide #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Guide
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ visite.guide ? visite.guide.prenom ~ ' ' ~ visite.guide.nom : 'N/A' }}
+                </dd>
+            </div>
+            {# Ajoute ici les autres champs de ton entité Visite #}
+        </dl>
+    </div>
 
-    <a href="{{ path('app_visite_edit', {'id': visite.id}) }}">edit</a>
+    {# Boutons d'action (Edit, Back to list, Delete) #}
+    <div class="flex justify-end space-x-4">
+        {# Bouton Edit #}
+        <a href="{{ path('app_visite_edit', {'id': visite.id}) }}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+            Edit
+        </a>
 
-    {{ include('visite/_delete_form.html.twig') }}
+        {# Bouton Back to list #}
+        <a href="{{ path('app_visite_index') }}" {# Utilise la route de la liste des visites #}
+           class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+            <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to list
+        </a>
+
+        {# Inclusion du formulaire de suppression #}
+        {% include 'visite/_delete_form.html.twig' with {'visite': visite} %}
+    </div>
+
 {% endblock %}

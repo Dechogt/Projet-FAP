@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/guide/touristique')]
+#[Route('/guide_touristique')]
 final class GuideTouristiqueController extends AbstractController
 {
     #[Route(name: 'app_guide_touristique_index', methods: ['GET'])]

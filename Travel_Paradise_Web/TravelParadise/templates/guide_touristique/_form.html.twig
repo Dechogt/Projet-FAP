@@ -1,4 +1,12 @@
+{# templates/guide_touristique/_form.html.twig #}
+{# Ce template est un PARTIAL, il n'étend PAS de layout #}
+
 {{ form_start(form) }}
+    {# form_widget(form) rend tous les champs en utilisant le thème global #}
     {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+
+    {# Le bouton submit est généralement inclus par form_end(form) #}
+    {# Si tu le rends séparément, assure-toi qu'il est stylisé #}
+    {# <button class="btn">{{ button_label|default('Save') }}</button> #}
+
 {{ form_end(form) }}

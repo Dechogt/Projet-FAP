@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Travel Paradise {% endblock %}
+
+{% block body %}
+{# Conteneur principal avec arrière-plan et centrage #}
+<div class="min-h-screen flex items-center justify-center bg-cover bg-center" style="background-image: url('{{ asset('images/tp4.jpg') }}');">
+    <div class="absolute inset-0 bg-black opacity-50"></div>
+
+    {# Contenu centré au-dessus de l'overlay #}
+    <div class="relative z-10 text-center p-8 max-w-3xl mx-auto"> {# mx-auto pour centrer horizontalement #}
+        {# Titre avec animation subtile #}
+        <h1 class="text-6xl md:text-7xl font-extrabold mb-6 text-teal-400 animate-fade-in-down"> {# animate-fade-in-down nécessite une configuration d'animation dans Tailwind #}
+            Travel Paradise
+        </h1>
+        {# Paragraphe avec animation subtile #}
+        <p class="text-xl md:text-2xl mb-10 text-gray-300 animate-fade-in-up"> {# animate-fade-in-up nécessite une configuration d'animation dans Tailwind #}
+            Discover breathtaking destinations and unforgettable experiences.
+            Your journey to paradise starts here.
+        </p>
+        {# Bouton stylisé et animé #}
+        {# Assure-toi que la route 'app_login' est bien définie dans security.yaml et SecurityController #}
+        <a href="{{ path('app_login') }}" class="inline-block bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700 text-white font-bold py-4 px-10 rounded-full transition duration-300 ease-in-out shadow-xl transform hover:scale-105">
+            Administrer
+        </a>
+    </div>
+</div>
+{% endblock %}

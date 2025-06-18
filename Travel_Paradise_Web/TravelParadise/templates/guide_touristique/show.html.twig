@@ -1,42 +1,82 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout_app.html.twig' %} {# Étend le layout de l'application #}
 
-{% block title %}GuideTouristique{% endblock %}
+{% block app_title %}Détails du Guide - TravelParadise{% endblock %} {# Titre dans la barre du navigateur #}
+{% block page_title %}Détails du Guide{% endblock %} {# Titre affiché dans le header #}
 
-{% block body %}
-    <h1>GuideTouristique</h1>
+{% block content %} {# Renomme le bloc body en content #}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ guide_touristique.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ guide_touristique.nom }}</td>
-            </tr>
-            <tr>
-                <th>Prenom</th>
-                <td>{{ guide_touristique.prenom }}</td>
-            </tr>
-            <tr>
-                <th>Photo</th>
-                <td>{{ guide_touristique.photo }}</td>
-            </tr>
-            <tr>
-                <th>Statut</th>
-                <td>{{ guide_touristique.statut ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>PaysAffectation</th>
-                <td>{{ guide_touristique.paysAffectation }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Détails du Guide Touristique</h2>
 
-    <a href="{{ path('app_guide_touristique_index') }}">back to list</a>
+    {# Affichage des détails dans une structure stylisée #}
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <dl class="divide-y divide-gray-200">
+            {# Exemple pour l'ID #}
+            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    ID
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ guide_touristique.id }} {# Assure-toi que la variable est correcte #}
+                </dd>
+            </div>
+            {# Exemple pour le Nom #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Nom
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ guide_touristique.nom }}
+                </dd>
+            </div>
+             {# Exemple pour le Prénom #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Prénom
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ guide_touristique.prenom }}
+                </dd>
+            </div>
+             {# Exemple pour l'Email #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Email
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ guide_touristique.email }}
+                </dd>
+            </div>
+             {# Exemple pour le Téléphone #}
+             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt class="text-sm font-medium text-gray-500">
+                    Téléphone
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ guide_touristique.telephone }}
+                </dd>
+            </div>
+            {# Ajoute ici les autres champs de ton entité GuideTouristique #}
+        </dl>
+    </div>
 
-    <a href="{{ path('app_guide_touristique_edit', {'id': guide_touristique.id}) }}">edit</a>
+    {# Boutons d'action (Edit, Back to list, Delete) #}
+    <div class="flex justify-end space-x-4">
+        {# Bouton Edit #}
+        <a href="{{ path('app_guide_touristique_edit', {'id': guide_touristique.id}) }}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+            Edit
+        </a>
 
-    {{ include('guide_touristique/_delete_form.html.twig') }}
+        {# Bouton Back to list #}
+        <a href="{{ path('app_guide_touristique_index') }}" {# Utilise la route de la liste des guides #}
+           class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+            <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to list
+        </a>
+
+        {# Inclusion du formulaire de suppression #}
+        {% include 'guide_touristique/_delete_form.html.twig' with {'guide_touristique': guide_touristique} %}
+    </div>
+
 {% endblock %}
