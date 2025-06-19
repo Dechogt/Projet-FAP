@@ -1,13 +1,27 @@
-{% extends 'base.html.twig' %}
+{# templates/visiteur/edit.html.twig #}
+{% extends 'layout_app.html.twig' %} {# Étend le layout de l'application #}
 
-{% block title %}Edit Visiteur{% endblock %}
+{% block app_title %}Modifier Visiteur - TravelParadise{% endblock %} {# Titre dans la barre du navigateur #}
+{% block page_title %}Modifier Visiteur{% endblock %} {# Titre affiché dans le header #}
 
-{% block body %}
-    <h1>Edit Visiteur</h1>
+{% block content %} {# Renomme le bloc body en content #}
 
-    {{ include('visiteur/_form.html.twig', {'button_label': 'Update'}) }}
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Modifier Visiteur</h2>
 
-    <a href="{{ path('app_visiteur_index') }}">back to list</a>
+    {# Inclusion du formulaire (le style est géré par le thème global) #}
+    {% include 'visiteur/_form.html.twig' with {'button_label': 'Update'} %}
 
-    {{ include('visiteur/_delete_form.html.twig') }}
+    {# Boutons d'action (Back to list, Delete) #}
+    <div class="flex justify-between items-center mt-6"> {# Utilise flex pour aligner les boutons #}
+        {# Bouton Back to list #}
+        <a href="{{ path('app_visiteur_index') }}"
+           class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+            <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Retour à la liste
+        </a>
+
+        {# Inclusion du formulaire de suppression #}
+        {% include 'visiteur/_delete_form.html.twig' with {'visiteur': visiteur} %} {# Assure-toi que la variable est correcte #}
+    </div>
+
 {% endblock %}
