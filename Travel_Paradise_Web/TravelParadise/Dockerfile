@@ -26,7 +26,6 @@ WORKDIR /var/www/html
 # Copier les fichiers du projet
 COPY . .
 
-# Rendre le script exécutable
 RUN chmod +x start.sh
 
 # Corriger le warning git ownership dans Docker
@@ -38,5 +37,7 @@ RUN composer install --optimize-autoloader
 # Exposer le port
 EXPOSE 8000
 
-# Commande par défaut
-CMD ["./start.sh"]
+# Démarrer le serveur Symfony
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+# CMD ["bash","start.sh"]
+# CMD ["php-fpm"]

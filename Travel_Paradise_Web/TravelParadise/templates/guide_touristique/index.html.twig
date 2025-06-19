@@ -1,43 +1,124 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout_app.html.twig' %} {# Étend le layout de l'application #}
 
-{% block title %}GuideTouristique index{% endblock %}
+{% block app_title %}Guides Touristiques - TravelParadise{% endblock %} {# Titre dans la barre du navigateur #}
+{% block page_title %}Guides Touristiques{% endblock %} {# Titre affiché dans le header #}
 
-{% block body %}
-    <h1>GuideTouristique index</h1>
+{% block content %} {# Renomme le bloc body en content #}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Prenom</th>
-                <th>Photo</th>
-                <th>Statut</th>
-                <th>PaysAffectation</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for guide_touristique in guide_touristiques %}
-            <tr>
-                <td>{{ guide_touristique.id }}</td>
-                <td>{{ guide_touristique.nom }}</td>
-                <td>{{ guide_touristique.prenom }}</td>
-                <td>{{ guide_touristique.photo }}</td>
-                <td>{{ guide_touristique.statut ? 'Yes' : 'No' }}</td>
-                <td>{{ guide_touristique.paysAffectation }}</td>
-                <td>
-                    <a href="{{ path('app_guide_touristique_show', {'id': guide_touristique.id}) }}">show</a>
-                    <a href="{{ path('app_guide_touristique_edit', {'id': guide_touristique.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {# Le contenu de la page commence ici #}
 
-    <a href="{{ path('app_guide_touristique_new') }}">Create new</a>
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Liste des Guides Touristiques</h2>
+        {# Bouton "Create New" #}
+        <a href="{{ path('app_guide_touristique_new') }}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            Créer un nouveau Guide
+        </a>
+    </div>
+     <div class="mb-6">
+        <form method="get" action="{{ path('app_guide_touristique_index') }}" class="flex items-center space-x-4">
+            <input type="text" name="q" value="{{ searchTerm|default('') }}" {# Affiche le terme de recherche actuel #}
+                   placeholder="Rechercher par nom, prénom, email..."
+                   class="flex-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm">
+            <button type="submit"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                Rechercher
+            </button>
+             {% if searchTerm %} {# Ajoute un bouton pour effacer la recherche si un terme est présent #}
+                <a href="{{ path('app_guide_touristique_index') }}"
+                   class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+                    Effacer
+                </a>
+            {% endif %}
+        </form>
+    </div>
+
+    {# Tableau des guides #}
+    <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6"> {# Ajoute une marge en bas #}
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    {# Adapte les en-têtes de colonne #}
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        {# Utilise le helper sortable pour rendre la colonne triable #}
+                        {{ knp_pagination_sortable(pagination, 'ID', 'g.id') }} {# 'pagination' est l'objet, 'ID' est le label, 'g.id' est la propriété de l'entité #}
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                         {{ knp_pagination_sortable(pagination, 'Nom', 'g.nom') }}
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                         {{ knp_pagination_sortable(pagination, 'Prénom', 'g.prenom') }}
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                         {{ knp_pagination_sortable(pagination, 'Email', 'g.email') }}
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Téléphone
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Photo
+                    </th>
+                    {# Ajoute d'autres en-têtes si nécessaire #}
+                    <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for guide_touristique in pagination %} {# Utilise l'objet de pagination #}
+                    <tr>
+                        {# Adapte l'affichage des données #}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ guide_touristique.id }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ guide_touristique.nom }}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ guide_touristique.prenom }}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ guide_touristique.email }}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ guide_touristique.telephone }}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {% if guide_touristique.photoFilename %}
+                                <img src="{{ asset('uploads/photos/' ~ guide_touristique.photoFilename) }}"
+                                     alt="Photo de {{ guide_touristique.prenom }} {{ guide_touristique.nom }}"
+                                     class="h-10 w-10 rounded-full object-cover">
+                            {% else %}
+                                Aucune photo
+                            {% endif %}
+                        </td>
+                        {# Ajoute d'autres cellules si nécessaire #}
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            {# Liens d'action #}
+                            <a href="{{ path('app_guide_touristique_show', {'id': guide_touristique.id}) }}"
+                               class="text-gray-600 hover:text-gray-900 mr-4">Show</a>
+                            <a href="{{ path('app_guide_touristique_edit', {'id': guide_touristique.id}) }}"
+                               class="text-teal-600 hover:text-teal-900 mr-4">Edit</a>
+                            {# Inclusion du formulaire de suppression #}
+                            {% include 'guide_touristique/_delete_form.html.twig' with {'guide_touristique': guide_touristique} %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            Aucun guide touristique trouvé{% if searchTerm %} pour "{{ searchTerm }}"{% endif %}. 
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# Affichage de la pagination #}
+    <div class="flex justify-center mt-4">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
 {% endblock %}
