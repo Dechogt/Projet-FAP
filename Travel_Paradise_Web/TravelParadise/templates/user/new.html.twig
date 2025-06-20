@@ -1,11 +1,17 @@
-{% extends 'base.html.twig' %}
+{# templates/user/new.html.twig #}
+{% extends 'layout_app.html.twig' %}
 
-{% block title %}New User{% endblock %}
+{% block app_title %}Nouvel Utilisateur - TravelParadise{% endblock %}
+{% block page_title %}Créer un nouvel Utilisateur{% endblock %}
 
-{% block body %}
-    <h1>Create new User</h1>
+{% block content %}
 
-    {{ include('user/_form.html.twig') }}
+    <div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Nouvel utilisateur</h2>
+
+        {% include 'user/_form.html.twig' with {'form': form} %}
+
+    </div>
+
 {% endblock %}

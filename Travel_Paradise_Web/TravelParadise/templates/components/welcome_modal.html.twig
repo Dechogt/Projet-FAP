@@ -1,0 +1,42 @@
+{# templates/components/welcome_modal.html.twig #}
+
+{# Ce template définit l'apparence de la modale de bienvenue #}
+{# Il utilise des classes Tailwind CSS. Assure-toi que Tailwind est configuré. #}
+
+{# La modale elle-même. Elle est cachée par défaut (classe 'hidden') #}
+<div id="welcome-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+    {# L'overlay gris semi-transparent derrière la modale #}
+    <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
+
+    {# Un élément pour aider à centrer la modale verticalement #}
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+    {# Le conteneur principal du contenu de la modale #}
+    <div class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+      <div>
+        {# L'icône de bienvenue (un cercle vert avec une coche) #}
+        <div class="flex items-center justify-center w-12 h-12 mx-auto bg-green-100 rounded-full">
+          <svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        {# Le texte de bienvenue #}
+        <div class="mt-3 text-center sm:mt-5">
+          <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">Bienvenue !</h3>
+          <div class="mt-2">
+            {# On utilise la variable userName passée par le contrôleur via le template parent #}
+            <p class="text-sm text-gray-500">Nous sommes heureux de vous revoir, <strong>{{ userName }}</strong> !</p>
+            <p class="text-sm text-gray-500 mt-2">Cliquez sur "OK" pour commencer l'administration</p>
+          </div>
+        </div>
+      </div>
+      {# Le bouton "OK" #}
+      <div class="mt-5 sm:mt-6">
+        <button type="button" id="welcome-modal-ok-button" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm">
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

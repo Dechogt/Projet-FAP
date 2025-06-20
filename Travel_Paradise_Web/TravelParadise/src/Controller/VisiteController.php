@@ -5,32 +5,36 @@ namespace App\Controller;
 use App\Entity\Visite;
 use App\Form\VisiteType;
 use App\Repository\VisiteRepository;
+use App\Service\FileUploader; // Assure-toi que ce service existe et est configuré
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface; // Importe SluggerInterface
-use Symfony\Component\HttpFoundation\File\UploadedFile; // Importe UploadedFile
-use Symfony\Component\Filesystem\Filesystem; // Pour supprimer l'ancien fichier
-use Symfony\Component\HttpFoundation\File\Exception\FileException; // Pour gérer les exceptions d'upload
-
-#[Route('/admin/visite')] // Assure-toi que la route est correcte
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 // #[IsGranted('ROLE_ADMIN')] // Optionnel : sécuriser tout le contrôleur
+
+#[Route('/admin/visite')]
 class VisiteController extends AbstractController
 {
-    // Injecte SluggerInterface et Filesystem
+    // Injection des dépendances via le constructeur
     public function __construct(
         private VisiteRepository $visiteRepository,
-        private SluggerInterface $slugger,
-        private Filesystem $filesystem
+        private EntityManagerInterface $entityManager, // Injecte EntityManagerInterface
+        private FileUploader $fileUploader, // Utilise ton service FileUploader
+        private Filesystem $filesystem,
+        private SluggerInterface $slugger // Injecte SluggerInterface
     ) {
     }
 
-    #[Route(name: 'app_visite_index', methods: ['GET'])]
-    public function index(VisiteRepository $visiteRepository): Response
+    #[Route('/', name: 'app_visite_index', methods: ['GET'])]
+    public function index(): Response // Pas besoin d'injecter VisiteRepository ici si tu l'as dans le constructeur
     {
         return $this->render('visite/index.html.twig', [
-            'visites' => $visiteRepository->findAll(),
+            'visites' => $this->visiteRepository->findAll(), // Utilise la propriété injectée
         ]);
     }
 
@@ -42,35 +46,34 @@ class VisiteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile|null $imageFile */
-            $imageFile = $form->get('imageFile')->getData();
+            /** @var UploadedFile|null $photoFile */ // Utilise photoFile pour la cohérence
+            $photoFile = $form->get('photoFile')->getData(); // Utilise photoFile
 
-            if ($imageFile) {
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $this->slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-
+            if ($photoFile) {
+                // Utilise ton service FileUploader pour gérer l'upload
                 try {
-                    $imageFile->move(
-                        $this->getParameter('images_directory'), // Utilise un répertoire différent si tu veux
-                        $newFilename
-                    );
+                    $photoFilename = $this->fileUploader->upload($photoFile);
+                    $visite->setPhotoFilename($photoFilename); // Utilise setPhotoFilename
                 } catch (FileException $e) {
-                     $this->addFlash('error', 'Une erreur est survenue lors de l\'upload de l\'image.');
-                     return $this->redirectToRoute('app_visite_new');
+                     $this->addFlash('error', 'Une erreur est survenue lors de l\'upload de l\'image : ' . $e->getMessage());
+                     // Redirige vers la page new pour afficher les erreurs du formulaire
+                     return $this->render('visite/new.html.twig', [
+                        'visite' => $visite,
+                        'form' => $form,
+                    ]);
                 }
-
-                $visite->setImageFilename($newFilename);
             }
 
-            $this->visiteRepository->save($visite, true);
+            $this->entityManager->persist($visite); // Utilise EntityManager
+            $this->entityManager->flush(); // Utilise EntityManager
 
             $this->addFlash('success', 'La visite a été créée avec succès.');
 
             return $this->redirectToRoute('app_visite_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('visite/new.html.twig', [
+        // Utilise render() au lieu de renderForm()
+        return $this->render('visite/new.html.twig', [
             'visite' => $visite,
             'form' => $form,
         ]);
@@ -91,45 +94,43 @@ class VisiteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-             /** @var UploadedFile|null $imageFile */
-            $imageFile = $form->get('imageFile')->getData();
+             /** @var UploadedFile|null $photoFile */ // Utilise photoFile
+            $photoFile = $form->get('photoFile')->getData(); // Utilise photoFile
 
-            if ($imageFile) {
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $this->slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-
-                try {
-                    $imageFile->move(
-                        $this->getParameter('images_directory'), // Utilise le même répertoire
-                        $newFilename
-                    );
-
-                    // Supprime l'ancien fichier si il existe
-                    $oldImageFilename = $visite->getImageFilename();
-                    if ($oldImageFilename) {
-                         $oldImagePath = $this->getParameter('images_directory') . '/' . $oldImageFilename;
-                         if ($this->filesystem->exists($oldImagePath)) {
-                             $this->filesystem->remove($oldImagePath);
-                         }
-                    }
-
-                } catch (FileException $e) {
-                     $this->addFlash('error', 'Une erreur est survenue lors de l\'upload de l\'image.');
-                     return $this->redirectToRoute('app_visite_edit', ['id' => $visite->getId()]);
+            if ($photoFile) {
+                // Supprimer l'ancienne photo si elle existe
+                $oldPhotoFilename = $visite->getPhotoFilename(); // Utilise getPhotoFilename
+                if ($oldPhotoFilename) {
+                     $oldPhotoPath = $this->getParameter('uploads_directory') . '/' . $oldPhotoFilename; // Utilise uploads_directory
+                     if ($this->filesystem->exists($oldPhotoPath)) {
+                         $this->filesystem->remove($oldPhotoPath);
+                     }
                 }
 
-                $visite->setImageFilename($newFilename);
+                // Uploader la nouvelle photo en utilisant ton service
+                try {
+                    $photoFilename = $this->fileUploader->upload($photoFile);
+                    $visite->setPhotoFilename($photoFilename); // Utilise setPhotoFilename
+                } catch (FileException $e) {
+                     $this->addFlash('error', 'Une erreur est survenue lors de l\'upload de l\'image : ' . $e->getMessage());
+                     // Redirige vers la page edit pour afficher les erreurs du formulaire
+                     return $this->render('visite/edit.html.twig', [
+                        'visite' => $visite,
+                        'form' => $form,
+                    ]);
+                }
             }
+            // Si aucun nouveau fichier n'est uploadé, la photo existante est conservée
 
-            $this->visiteRepository->save($visite, true);
+            $this->entityManager->flush(); // Utilise EntityManager
 
             $this->addFlash('success', 'La visite a été mise à jour avec succès.');
 
             return $this->redirectToRoute('app_visite_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('visite/edit.html.twig', [
+        // Utilise render() au lieu de renderForm()
+        return $this->render('visite/edit.html.twig', [
             'visite' => $visite,
             'form' => $form,
         ]);
@@ -141,15 +142,16 @@ class VisiteController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$visite->getId(), $request->request->get('_token'))) {
 
              // Supprime le fichier image associé si il existe
-            $imageFilename = $visite->getImageFilename();
-            if ($imageFilename) {
-                 $imagePath = $this->getParameter('images_directory') . '/' . $imageFilename;
-                 if ($this->filesystem->exists($imagePath)) {
-                     $this->filesystem->remove($imagePath);
+            $photoFilename = $visite->getPhotoFilename(); // Utilise getPhotoFilename
+            if ($photoFilename) {
+                 $photoPath = $this->getParameter('uploads_directory') . '/' . $photoFilename; // Utilise uploads_directory
+                 if ($this->filesystem->exists($photoPath)) {
+                     $this->filesystem->remove($photoPath);
                  }
             }
 
-            $this->visiteRepository->remove($visite, true);
+            $this->entityManager->remove($visite); // Utilise EntityManager
+            $this->entityManager->flush(); // Utilise EntityManager
 
             $this->addFlash('success', 'La visite a été supprimée avec succès.');
         } else {

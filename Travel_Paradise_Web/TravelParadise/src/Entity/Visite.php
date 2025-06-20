@@ -3,15 +3,18 @@
 namespace App\Entity;
 
 use App\Repository\VisiteRepository;
-use App\Validator\Constraints as AppAssert;
+use App\Validator\Constraints as AppAssert; // Assure-toi que ce namespace est correct si tu as des contraintes personnalisées
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
+use Symfony\Component\Validator\Constraints as Assert; // Import pour les contraintes de validation
 
 #[ORM\Entity(repositoryClass: VisiteRepository::class)]
-//#[Broadcast]
+//#[Broadcast] // Décommenter si tu utilises Turbo Broadcast
+#[ORM\HasLifecycleCallbacks] // Ajoute cette annotation pour que les méthodes PrePersist/PreUpdate soient appelées
+
 class Visite
 {
     #[ORM\Id]
@@ -19,40 +22,54 @@ class Visite
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $photo = null;
+    #[ORM\Column(length: 255, nullable: true)] // photo peut être null
+    private ?string $photoFilename = null; // Renommé pour cohérence avec l'upload
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le pays ne peut pas être vide.")]
+    #[Assert\Length(max: 100, maxMessage: "Le pays ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $pays = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le lieu ne peut pas être vide.")]
+    #[Assert\Length(max: 255, maxMessage: "Le lieu ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $lieu = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $date = null;
+    #[Assert\NotBlank(message: "La date ne peut pas être vide.")]
+    #[Assert\Date(message: "Veuillez saisir une date valide.")]
+    private ?\DateTimeInterface $date = null; // Utilise DateTimeInterface pour plus de flexibilité
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTime $heureDebut = null;
+    #[Assert\NotBlank(message: "L'heure de début ne peut pas être vide.")]
+    #[Assert\Time(message: "Veuillez saisir une heure valide.")]
+    private ?\DateTimeInterface $heureDebut = null; // Utilise DateTimeInterface
 
     #[ORM\Column]
-    private ?int $duree = null;
+    #[Assert\NotBlank(message: "La durée ne peut pas être vide.")]
+    #[Assert\Positive(message: "La durée doit être un nombre positif (en heures).")] // Supposons que la durée est en heures
+    private ?int $duree = null; // Durée en heures
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTime $heureFin = null;
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)] // heureFin peut être null si heureDebut ou duree sont null
+    private ?\DateTimeInterface $heureFin = null; // Calculé automatiquement
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "Le commentaire ne peut pas être vide.")]
     private ?string $commentaire = null;
 
     #[ORM\ManyToOne(inversedBy: 'visites')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: "Veuillez sélectionner un guide pour cette visite.")]
     private ?GuideTouristique $guide = null;
 
     /**
      * @var Collection<int, Visiteur>
      */
-
-    #[ORM\OneToMany(targetEntity: Visiteur::class, mappedBy: 'visite')]
+    #[ORM\OneToMany(targetEntity: Visiteur::class, mappedBy: 'visite', orphanRemoval: true)] // Ajout de orphanRemoval si tu veux supprimer les visiteurs avec la visite
     private Collection $visiteurs;
+
+    #[ORM\Column]
+    private ?\DateTime $createdAt = null;
 
     public function __construct()
     {
@@ -64,14 +81,14 @@ class Visite
         return $this->id;
     }
 
-    public function getPhoto(): ?string
+    public function getPhotoFilename(): ?string // Renommé
     {
-        return $this->photo;
+        return $this->photoFilename;
     }
 
-    public function setPhoto(string $photo): static
+    public function setPhotoFilename(?string $photoFilename): static // Renommé
     {
-        $this->photo = $photo;
+        $this->photoFilename = $photoFilename;
 
         return $this;
     }
@@ -100,24 +117,24 @@ class Visite
         return $this;
     }
 
-    public function getDate(): ?\DateTime
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTime $date): static
+    public function setDate(\DateTimeInterface $date): static
     {
         $this->date = $date;
 
         return $this;
     }
 
-    public function getHeureDebut(): ?\DateTime
+    public function getHeureDebut(): ?\DateTimeInterface
     {
         return $this->heureDebut;
     }
 
-    public function setHeureDebut(\DateTime $heureDebut): static
+    public function setHeureDebut(\DateTimeInterface $heureDebut): static
     {
         $this->heureDebut = $heureDebut;
 
@@ -136,17 +153,12 @@ class Visite
         return $this;
     }
 
-    public function getHeureFin(): ?\DateTime
+    public function getHeureFin(): ?\DateTimeInterface
     {
         return $this->heureFin;
     }
 
-    public function setHeureFin(\DateTime $heureFin): static
-    {
-        $this->heureFin = $heureFin;
-
-        return $this;
-    }
+    // Pas de setter pour heureFin car elle est calculée automatiquement
 
     public function getCommentaire(): ?string
     {
@@ -201,14 +213,29 @@ class Visite
 
         return $this;
     }
+
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function updateHeureFin(): void
     {
-        if ($this->heureDebut && $this->duree) {
+        if ($this->heureDebut && $this->duree !== null) { // Vérifie que duree n'est pas null
             $this->heureFin = clone $this->heureDebut;
+            // Assure-toi que la durée est en heures pour l'intervalle
             $this->heureFin->add(new \DateInterval("PT{$this->duree}H"));
+        } else {
+            $this->heureFin = null; // Met heureFin à null si heureDebut ou duree manquent
         }
+    }
 
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTime $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 }

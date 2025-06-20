@@ -1,207 +1,148 @@
 <?php
-// src/Controller/GuideTouristiqueController.php
 
 namespace App\Controller;
 
-use App\Entity\GuideTouristique; // Importe l'entité
-use App\Form\GuideTouristiqueType; // Importe le formulaire
-use App\Repository\GuideTouristiqueRepository; // Importe le repository
+use App\Entity\GuideTouristique;
+use App\Form\GuideTouristiqueType;
+use App\Repository\GuideTouristiqueRepository;
+use App\Service\FileUploader; // Assure-toi que ce service existe et est configuré
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface; // Pour l'upload d'image
-use Symfony\Component\HttpFoundation\File\UploadedFile; // Pour l'upload d'image
-use Symfony\Component\Filesystem\Filesystem; // Pour supprimer l'ancien fichier (si tu gères les images)
-use Knp\Component\Pager\PaginatorInterface; // Pour la pagination (si nécessaire)
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile; // Importe UploadedFile
+use Symfony\Component\Filesystem\Filesystem; // Importe Filesystem pour supprimer les fichiers
+use Knp\Component\Pager\PaginatorInterface;
 
-#[Route('/admin/guide_touristique')] // Préfixe de route pour ce contrôleur
-// #[IsGranted('ROLE_ADMIN')] // Optionnel : sécuriser tout le contrôleur pour les ADMINs
+#[Route('/admin/guide_touristique')]
 class GuideTouristiqueController extends AbstractController
 {
-    // Injecte les dépendances nécessaires (Repository, Slugger, Filesystem)
-    public function __construct(
-        private GuideTouristiqueRepository $guideTouristiqueRepository,
-        private SluggerInterface $slugger, // Si tu gères les images
-        private Filesystem $filesystem // Si tu gères la suppression d'anciennes images
-    ) {
-    }
-
-    // Action pour afficher la liste (Index)
     #[Route('/', name: 'app_guide_touristique_index', methods: ['GET'])]
-    public function index(Request $request, PaginatorInterface $paginator): Response
+    public function index(
+        Request $request,
+        GuideTouristiqueRepository $guideTouristiqueRepository,
+        PaginatorInterface $paginator // Injecte le service Paginator
+    ): Response
     {
-         // Récupère le terme de recherche depuis la requête (paramètre 'q')
-        $searchTerm = $request->query->get('q');
+        $searchTerm = $request->query->get('q', '');
 
-        // Crée une requête DQL ou QueryBuilder pour récupérer les guides
-        $queryBuilder = $this->guideTouristiqueRepository->createQueryBuilder('g')
-            ->orderBy('g.id', 'ASC'); // Tri par défaut
-
-        // Ajoute la condition de recherche si un terme est présent
+        // Récupère la requête (QueryBuilder ou Query) pour la pagination
+        // Si tu as une méthode search qui retourne un QueryBuilder ou Query :
         if ($searchTerm) {
-            $queryBuilder->andWhere('g.nom LIKE :searchTerm OR g.prenom LIKE :searchTerm OR g.email LIKE :searchTerm') // Adapte les champs de recherche
-                         ->setParameter('searchTerm', '%'.$searchTerm.'%');
+            $query = $guideTouristiqueRepository->searchQuery($searchTerm); // Supposons une méthode searchQuery
+        } else {
+            // Sinon, crée un QueryBuilder pour récupérer tous les guides
+            $query = $guideTouristiqueRepository->createQueryBuilder('g');
         }
 
-        // Paginer les résultats de la requête
-        $pagination = $paginator->paginate(
-            $queryBuilder->getQuery(), // Utilise la requête construite
-            $request->query->getInt('page', 1),
-            10
-        );
-
-        // Rend le template index.html.twig en lui passant l'objet de pagination et le terme de recherche
-        return $this->render('guide_touristique/index.html.twig', [
-            'pagination' => $pagination,
-            'searchTerm' => $searchTerm, // Passe le terme de recherche au template pour l'afficher dans le champ
-        ]);
-        // Récupère tous les guides (ou une requête DQL/QueryBuilder)
-        $query = $this->guideTouristiqueRepository->createQueryBuilder('g')
-            ->orderBy('g.id', 'ASC') // Ajoute un tri par défaut
-            ->getQuery();
-
-        // Paginer les résultats de la requête
+        // Utilise le Paginator pour paginer les résultats
         $pagination = $paginator->paginate(
             $query, // La requête à paginer
-            $request->query->getInt('page', 1), // Numéro de page, 1 par défaut
-            10 // Nombre d'éléments par page (peut être configuré globalement)
+            $request->query->getInt('page', 1), // Numéro de page (par défaut 1)
+            10 // Nombre d'éléments par page (adapte selon tes besoins)
         );
 
-        // Rend le template index.html.twig en lui passant l'objet de pagination
         return $this->render('guide_touristique/index.html.twig', [
-            'pagination' => $pagination, // Passe l'objet de pagination au template
+            // Passe l'objet de pagination au template sous le nom 'pagination'
+            'pagination' => $pagination,
+            'searchTerm' => $searchTerm,
         ]);
     }
 
-
-    // Action pour créer un nouveau guide (New)
     #[Route('/new', name: 'app_guide_touristique_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
     {
-        $guideTouristique = new GuideTouristique(); // Crée une nouvelle instance de l'entité
-        $form = $this->createForm(GuideTouristiqueType::class, $guideTouristique); // Crée le formulaire
-        $form->handleRequest($request); // Gère la requête (soumission du formulaire)
+        $guideTouristique = new GuideTouristique();
+        $form = $this->createForm(GuideTouristiqueType::class, $guideTouristique);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Logique d'upload d'image si tu en as une (comme vu précédemment)
             /** @var UploadedFile|null $photoFile */
             $photoFile = $form->get('photoFile')->getData();
+
             if ($photoFile) {
-                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $this->slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$photoFile->guessExtension();
-                try {
-                    $photoFile->move($this->getParameter('photos_directory'), $newFilename);
-                    $guideTouristique->setPhotoFilename($newFilename);
-                } catch (FileException $e) {
-                    // Gérer l'erreur d'upload
-                }
+                $photoFilename = $fileUploader->upload($photoFile);
+                $guideTouristique->setPhotoFilename($photoFilename);
             }
 
-            // Sauvegarde le nouveau guide en base de données
-            $this->guideTouristiqueRepository->save($guideTouristique, true);
+            // Le statut est défini à true par défaut dans le constructeur de l'entité
+            // Si tu as ajouté le champ statut au formulaire, il sera mis à jour ici
 
-            // Ajoute un message flash (optionnel mais recommandé)
-            $this->addFlash('success', 'Le guide a été créé avec succès.');
+            $entityManager->persist($guideTouristique);
+            $entityManager->flush();
 
-            // Redirige vers la page d'index
+            $this->addFlash('success', 'Le guide touristique a été créé avec succès.');
+
             return $this->redirectToRoute('app_guide_touristique_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        // Rend le template new.html.twig en lui passant le formulaire
-        return $this->renderForm('guide_touristique/new.html.twig', [
-            'guide_touristique' => $guideTouristique, // Passe l'entité (utile pour les erreurs de validation)
-            'form' => $form, // Passe l'objet formulaire au template
+        return $this->render('guide_touristique/new.html.twig', [
+            'guide_touristique' => $guideTouristique,
+            'form' => $form,
         ]);
     }
 
-    // Action pour afficher les détails d'un guide (Show)
     #[Route('/{id}', name: 'app_guide_touristique_show', methods: ['GET'])]
-    public function show(GuideTouristique $guideTouristique): Response // Symfony résout automatiquement l'entité par l'ID dans l'URL
+    public function show(GuideTouristique $guideTouristique): Response
     {
-        // Rend le template show.html.twig en lui passant l'entité guideTouristique
         return $this->render('guide_touristique/show.html.twig', [
-            'guide_touristique' => $guideTouristique, // Passe la variable 'guide_touristique' au template
+            'guide_touristique' => $guideTouristique,
         ]);
     }
 
-    // Action pour modifier un guide existant (Edit)
     #[Route('/{id}/edit', name: 'app_guide_touristique_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, GuideTouristique $guideTouristique): Response // Symfony résout automatiquement l'entité par l'ID
+    public function edit(Request $request, GuideTouristique $guideTouristique, EntityManagerInterface $entityManager, FileUploader $fileUploader, Filesystem $filesystem): Response
     {
-        $form = $this->createForm(GuideTouristiqueType::class, $guideTouristique); // Crée le formulaire avec l'entité existante
-        $form->handleRequest($request); // Gère la requête
+        $form = $this->createForm(GuideTouristiqueType::class, $guideTouristique);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-             // Logique d'upload d'image si tu en as une (avec suppression de l'ancien fichier)
             /** @var UploadedFile|null $photoFile */
             $photoFile = $form->get('photoFile')->getData();
+
             if ($photoFile) {
-                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $this->slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$photoFile->guessExtension();
-                try {
-                    $photoFile->move($this->getParameter('photos_directory'), $newFilename);
-
-                    // Supprime l'ancien fichier si il existe
-                    $oldPhotoFilename = $guideTouristique->getPhotoFilename();
-                    if ($oldPhotoFilename) {
-                         $oldPhotoPath = $this->getParameter('photos_directory') . '/' . $oldPhotoFilename;
-                         if ($this->filesystem->exists($oldPhotoPath)) {
-                             $this->filesystem->remove($oldPhotoPath);
-                         }
-                    }
-
-                    $guideTouristique->setPhotoFilename($newFilename);
-                } catch (FileException $e) {
-                    // Gérer l'erreur d'upload
+                // Supprimer l'ancienne photo si elle existe
+                $oldPhotoFilename = $guideTouristique->getPhotoFilename();
+                if ($oldPhotoFilename) {
+                    $filesystem->remove($this->getParameter('uploads_directory') . '/' . $oldPhotoFilename);
                 }
+
+                // Uploader la nouvelle photo
+                $photoFilename = $fileUploader->upload($photoFile);
+                $guideTouristique->setPhotoFilename($photoFilename);
             }
-            // Si aucun nouveau fichier n'est uploadé, le photoFilename existant est conservé
+            // Si aucun nouveau fichier n'est uploadé, la photo existante est conservée
 
-            // Sauvegarde les modifications en base de données
-            $this->guideTouristiqueRepository->save($guideTouristique, true);
+            $entityManager->flush();
 
-            // Ajoute un message flash
-            $this->addFlash('success', 'Le guide a été mis à jour avec succès.');
+            $this->addFlash('success', 'Le guide touristique a été mis à jour avec succès.');
 
-            // Redirige vers la page d'index
             return $this->redirectToRoute('app_guide_touristique_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        // Rend le template edit.html.twig en lui passant le formulaire et l'entité
-        return $this->renderForm('guide_touristique/edit.html.twig', [
-            'guide_touristique' => $guideTouristique, // Passe la variable 'guide_touristique' au template
-            'form' => $form, // Passe l'objet formulaire au template
+        return $this->render('guide_touristique/edit.html.twig', [
+            'guide_touristique' => $guideTouristique,
+            'form' => $form,
         ]);
     }
 
-    // Action pour supprimer un guide (Delete)
     #[Route('/{id}', name: 'app_guide_touristique_delete', methods: ['POST'])]
-    public function delete(Request $request, GuideTouristique $guideTouristique): Response // Symfony résout automatiquement l'entité par l'ID
+    public function delete(Request $request, GuideTouristique $guideTouristique, EntityManagerInterface $entityManager, Filesystem $filesystem): Response
     {
-        // Vérifie le token CSRF pour la sécurité
         if ($this->isCsrfTokenValid('delete'.$guideTouristique->getId(), $request->request->get('_token'))) {
-
-             // Supprime le fichier photo associé si il existe
+            // Supprimer la photo associée si elle existe
             $photoFilename = $guideTouristique->getPhotoFilename();
             if ($photoFilename) {
-                 $photoPath = $this->getParameter('photos_directory') . '/' . $photoFilename;
-                 if ($this->filesystem->exists($photoPath)) {
-                     $this->filesystem->remove($photoPath);
-                 }
+                 $filesystem->remove($this->getParameter('uploads_directory') . '/' . $photoFilename);
             }
 
-            // Supprime l'entité de la base de données
-            $this->guideTouristiqueRepository->remove($guideTouristique, true);
+            $entityManager->remove($guideTouristique);
+            $entityManager->flush();
 
-            // Ajoute un message flash
-            $this->addFlash('success', 'Le guide a été supprimé avec succès.');
-        } else {
-             $this->addFlash('error', 'Token CSRF invalide.');
+            $this->addFlash('success', 'Le guide touristique a été supprimé avec succès.');
         }
-        // Redirige vers la page d'index
+
         return $this->redirectToRoute('app_guide_touristique_index', [], Response::HTTP_SEE_OTHER);
     }
 }
