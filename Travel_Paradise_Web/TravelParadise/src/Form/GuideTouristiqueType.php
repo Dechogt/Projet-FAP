@@ -8,10 +8,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TelType; // Utilise TelType pour le téléphone
+use Symfony\Component\Form\Extension\Core\Type\PasswordType; // Importe PasswordType
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType; // Importe RepeatedPasswordType
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType; // Pour le statut si tu veux l'afficher
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank; // Importe NotBlank si tu veux valider ici aussi (redondant avec l'entité mais possible)
+use Symfony\Component\Validator\Constraints\Length;
 
 class GuideTouristiqueType extends AbstractType
 {
@@ -35,6 +39,34 @@ class GuideTouristiqueType extends AbstractType
                 'label' => 'Téléphone',
                 'required' => false, // Le téléphone est optionnel dans l'entité
                 'attr' => ['placeholder' => 'Ex: +33 6 12 34 56 78'],
+            ])
+            // Ajout du champ mot de passe avec confirmation
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'first_options' => [
+                    'label' => 'Mot de passe',
+                    'attr' => ['placeholder' => 'Saisissez le mot de passe'],
+                ],
+                'second_options' => [
+                    'label' => 'Confirmer le mot de passe',
+                    'attr' => ['placeholder' => 'Confirmez le mot de passe'],
+                ],
+                'invalid_message' => 'Les champs du mot de passe doivent correspondre.',
+                'mapped' => false, // IMPORTANT : Ne mappe pas ce champ directement à l'entité
+                'required' => $options['is_new'], // Rends le champ obligatoire uniquement lors de la création
+                'constraints' => [
+                    // Ajoute NotBlank uniquement si le champ est requis (lors de la création)
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un mot de passe.',
+                        'groups' => ['Default', 'new_guide'], // Utilise des groupes de validation si nécessaire
+                    ]),
+                    new Length([
+                        'min' => 6, // Longueur minimale du mot de passe
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 4096,
+                    ]),
+                ],
             ])
             ->add('paysAffectation', TextType::class, [
                 'label' => 'Pays d\'affectation',
