@@ -55,10 +55,10 @@
                          {{ knp_pagination_sortable(pagination, 'Email', 'g.email') }}
                     </th>
                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Téléphone
+                        {{ knp_pagination_sortable(pagination, 'Téléphone', 'g.telephone') }}
                     </th>
                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Photo
+                        {{ knp_pagination_sortable(pagination, 'Photo', 'g.photo') }}
                     </th>
                     {# Ajoute d'autres en-têtes si nécessaire #}
                     <th scope="col" class="relative px-6 py-3">
@@ -108,7 +108,7 @@
                 {% else %}
                     <tr>
                         <td colspan="7" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                            Aucun guide touristique trouvé{% if searchTerm %} pour "{{ searchTerm }}"{% endif %}. 
+                            Aucun guide touristique trouvé{% if searchTerm %} pour "{{ searchTerm }}"{% endif %}.
                         </td>
                     </tr>
                 {% endfor %}

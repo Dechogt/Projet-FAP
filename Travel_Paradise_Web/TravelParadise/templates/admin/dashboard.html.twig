@@ -1,142 +1,287 @@
-{% extends 'layout_app.html.twig' %} {# Étend le layout de l'application #}
+{% extends 'layout_app.html.twig' %}
 
-{% block app_title %}Dashboard - TravelParadise{% endblock %} {# Titre dans la barre du navigateur #}
-{% block page_title %}Dashboard{% endblock %} {# Titre affiché dans le header #}
+{% block app_title %}Dashboard - TravelParadise{% endblock %}
+{% block page_title %}Tableau de bord{% endblock %}
 
-{% block content %} {# Renomme le bloc body en content #}
+{% block content %}
 
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Aperçu de l'Administration</h2>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
-    {# Grille pour les cartes de statistiques #}
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {# Exemple de Carte 1 : Nombre d'Utilisateurs #}
+        {# Carte pour les Guides #}
         <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        {# Icône (exemple : utilisateurs) #}
-                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M12 20.991a7 7 0 007-7v-2a7 7 0 00-7-7m0 14a7 7 0 01-7-7v-2a7 7 0 017-7"></path></svg>
+                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                        <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
                     <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                Total Utilisateurs
-                            </dt>
-                            <dd class="flex items-baseline">
-                                {# Remplace 0 par la variable contenant le nombre d'utilisateurs #}
-                                <div class="text-2xl font-semibold text-gray-900">
-                                    {{ totalUsers|default(0) }} {# Assure-toi que cette variable est passée depuis le contrôleur #}
-                                </div>
-                            </dd>
-                        </dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Total Guides</dt>
+                        <dd class="flex items-baseline">
+                            {# CORRECTION ICI : Accède à totalGuides via le tableau stats #}
+                            <div class="text-2xl font-semibold text-gray-900">{{ stats.totalGuides }}</div>
+                        </dd>
                     </div>
                 </div>
             </div>
             <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    <a href="{{ path('app_user_index') }}" class="font-medium text-teal-600 hover:text-teal-900">
-                        Voir tous les utilisateurs
-                    </a>
+                    <a href="{{ path('admin_guides') }}" class="font-medium text-blue-600 hover:text-blue-800">Voir tous les guides</a> {# Utilise la route nommée 'admin_guides' #}
                 </div>
             </div>
         </div>
 
-        {# Exemple de Carte 2 : Nombre de Guides #}
-         <div class="bg-white overflow-hidden shadow rounded-lg">
+        {# Carte pour les Visites #}
+        <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        {# Icône (exemple : guides) #}
-                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                         <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     </div>
                     <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                Total Guides
-                            </dt>
-                            <dd class="flex items-baseline">
-                                {# Remplace 0 par la variable contenant le nombre de guides #}
-                                <div class="text-2xl font-semibold text-gray-900">
-                                    {{ totalGuides|default(0) }} {# Assure-toi que cette variable est passée depuis le contrôleur #}
-                                </div>
-                            </dd>
-                        </dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Total Visites</dt>
+                        <dd class="flex items-baseline">
+                            {# CORRECTION ICI #}
+                            <div class="text-2xl font-semibold text-gray-900">{{ stats.totalVisites }}</div>
+                        </dd>
                     </div>
                 </div>
             </div>
             <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    <a href="{{ path('app_guide_touristique_index') }}" class="font-medium text-teal-600 hover:text-teal-900">
-                        Voir tous les guides
-                    </a>
+                    <a href="{{ path('admin_visites') }}" class="font-medium text-blue-600 hover:text-blue-800">Voir toutes les visites</a> {# Utilise la route nommée 'admin_visites' #}
                 </div>
             </div>
         </div>
 
-        {# Ajoute d'autres cartes pour les Visites, Visiteurs, etc. #}
-         <div class="bg-white overflow-hidden shadow rounded-lg">
+        {# Carte pour les Utilisateurs #}
+        <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        {# Icône (exemple : visites) #}
-                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
+                         <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.939 13.939 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                     <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                Total Visites
-                            </dt>
-                            <dd class="flex items-baseline">
-                                {# Remplace 0 par la variable contenant le nombre de visites #}
-                                <div class="text-2xl font-semibold text-gray-900">
-                                    {{ totalVisites|default(0) }} {# Assure-toi que cette variable est passée depuis le contrôleur #}
-                                </div>
-                            </dd>
-                        </dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Total Utilisateurs</dt>
+                        <dd class="flex items-baseline">
+                            {# CORRECTION ICI #}
+                            <div class="text-2xl font-semibold text-gray-900">{{ stats.totalUsers }}</div>
+                        </dd>
                     </div>
                 </div>
             </div>
             <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    <a href="{{ path('app_visite_index') }}" class="font-medium text-teal-600 hover:text-teal-900">
-                        Voir toutes les visites
-                    </a>
+                    <a href="{{ path('admin_users') }}" class="font-medium text-blue-600 hover:text-blue-800">Voir tous les utilisateurs</a> {# Utilise la route nommée 'admin_users' #}
                 </div>
             </div>
         </div>
 
-         <div class="bg-white overflow-hidden shadow rounded-lg">
+        {# Ajoute les autres cartes pour les stats détaillées si tu veux les afficher ici #}
+        {# Carte pour les Visiteurs #}
+        <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        {# Icône (exemple : visiteurs) #}
-                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <div class="flex-shrink-0 bg-orange-500 rounded-md p-3">
+                         {# Icône pour les visiteurs (exemple) #}
+                         <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                     </div>
                     <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                Total Visiteurs
-                            </dt>
-                            <dd class="flex items-baseline">
-                                {# Remplace 0 par la variable contenant le nombre de visiteurs #}
-                                <div class="text-2xl font-semibold text-gray-900">
-                                    {{ totalVisiteurs|default(0) }} {# Assure-toi que cette variable est passée depuis le contrôleur #}
-                                </div>
-                            </dd>
-                        </dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Total Visiteurs</dt>
+                        <dd class="flex items-baseline">
+                            {# CORRECTION ICI #}
+                            <div class="text-2xl font-semibold text-gray-900">{{ stats.totalVisiteurs }}</div>
+                        </dd>
                     </div>
                 </div>
             </div>
-            <div class="bg-gray-50 px-5 py-3">
+             <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    <a href="{{ path('app_visiteur_index') }}" class="font-medium text-teal-600 hover:text-teal-900">
-                        Voir tous les visiteurs
-                    </a>
+                    {# Si tu as une page pour lister les visiteurs, adapte la route #}
+                    <span class="font-medium text-gray-500">Statistique globale</span>
                 </div>
             </div>
         </div>
+
+         {# Carte pour les Guides Actifs #}
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-teal-500 rounded-md p-3">
+                         {# Icône pour les guides actifs (exemple) #}
+                         <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dt class="text-sm font-medium text-gray-500 truncate">Guides Actifs</dt>
+                        <dd class="flex items-baseline">
+                            {# CORRECTION ICI #}
+                            <div class="text-2xl font-semibold text-gray-900">{{ stats.guidesActifs }}</div>
+                        </dd>
+                    </div>
+                </div>
+            </div>
+             <div class="bg-gray-50 px-5 py-3">
+                <div class="text-sm">
+                    {# Si tu as une page pour lister les guides actifs, adapte la route #}
+                    <span class="font-medium text-gray-500">Statistique détaillée</span>
+                </div>
+            </div>
+        </div>
+
+         {# Carte pour les Visites Aujourd'hui #}
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
+                         {# Icône pour les visites aujourd'hui (exemple) #}
+                         <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dt class="text-sm font-medium text-gray-500 truncate">Visites Aujourd'hui</dt>
+                        <dd class="flex items-baseline">
+                            {# CORRECTION ICI #}
+                            <div class="text-2xl font-semibold text-gray-900">{{ stats.visitesAujourdhui }}</div>
+                        </dd>
+                    </div>
+                </div>
+            </div>
+             <div class="bg-gray-50 px-5 py-3">
+                <div class="text-sm">
+                    {# Si tu veux lister les visites d'aujourd'hui, adapte la route #}
+                     <span class="font-medium text-gray-500">Statistique détaillée</span>
+                </div>
+            </div>
+        </div>
+
+         {# Carte pour les Visites Prochainement #}
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
+                         {# Icône pour les visites prochainement (exemple) #}
+                         <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dt class="text-sm font-medium text-gray-500 truncate">Visites Prochainement</dt>
+                        <dd class="flex items-baseline">
+                            {# CORRECTION ICI #}
+                            <div class="text-2xl font-semibold text-gray-900">{{ stats.visitesProchainement }}</div>
+                        </dd>
+                    </div>
+                </div>
+            </div>
+             <div class="bg-gray-50 px-5 py-3">
+                <div class="text-sm">
+                    {# Si tu veux lister les visites prochaines, adapte la route #}
+                     <span class="font-medium text-gray-500">Statistique détaillée</span>
+                </div>
+            </div>
+        </div>
+
+         {# Carte pour le Taux de Présence #}
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-pink-500 rounded-md p-3">
+                         {# Icône pour le taux de présence (exemple) #}
+                         <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dt class="text-sm font-medium text-gray-500 truncate">Taux de Présence</dt>
+                        <dd class="flex items-baseline">
+                            {# CORRECTION ICI : Affiche le taux de présence #}
+                            <div class="text-2xl font-semibold text-gray-900">{{ stats.tauxPresence|number_format(2) }}%</div> {# Affiche avec 2 décimales et un signe % #}
+                        </dd>
+                    </div>
+                </div>
+            </div>
+             <div class="bg-gray-50 px-5 py-3">
+                <div class="text-sm">
+                     <span class="font-medium text-gray-500">Statistique détaillée</span>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
-    {# Tu peux ajouter d'autres sections ici, comme des listes des derniers éléments ajoutés, etc. #}
+    {# Section pour les listes de visites (si tu veux les afficher) #}
+    {% if visitesAujourdhuiList is not empty %}
+        <div class="mt-8">
+            <h3 class="text-lg font-medium leading-6 text-gray-900">Visites prévues aujourd'hui</h3>
+            {# Affiche la liste des visites d'aujourd'hui ici #}
+            {# Exemple : une simple liste #}
+            <ul class="mt-4 border-t border-gray-200 divide-y divide-gray-200">
+                {% for visite in visitesAujourdhuiList %}
+                    <li class="py-4 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900">{{ visite.nom }}</p> {# Adapte si le nom de la visite est différent #}
+                                <p class="text-sm text-gray-500">{{ visite.date|date('H:i') }} avec {{ visite.guide.nom }}</p> {# Adapte si les propriétés sont différentes #}
+                            </div>
+                        </div>
+                        {# Ajoute un lien vers la page de détail de la visite si elle existe #}
+                        {# <a href="{{ path('app_visite_show', {'id': visite.id}) }}" class="ml-6 whitespace-nowrap text-sm font-medium text-blue-600 hover:text-blue-800">Voir</a> #}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+     {% if visitesProchainementList is not empty %}
+        <div class="mt-8">
+            <h3 class="text-lg font-medium leading-6 text-gray-900">Visites prochaines</h3>
+             {# Affiche la liste des visites prochaines ici #}
+             <ul class="mt-4 border-t border-gray-200 divide-y divide-gray-200">
+                {% for visite in visitesProchainementList %}
+                    <li class="py-4 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900">{{ visite.nom }}</p> {# Adapte si le nom de la visite est différent #}
+                                <p class="text-sm text-gray-500">{{ visite.date|date('Y-m-d H:i') }} avec {{ visite.guide.nom }}</p> {# Adapte si les propriétés sont différentes #}
+                            </div>
+                        </div>
+                        {# Ajoute un lien vers la page de détail de la visite si elle existe #}
+                        {# <a href="{{ path('app_visite_show', {'id': visite.id}) }}" class="ml-6 whitespace-nowrap text-sm font-medium text-blue-600 hover:text-blue-800">Voir</a> #}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+     {% if showWelcomeModal %}
+        {# La balise 'include' insère le contenu de l'autre fichier ici. #}
+        {# 'with {'userName': userName}' passe la variable 'userName' au template inclus. #}
+        {% include 'components/welcome_modal.html.twig' with {'userName': userName} %}
+    {% endif %}
+
+    {% block javascripts %}
+        {{ parent() }} {# Très important : inclut les scripts du layout parent #}
+
+        {# Ajouter le script pour gérer l'affichage et la disparition de la modale #}
+        {% if showWelcomeModal %} {# On inclut le script seulement si la modale doit être affichée #}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // On récupère la modale et le bouton OK par leurs IDs
+                const modal = document.getElementById('welcome-modal');
+                const okButton = document.getElementById('welcome-modal-ok-button');
+
+                // Afficher la modale en retirant la classe 'hidden'
+                modal.classList.remove('hidden');
+
+                // Ajouter un écouteur d'événement sur le clic du bouton OK
+                okButton.addEventListener('click', function() {
+                    // Cacher la modale en ajoutant la classe 'hidden'
+                    modal.classList.add('hidden');
+                });
+
+                // Optionnel : Cacher la modale si l'utilisateur clique sur l'overlay gris
+                const overlay = modal.querySelector('.fixed.inset-0.transition-opacity');
+                overlay.addEventListener('click', function() {
+                    modal.classList.add('hidden');
+                });
+            });
+        </script>
+        {% endif %}
+    {% endblock %}
 
 {% endblock %}

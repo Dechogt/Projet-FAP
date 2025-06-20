@@ -1,42 +1,56 @@
+{# templates/user/show.html.twig #}
 {% extends 'layout_app.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block app_title %}Utilisateur {{ user.email }} - TravelParadise{% endblock %}
+{% block page_title %}Détails de l'Utilisateur{% endblock %}
 
-{% block body %}
-    <h1>User</h1>
+{% block content %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ user.nom }}</td>
-            </tr>
-            <tr>
-                <th>Prenom</th>
-                <td>{{ user.prenom }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ user.password }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Détails de l'Utilisateur</h2>
 
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+        <div class="border-t border-gray-200 pt-4">
+            <dl class="divide-y divide-gray-200">
+                <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Adresse e-mail</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ user.email }}</dd>
+                </div>
+                 <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Nom</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ user.nom ?? 'N/A' }}</dd>
+                </div>
+                 <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Prénom</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ user.prenom ?? 'N/A' }}</dd>
+                </div>
+                 <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Rôles</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                        {% for role in user.roles %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 mr-2">{{ role }}</span>
+                        {% endfor %}
+                    </dd>
+                </div>
+            </dl>
+        </div>
 
-    {{ include('user/_delete_form.html.twig') }}
+        {# Boutons d'action #}
+        <div class="mt-6 flex justify-end space-x-4">
+            <a href="{{ path('app_user_index') }}"
+               class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Retour à la liste
+            </a>
+            <a href="{{ path('app_user_edit', {'id': user.id}) }}"
+               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z"></path></svg>
+                Modifier
+            </a>
+        </div>
+
+        {% include 'user/_delete_form.html.twig' %}
+
+    </div>
+
 {% endblock %}

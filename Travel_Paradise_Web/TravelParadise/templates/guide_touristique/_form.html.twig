@@ -1,12 +1,104 @@
 {# templates/guide_touristique/_form.html.twig #}
-{# Ce template est un PARTIAL, il n'étend PAS de layout #}
 
 {{ form_start(form) }}
-    {# form_widget(form) rend tous les champs en utilisant le thème global #}
-    {{ form_widget(form) }}
 
-    {# Le bouton submit est généralement inclus par form_end(form) #}
-    {# Si tu le rends séparément, assure-toi qu'il est stylisé #}
-    {# <button class="btn">{{ button_label|default('Save') }}</button> #}
+    {{ form_errors(form) }}
+
+    {# Conteneur pour les champs du formulaire #}
+    <div class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+
+        {# Champ Nom #}
+        <div class="sm:col-span-1">
+            {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.nom, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }} {# Utilise blue pour le focus #}
+            {{ form_errors(form.nom) }}
+        </div>
+
+        {# Champ Prénom #}
+        <div class="sm:col-span-1">
+            {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.prenom, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }} {# Utilise blue pour le focus #}
+            {{ form_errors(form.prenom) }}
+        </div>
+
+        {# Champ Email #}
+        <div class="sm:col-span-2">
+            {{ form_label(form.email, 'Adresse e-mail', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.email, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }} {# Utilise blue pour le focus #}
+            {{ form_errors(form.email) }}
+        </div>
+
+        {# Champ Téléphone #}
+        <div class="sm:col-span-2">
+            {{ form_label(form.telephone, 'Téléphone', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.telephone, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }} {# Utilise blue pour le focus #}
+            {{ form_errors(form.telephone) }}
+        </div>
+
+        {# Champ Pays d'affectation #}
+        <div class="sm:col-span-2">
+            {{ form_label(form.paysAffectation, 'Pays d\'affectation', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.paysAffectation, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }} {# Utilise blue pour le focus #}
+            {{ form_errors(form.paysAffectation) }}
+        </div>
+
+        {# Champ Photo (avec le bouton stylisé) #}
+        <div class="sm:col-span-2">
+            {# Le label est utilisé comme le bouton stylisé #}
+            <label for="{{ form.photoFile.vars.id }}"
+                   class="cursor-pointer inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150 transform hover:-translate-y-1 hover:scale-105"> {# Couleurs bleues #}
+                {# Icône d'upload #}
+                <svg class="-ml-1 mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                Choisir une image
+            </label>
+
+            {# Le champ de fichier réel est masqué #}
+            {{ form_widget(form.photoFile, {'attr': {'class': 'sr-only'}}) }}
+
+            {# Affichage des erreurs pour le champ de fichier #}
+            {{ form_errors(form.photoFile) }}
+
+            {# Afficher l'image existante si on est en mode édition et qu'une photo existe #}
+            {% if guide_touristique.photoFilename is not null %}
+                <div class="mt-4">
+                    <p class="block text-sm font-medium text-gray-700 mb-2">Image actuelle :</p>
+                    {# Assure-toi que le chemin vers tes images uploadées est correct #}
+                    <img src="{{ asset('uploads/' ~ guide_touristique.photoFilename) }}" alt="Photo de {{ guide_touristique.nom }} {{ guide_touristique.prenom }}" class="h-32 w-32 object-cover rounded-md shadow-md">
+                </div>
+            {% endif %}
+
+        </div>
+
+        {# Champ Statut (si tu veux l'afficher) #}
+        {% if form.statut is defined %} {# Vérifie si le champ statut existe dans le formulaire #}
+            <div class="sm:col-span-2">
+                 <div class="flex items-center">
+                    {{ form_widget(form.statut, {'attr': {'class': 'h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'}}) }} {# Utilise blue pour la checkbox #}
+                    {{ form_label(form.statut, 'Actif', {'label_attr': {'class': 'ml-2 block text-sm text-gray-900'}}) }}
+                 </div>
+                 {{ form_errors(form.statut) }}
+            </div>
+        {% endif %}
+
+
+    </div> {# Fin du conteneur des champs #}
+
+
+    {# Conteneur pour les boutons - Placé en bas du formulaire #}
+    <div class="flex justify-end mt-6 space-x-4">
+
+        {# Bouton Retour à la liste #}
+        <a href="{{ path('app_guide_touristique_index') }}"
+           class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"> {# Utilise blue pour le focus #}
+            <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Retour à la liste
+        </a>
+
+        {# Bouton de soumission #}
+        <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"> {# Couleurs bleues #}
+            Enregistrer
+        </button>
+
+    </div> {# Fin du conteneur des boutons #}
 
 {{ form_end(form) }}
