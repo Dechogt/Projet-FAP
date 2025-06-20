@@ -7,8 +7,10 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface; // Importe cette interface
+use Symfony\Component\Security\Core\User\UserInterface; // Importe cette interface
+use Symfony\Component\Validator\Constraints as Assert; // Pour les contraintes de validation
 use Symfony\UX\Turbo\Attribute\Broadcast;
-use Symfony\Component\Validator\Constraints as Assert; // Import pour les contraintes de validation
 
 #[ORM\Entity(repositoryClass: GuideTouristiqueRepository::class)]
 //#[Broadcast] // Décommenter si tu utilises Turbo Broadcast
@@ -51,6 +53,12 @@ class GuideTouristique
     #[ORM\Column(length: 20, nullable: true)] // Téléphone optionnel
     #[Assert\Length(max: 20, maxMessage: "Le numéro de téléphone ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $telephone = null;
+
+    #[ORM\Column(length: 255)] // Ajout de la propriété password
+    #[Assert\NotBlank(message: "Le mot de passe ne peut pas être vide.")]
+    // Tu peux ajouter des contraintes de complexité si tu le souhaites
+    // #[Assert\Length(min: 8, minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères.")]
+    private ?string $password = null;
 
     /**
      * @var Collection<int, Visite>
@@ -153,6 +161,59 @@ class GuideTouristique
         $this->telephone = $telephone;
 
         return $this;
+    }
+
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER'; // Ajoute ROLE_USER par défaut
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        // Utilise l'email comme identifiant unique pour la connexion
+        return (string) $this->email;
     }
 
     /**

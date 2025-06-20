@@ -53,8 +53,8 @@ class Visite
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)] // heureFin peut être null si heureDebut ou duree sont null
     private ?\DateTimeInterface $heureFin = null; // Calculé automatiquement
 
-    #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank(message: "Le commentaire ne peut pas être vide.")]
+    #[ORM\Column(type: Types::TEXT, nullable: true)] // Le commentaire peut être null
+    // #[Assert\NotBlank(message: "Le commentaire ne peut pas être vide.")] // Le commentaire n'est généralement pas obligatoire
     private ?string $commentaire = null;
 
     #[ORM\ManyToOne(inversedBy: 'visites')]
@@ -69,11 +69,23 @@ class Visite
     private Collection $visiteurs;
 
     #[ORM\Column]
-    private ?\DateTime $createdAt = null;
+    private ?\DateTimeImmutable $createdAt = null; // Utilise DateTimeImmutable pour les dates de création/mise à jour
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)] // Ajout de la propriété prix
+    #[Assert\NotBlank(message: "Le prix ne peut pas être vide.")]
+    #[Assert\PositiveOrZero(message: "Le prix doit être un nombre positif ou nul.")]
+    private ?string $prix = null; // Utilise ?string pour DECIMAL, ou ?float si tu préfères
+
+    #[ORM\Column] // Ajout de la propriété nombreMaxVisiteurs
+    #[Assert\NotBlank(message: "Le nombre maximum de visiteurs ne peut pas être vide.")]
+    #[Assert\Positive(message: "Le nombre maximum de visiteurs doit être un nombre entier positif.")]
+    private ?int $nombreMaxVisiteurs = null;
+
 
     public function __construct()
     {
         $this->visiteurs = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable(); // Initialise createdAt à la création
     }
 
     public function getId(): ?int
@@ -165,7 +177,7 @@ class Visite
         return $this->commentaire;
     }
 
-    public function setCommentaire(string $commentaire): static
+    public function setCommentaire(?string $commentaire): static // Le commentaire peut être null
     {
         $this->commentaire = $commentaire;
 
@@ -218,24 +230,69 @@ class Visite
     #[ORM\PreUpdate]
     public function updateHeureFin(): void
     {
-        if ($this->heureDebut && $this->duree !== null) { // Vérifie que duree n'est pas null
-            $this->heureFin = clone $this->heureDebut;
-            // Assure-toi que la durée est en heures pour l'intervalle
-            $this->heureFin->add(new \DateInterval("PT{$this->duree}H"));
+        // Assure-toi que heureDebut est un objet DateTimeInterface et duree n'est pas null
+        if ($this->heureDebut instanceof \DateTimeInterface && $this->duree !== null) {
+            // Clone l'objet DateTimeInterface pour éviter de modifier l'original
+            $heureFin = \DateTimeImmutable::createFromInterface($this->heureDebut);
+            // Ajoute la durée (en heures)
+            $this->heureFin = $heureFin->add(new \DateInterval("PT{$this->duree}H"));
         } else {
             $this->heureFin = null; // Met heureFin à null si heureDebut ou duree manquent
         }
     }
 
-    public function getCreatedAt(): ?\DateTime
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): static
+    // Pas de setter pour createdAt car il est initialisé dans le constructeur et ne devrait pas être modifié manuellement
+
+    // --- Ajout de la propriété prix et de ses méthodes d'accès ---
+    public function getPrix(): ?string // Ou ?float si tu utilises float
     {
-        $this->createdAt = $createdAt;
+        return $this->prix;
+    }
+
+    public function setPrix(?string $prix): static // Ou ?float si tu utilises float
+    {
+        $this->prix = $prix;
 
         return $this;
+    }
+
+    // --- Ajout de la propriété nombreMaxVisiteurs et de ses méthodes d'accès ---
+    public function getNombreMaxVisiteurs(): ?int
+    {
+        return $this->nombreMaxVisiteurs;
+    }
+
+    public function setNombreMaxVisiteurs(int $nombreMaxVisiteurs): static
+    {
+        $this->nombreMaxVisiteurs = $nombreMaxVisiteurs;
+
+        return $this;
+    }
+
+    // --- Méthode pour obtenir la date et l'heure complètes (utile pour l'affichage) ---
+    public function getDateTime(): ?\DateTimeImmutable
+    {
+        if ($this->date && $this->heureDebut) {
+            // Combine la date et l'heure de début
+            $dateTimeString = $this->date->format('Y-m-d') . ' ' . $this->heureDebut->format('H:i:s');
+            return \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dateTimeString);
+        }
+        return null;
+    }
+
+    // --- Méthode pour obtenir la date et l'heure de fin complètes (utile pour l'affichage) ---
+     public function getDateTimeFin(): ?\DateTimeImmutable
+    {
+        if ($this->date && $this->heureFin) {
+            // Combine la date et l'heure de fin
+            $dateTimeString = $this->date->format('Y-m-d') . ' ' . $this->heureFin->format('H:i:s');
+            return \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dateTimeString);
+        }
+        return null;
     }
 }

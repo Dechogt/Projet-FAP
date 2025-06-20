@@ -4,6 +4,7 @@
 
     {{ form_errors(form) }}
 
+    {# Conteneur principal de la grille #}
     <div class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
 
         {# Champ Pays #}
@@ -48,14 +49,14 @@
             {{ form_errors(form.guide) }}
         </div>
 
-        {# Champ Commentaire #}
+        {# Champ Commentaire (sur 2 colonnes) #}
         <div class="sm:col-span-2">
             {{ form_label(form.commentaire, 'Commentaire', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
             {{ form_widget(form.commentaire, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
             {{ form_errors(form.commentaire) }}
         </div>
 
-        {# Champ Photo (avec le bouton stylisé) #}
+        {# Champ Photo (sur 2 colonnes) #}
         <div class="sm:col-span-2">
             <label for="{{ form.photoFile.vars.id }}"
                    class="cursor-pointer inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150 transform hover:-translate-y-1 hover:scale-105">
@@ -75,7 +76,23 @@
             {% endif %}
         </div>
 
-    </div>
+        {# --- Ajout des champs Prix et Nombre maximum de visiteurs dans la grille --- #}
+        {# Ces champs seront sur une nouvelle ligne, chacun prenant une colonne #}
+        <div class="sm:col-span-1">
+            {{ form_label(form.prix, 'Prix', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.prix, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.prix) }}
+        </div>
+
+        <div class="sm:col-span-1">
+            {{ form_label(form.nombreMaxVisiteurs, 'Nombre maximum de visiteurs', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.nombreMaxVisiteurs, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.nombreMaxVisiteurs) }}
+        </div>
+        {# --- Fin de l'ajout --- #}
+
+    </div> {# Fin du conteneur principal de la grille #}
+
 
     {# Conteneur pour les boutons #}
     <div class="flex justify-end mt-6 space-x-4">
