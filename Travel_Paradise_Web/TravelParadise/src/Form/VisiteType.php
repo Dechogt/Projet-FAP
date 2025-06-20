@@ -45,7 +45,7 @@ class VisiteType extends AbstractType
             ->add('date', DateType::class, [
                 'label' => 'Date',
                 'widget' => 'single_text', // Utilise un champ de date HTML5
-                'html5' => true, // Cette option est correcte pour DateType
+                'html5' => true,
                 'required' => true, // Rends le champ obligatoire si nécessaire
                  'constraints' => [
                     new NotBlank(['message' => 'La date est obligatoire.']),
@@ -54,7 +54,7 @@ class VisiteType extends AbstractType
             ->add('heureDebut', TimeType::class, [
                 'label' => 'Heure de début',
                 'widget' => 'single_text', // Utilise un champ d'heure HTML5
-                'html5' => true, // Cette option est correcte pour TimeType
+                'html5' => true,
                 'required' => true, // Rends le champ obligatoire si nécessaire
                  'constraints' => [
                     new NotBlank(['message' => "L'heure de début est obligatoire."]),
@@ -62,8 +62,6 @@ class VisiteType extends AbstractType
             ])
             ->add('duree', IntegerType::class, [ // Utilise IntegerType pour la durée (nombre entier)
                 'label' => 'Durée (en heures)', // Précise l'unité
-                // !!! SUPPRESSION DE L'OPTION 'html5' ICI !!!
-                // 'html5' => true, // <-- Cette ligne a été supprimée car non supportée par IntegerType
                 'required' => true, // Rends le champ obligatoire si nécessaire
                 'attr' => [
                     'placeholder' => 'Ex: 3',
@@ -130,8 +128,9 @@ class VisiteType extends AbstractType
                 'label' => 'Nombre maximum de visiteurs',
                 'required' => true,
                 'attr' => [
-                    'placeholder' => 'Ex: 20',
+                    'placeholder' => 'Max: 15',
                     'min' => 1, // Au moins 1 visiteur max
+                    'max' => 15, // Au plus 15 visiteurs
                 ],
                  'constraints' => [
                     new NotBlank(['message' => 'Le nombre maximum de visiteurs est obligatoire.']),
