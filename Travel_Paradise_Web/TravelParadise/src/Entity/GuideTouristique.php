@@ -7,16 +7,16 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface; // Importe cette interface
-use Symfony\Component\Security\Core\User\UserInterface; // Importe cette interface
-use Symfony\Component\Validator\Constraints as Assert; // Pour les contraintes de validation
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: GuideTouristiqueRepository::class)]
 //#[Broadcast] // Décommenter si tu utilises Turbo Broadcast
 #[ApiResource] // Décommenter si tu utilises API Platform
 
-class GuideTouristique
+class GuideTouristique implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -55,7 +55,7 @@ class GuideTouristique
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255)] // Ajout de la propriété password
-    #[Assert\NotBlank(message: "Le mot de passe ne peut pas être vide.")]
+    // #[Assert\NotBlank(message: "Le mot de passe ne peut pas être vide.")] // <-- COMMENTÉ
     // Tu peux ajouter des contraintes de complexité si tu le souhaites
     // #[Assert\Length(min: 8, minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères.")]
     private ?string $password = null;
@@ -66,10 +66,15 @@ class GuideTouristique
     #[ORM\OneToMany(targetEntity: Visite::class, mappedBy: 'guide', orphanRemoval: true)]
     private Collection $visites;
 
+    // Ajout de la propriété roles pour l'interface UserInterface
+    #[ORM\Column]
+    private array $roles = []; // Initialise avec un tableau vide
+
     public function __construct()
     {
         $this->visites = new ArrayCollection();
         $this->statut = true; // Définit le statut à true par défaut lors de la création
+        $this->roles = ['ROLE_USER']; // Définit ROLE_USER par défaut
     }
 
     public function getId(): ?int
@@ -188,7 +193,8 @@ class GuideTouristique
      */
     public function getPassword(): string
     {
-        return $this->password;
+        // Retourne une chaîne vide si le mot de passe est null (pour éviter les erreurs de type)
+        return (string) $this->password;
     }
 
     public function setPassword(string $password): static
