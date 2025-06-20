@@ -10,12 +10,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TelType; // Utilise TelType pour le téléphone
 use Symfony\Component\Form\Extension\Core\Type\PasswordType; // Importe PasswordType
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType; // Importe RepeatedPasswordType
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType; // Importe RepeatedType
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType; // Pour le statut si tu veux l'afficher
 use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\Validator\Constraints\NotBlank; // Importe NotBlank si tu veux valider ici aussi (redondant avec l'entité mais possible)
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Email; // Importe Email pour la validation
 
 class GuideTouristiqueType extends AbstractType
 {
@@ -24,18 +25,24 @@ class GuideTouristiqueType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'label' => 'Nom',
-                'attr' => ['placeholder' => 'Nom du guide'], // Exemple de placeholder
+                'attr' => ['placeholder' => 'Nom du guide'],
+                'required' => true, // Assure-toi que c'est requis si c'est non nullable dans l'entité
             ])
             ->add('prenom', TextType::class, [
                 'label' => 'Prénom',
                 'attr' => ['placeholder' => 'Prénom du guide'],
+                'required' => true, // Assure-toi que c'est requis
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Adresse e-mail',
                 'required' => true, // Rendre le champ requis côté formulaire aussi
                 'attr' => ['placeholder' => 'email@example.com'],
+                'constraints' => [ // Ajoute la contrainte Email ici aussi pour une validation côté formulaire
+                    new NotBlank(['message' => 'L\'adresse e-mail ne peut pas être vide.']),
+                    new Email(['message' => 'Veuillez saisir une adresse e-mail valide.']),
+                ],
             ])
-            ->add('telephone', TextType::class, [
+            ->add('telephone', TelType::class, [ // Utilise TelType
                 'label' => 'Téléphone',
                 'required' => false, // Le téléphone est optionnel dans l'entité
                 'attr' => ['placeholder' => 'Ex: +33 6 12 34 56 78'],
@@ -53,12 +60,13 @@ class GuideTouristiqueType extends AbstractType
                 ],
                 'invalid_message' => 'Les champs du mot de passe doivent correspondre.',
                 'mapped' => false, // IMPORTANT : Ne mappe pas ce champ directement à l'entité
-                'required' => $options['is_new'], // Rends le champ obligatoire uniquement lors de la création
+                // Utilise l'option 'is_new' pour rendre le champ obligatoire uniquement lors de la création
+                'required' => $options['is_new'],
                 'constraints' => [
-                    // Ajoute NotBlank uniquement si le champ est requis (lors de la création)
+                    // Applique NotBlank uniquement si le champ est requis (lors de la création)
                     new NotBlank([
                         'message' => 'Veuillez saisir un mot de passe.',
-                        'groups' => ['Default', 'new_guide'], // Utilise des groupes de validation si nécessaire
+                        // 'groups' => ['Default', 'new_guide'], // Utilise des groupes de validation si nécessaire
                     ]),
                     new Length([
                         'min' => 6, // Longueur minimale du mot de passe
@@ -71,6 +79,7 @@ class GuideTouristiqueType extends AbstractType
             ->add('paysAffectation', TextType::class, [
                 'label' => 'Pays d\'affectation',
                 'attr' => ['placeholder' => 'Ex: France, Espagne'],
+                'required' => false, // Assure-toi que c'est requis si c'est non nullable dans l'entité
             ])
             ->add('photoFile', FileType::class, [
                 'label' => 'Photo (JPG, PNG)',
@@ -100,7 +109,13 @@ class GuideTouristiqueType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => GuideTouristique::class,
+            // --- Déclaration de l'option personnalisée 'is_new' ---
+            'is_new' => true, // Définit l'option 'is_new' avec une valeur par défaut à true
+            // --- Fin de la déclaration ---
             'validation_groups' => ['Default'], // Assure-toi que les contraintes de l'entité sont utilisées
         ]);
+
+        // Tu peux aussi définir le type de l'option si tu veux être plus strict
+        // $resolver->setAllowedTypes('is_new', 'bool');
     }
 }
