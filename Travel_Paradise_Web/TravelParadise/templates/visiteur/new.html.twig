@@ -1,23 +1,87 @@
 {# templates/visiteur/new.html.twig #}
-{% extends 'layout_app.html.twig' %} {# Étend le layout de l'application #}
+{% extends 'layout_app.html.twig' %} {# Assure-toi que c'est le bon layout #}
 
-{% block app_title %}Nouveau Visiteur - TravelParadise{% endblock %} {# Titre dans la barre du navigateur #}
-{% block page_title %}Créer un nouveau Visiteur{% endblock %} {# Titre affiché dans le header #}
+{% block app_title %}Ajout d'utilisateur - TravelParadise{% endblock %}
+{% block page_title %}Créer un Nouveau Visiteur{% endblock %}
 
-{% block content %} {# Renomme le bloc body en content #}
+{% block content %}
 
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Créer un nouveau Visiteur</h2>
+    {# Conteneur principal pour le formulaire, centré et avec une ombre #}
+    <div class="max-w-3xl mx-auto px-4 py-8"> {# J'ai réduit la largeur pour un formulaire plus simple #}
+        <div class="bg-white shadow-xl rounded-lg overflow-hidden border border-gray-200">
+            <div class="px-6 py-5 bg-gradient-to-r from-blue-500 to-blue-600 text-white"> {# Changement de couleur pour différencier #}
+                <h2 class="text-xl font-semibold"> Nouveau Visiteur</h2>
+            </div>
 
-    {# Inclusion du formulaire (le style est géré par le thème global) #}
-    {% include 'visiteur/_form.html.twig' %}
+            <div class="px-6 py-8">
+                {# Le formulaire lui-même #}
+                {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
 
-    {# Bouton Back to list #}
-    <div class="mt-6"> {# Ajoute une marge au-dessus du bouton #}
-        <a href="{{ path('app_visiteur_index') }}"
-           class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
-            <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Retour à la liste
-        </a>
+                    {# Champ Nom #}
+                    <div>
+                        {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        <div class="mt-1">
+                            {{ form_widget(form.nom, {'attr': {'class': 'shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md'}}) }}
+                            {{ form_errors(form.nom) }}
+                        </div>
+                    </div>
+
+                    {# Champ Prénom #}
+                    <div>
+                        {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        <div class="mt-1">
+                            {{ form_widget(form.prenom, {'attr': {'class': 'shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md'}}) }}
+                            {{ form_errors(form.prenom) }}
+                        </div>
+                    </div>
+
+                    {# Champ Présent (Checkbox) #}
+                    <div class="flex items-center">
+                        <div class="flex items-center h-5">
+                            {{ form_widget(form.present, {'attr': {'class': 'focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded'}}) }}
+                        </div>
+                        <div class="ml-3 text-sm">
+                            {{ form_label(form.present, 'Présent', {'label_attr': {'class': 'font-medium text-gray-700'}}) }}
+                        </div>
+                        {{ form_errors(form.present) }}
+                    </div>
+
+                    {# Champ Commentaire #}
+                    <div>
+                        {{ form_label(form.commentaire, 'Commentaire', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        <div class="mt-1">
+                            {{ form_widget(form.commentaire, {'attr': {'rows': '4', 'class': 'shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md'}}) }}
+                            {{ form_errors(form.commentaire) }}
+                        </div>
+                    </div>
+
+                    {# Champ Visite (Select) #}
+                    <div>
+                        {{ form_label(form.visite, 'Visite', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        <div class="mt-1">
+                            {{ form_widget(form.visite, {'attr': {'class': 'shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md'}}) }}
+                            {{ form_errors(form.visite) }}
+                        </div>
+                    </div>
+
+                    {# Boutons d'action #}
+                    <div class="pt-4 flex justify-end space-x-4">
+                        {# Bouton Retour à la liste #}
+                        <a href="{{ path('app_visiteur_index') }}" {# Assure-toi que cette route existe #}
+                           class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150">
+                            Retour à la liste
+                        </a>
+
+                        {# Bouton Enregistrer #}
+                        <button type="submit"
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150">
+                            Enregistrer le Visiteur
+                        </button>
+                    </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
     </div>
 
 {% endblock %}

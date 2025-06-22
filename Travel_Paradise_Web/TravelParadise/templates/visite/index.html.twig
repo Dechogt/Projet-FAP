@@ -90,7 +90,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {% if visite.photoFilename %}
                                 {# Utilise la fonction asset() pour générer l'URL de l'image #}
-                                <img src="{{ asset('uploads/images/' ~ visite.photoFilename) }}" {# Adapte le chemin #}
+                                <img src="{{ asset('uploads/' ~ visite.photoFilename) }}" {# Adapte le chemin #}
                                     alt="Image de la visite {{ visite.lieu }}" {# Changé l'alt text pour utiliser 'lieu' #}
                                     class="h-10 w-10 rounded object-cover"> {# Classes Tailwind pour styliser l'image #}
                             {% else %}

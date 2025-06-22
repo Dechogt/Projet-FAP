@@ -1,47 +1,52 @@
-{# templates/layout_app.html.twig - Layout du Tableau de Bord #}
-{# {% form_theme _self 'form/tailwind_form_theme.html.twig' %} #}
-{% extends 'base.html.twig' %} {# Ce layout étend le squelette de base #}
+{# templates/layout_app.html.twig - Layout avec Image d'Arrière-plan Floutée #}
+{% extends 'base.html.twig' %}
 
-{# Le titre sera défini dans les templates enfants #}
 {% block title %}{% block app_title %}TravelParadise{% endblock %}{% endblock %}
 
 {% block body %}
-    {# Conteneur principal qui utilise flexbox pour la disposition latérale #}
-    <div class="flex h-screen bg-gray-100"> {# Fond clair pour le contenu de l'application #}
+    {# Conteneur principal avec l'image d'arrière-plan #}
+    {# L'image est appliquée ici, et le contenu est superposé #}
+    <div class="flex h-screen overflow-hidden relative"
+         style="background-image: url('{{ asset('images/bg_img.jpg') }}'); background-size: cover; background-position: center;">
 
-        {# Sidebar (Menu latéral) #}
-        <aside class="w-64 bg-gray-800 text-white flex flex-col shadow-xl"> {# Ajout d'une ombre #}
+        {# Overlay pour le floutage et pour assombrir légèrement l'image #}
+        {# Cet overlay permet de rendre le texte plus lisible #}
+        <div class="absolute inset-0 bg-black opacity-95 z-0"></div> {# Ajuste opacity pour plus ou moins de noirceur #}
+
+        {# Sidebar (Menu latéral) - Doit être au-dessus de l'overlay #}
+        <aside class="w-64 bg-gradient-to-br from-gray-800 to-gray-900 text-white flex flex-col shadow-xl flex-shrink-0 z-10 relative"> {# z-10 pour être au-dessus de l'overlay #}
+            {# ... (Contenu de la sidebar comme précédemment) ... #}
             {# Logo ou titre de l'application dans la sidebar #}
-            <div class="flex items-center justify-center h-16 border-b border-gray-700 flex-shrink-0"> {# flex-shrink-0 pour éviter que le logo ne rétrécisse #}
-                 <div class="h-8 w-8 bg-teal-600 rounded-full flex items-center justify-center"> {# Couleur du logo adaptée #}
-                    <img src="{{ asset('images/logo-transparent.png') }}" alt="Travel Paradise Logo">
+            <div class="flex items-center justify-center h-20 border-b border-gray-700 px-4">
+                 <div class="h-10 w-10 bg-teal-500 rounded-full flex items-center justify-center shadow-lg">
+                    <img src="{{ asset('images/logo-transparent.png') }}" alt="Travel Paradise Logo" class="h-6 w-6">
                 </div>
-                <span class="ml-3 text-xl font-bold text-teal-400">TravelParadise</span>
+                <span class="ml-3 text-xl font-bold text-teal-300 tracking-wide">TravelParadise</span>
             </div>
             {# Navigation principale #}
-            <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto"> {# overflow-y-auto pour permettre le défilement si la navigation est longue #}
-                {# Liens de navigation (exemples) #}
+            <nav class="flex-1 px-3 py-6 space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
+                {# Liens de navigation #}
                 <a href="{{ path('admin_dashboard') }}"
-                   class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors
-                   {% if app.request.get('_route') starts with 'admin_dashboard' %}bg-gray-700 text-white{% endif %}"> {# Style actif #}
-                    <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l7 7M19 10v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
+                   {% if app.request.get('_route') starts with 'admin_dashboard' %}bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md{% endif %}">
+                    <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l7 7M19 10v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     Dashboard
                 </a>
 
                 {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('app_guide_touristique_index') }}"
-                class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors
-                {% if app.request.get('_route') starts with 'app_guide_touristique_index' %}bg-gray-700 text-white{% endif %}">
-                    <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
+                   {% if app.request.get('_route') starts with 'app_guide_touristique_index' %}bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md{% endif %}">
+                    <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                     </svg>
                     Guides
                 </a>
 
                 <a href="{{ path('app_visite_index') }}"
-                class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors
-                {% if app.request.get('_route') starts with 'admin_visites' %}bg-gray-700 text-white{% endif %}">
-                    <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
+                   {% if app.request.get('_route') starts with 'admin_visites' %}bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md{% endif %}">
+                    <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
@@ -49,36 +54,33 @@
                 </a>
 
                 <a href="{{ path('app_user_index') }}"
-                class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors
-                {% if app.request.get('_route') starts with 'admin_users' %}bg-gray-700 text-white{% endif %}">
-                    <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
+                   {% if app.request.get('_route') starts with 'admin_users' %}bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md{% endif %}">
+                    <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.291M12 4a4 4 0 100 8 4 4 0 000-8z"></path>
                     </svg>
                     Utilisateurs
                 </a>
             {% endif %}
             <a href="{{ path('app_visiteur_index') }}"
-                class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors
-                {% if app.request.get('_route') starts with 'app_visiteur_' %}bg-gray-700 text-white{% endif %}">
-                    {# Icône pour les visiteurs #}
-                    <svg class="h-5 w-5 mr-3 text-gray-400 {% if app.request.get('_route') starts with 'app_visiteur_' %}text-gray-300{% else %}group-hover:text-gray-300{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
+                {% if app.request.get('_route') starts with 'app_visiteur_' %}bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md{% endif %}">
+                    <svg class="h-6 w-6 mr-4 flex-shrink-0 {% if app.request.get('_route') starts with 'app_visiteur_' %}text-white{% else %}text-gray-400 group-hover:text-gray-300{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                     Visiteurs
             </a>
 
             <a href="{{ path('admin_statistics') }}"
-                class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors
-                {% if app.request.get('_route') starts with 'admin_statistics' %}bg-gray-700 text-white{% endif %}">
-                    <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
+                {% if app.request.get('_route') starts with 'admin_statistics' %}bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md{% endif %}">
+                    <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                     Statistiques
             </a>
-
-            {# Lien vers la page de gestion des paramètres (optionnel) #}
             </nav>
-            {# Pied de page de la sidebar (optionnel) #}
-            <div class="p-4 text-center text-gray-500 text-sm border-t border-gray-700 flex-shrink-0">
-                © 2023 TravelParadise
+            {# Pied de page de la sidebar #}
+            <div class="p-5 text-center text-gray-500 text-xs border-t border-gray-700 flex-shrink-0">
+                © {{ 'now'|date('Y') }} TravelParadise
             </div>
         </aside>
 
@@ -86,24 +88,23 @@
         <div class="flex-1 flex flex-col overflow-hidden"> {# flex-1 pour prendre l'espace restant, overflow-hidden pour gérer le défilement #}
 
             {# Header (En-tête) #}
-            <header class="flex items-center justify-between h-16 bg-white border-b border-gray-200 px-6 flex-shrink-0"> {# flex-shrink-0 pour éviter que le header ne rétrécisse #}
-                {# Titre de la page actuelle ou barre de recherche #}
-                <div class="text-lg font-semibold text-gray-800">
-                    {% block page_title %}{% endblock %} {# Bloc pour le titre de la page spécifique #}
+            <header class="flex items-center justify-between h-20 bg-white bg-opacity-80 border-b border-gray-200 px-6 shadow-sm flex-shrink-0 backdrop-blur-sm"> {# Header semi-transparent avec flou #}
+                {# Titre de la page actuelle #}
+                <div class="text-2xl font-bold text-gray-800">
+                    {% block page_title %}{% endblock %}
                 </div>
                 {# Profil utilisateur ou actions #}
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-6">
                     {# Avatar ou nom de l'utilisateur #}
-                    <div class="flex items-center space-x-2">
-                         <div class="h-8 w-8 bg-gray-300 rounded-full flex items-center justify-center">
-                            <svg class="h-4 w-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex items-center space-x-3">
+                         <div class="h-10 w-10 bg-blue-200 rounded-full flex items-center justify-center shadow-inner">
+                            <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
                         </div>
                         <div class="text-sm">
-                            {# Utilisation de app.user.prenom et app.user.nom si ces propriétés existent #}
-                            <div class="font-medium text-gray-900">{{ app.user.prenom|default('Utilisateur') }} {{ app.user.nom|default('') }}</div>
-                            <div class="text-gray-500">
+                            <div class="font-semibold text-gray-900">{{ app.user.prenom|default('Utilisateur') }} {{ app.user.nom|default('') }}</div>
+                            <div class="text-xs text-gray-500">
                                 {% if is_granted('ROLE_ADMIN') %}
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Admin</span>
                                 {% else %}
@@ -115,7 +116,7 @@
 
                     {# Bouton de déconnexion #}
                     <a href="{{ path('app_logout') }}"
-                       class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition-colors">
+                       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ease-in-out">
                         <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
@@ -125,19 +126,19 @@
             </header>
 
             {# Contenu principal de la page #}
-            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6"> {# overflow-y-auto pour permettre le défilement si le contenu est trop long #}
+            <main class="flex-1 overflow-y-auto bg-transparent p-8 relative z-10"> {# bg-transparent pour laisser passer l'arrière-plan, z-10 pour être au-dessus de l'overlay #}
                 {# Affichage des messages flash #}
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
-                        <div class="mb-4"> {# Pas besoin de max-w et mx-auto ici car le main content a déjà du padding #}
-                            <div class="alert alert-{{ label }} bg-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-100 border border-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-400 text-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-700 px-4 py-3 rounded-lg">
+                        <div class="mb-6">
+                            <div class="alert alert-{{ label }} bg-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-100 border border-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-400 text-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-700 px-6 py-4 rounded-lg shadow-md">
                                 {{ message }}
                             </div>
                         </div>
                     {% endfor %}
                 {% endfor %}
 
-                {# Ici sera injecté le contenu spécifique de chaque page (dashboard, users, etc.) #}
+                {# Ici sera injecté le contenu spécifique de chaque page #}
                 {% block content %}{% endblock %}
             </main>
 
