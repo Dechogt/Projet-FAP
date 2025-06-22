@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface; // Importe le service de hachage
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/admin/user')]
 class UserController extends AbstractController
@@ -27,31 +27,26 @@ class UserController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, [
+            'is_password_required' => true
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Hacher le mot de passe
             $plainPassword = $form->get('plainPassword')->getData();
-            if ($plainPassword) {
-                $hashedPassword = $passwordHasher->hashPassword(
-                    $user,
-                    $plainPassword
-                );
-                $user->setPassword($hashedPassword);
-            }
+            $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+            $user->setPassword($hashedPassword);
 
             $entityManager->persist($user);
             $entityManager->flush();
 
             $this->addFlash('success', 'L\'utilisateur a été créé avec succès.');
-
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_index');
         }
 
         return $this->render('user/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -66,32 +61,26 @@ class UserController extends AbstractController
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-        // Passe l'option is_edit au formulaire
-        $form = $this->createForm(UserType::class, $user, ['is_edit' => true]);
+        $form = $this->createForm(UserType::class, $user, [
+            'is_password_required' => false
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-             // Hacher le nouveau mot de passe si un nouveau est saisi
-            $plainPassword = $form->get('plainPassword')->getData();
-            if ($plainPassword) {
-                $hashedPassword = $passwordHasher->hashPassword(
-                    $user,
-                    $plainPassword
-                );
+            // Ne hacher le mot de passe que si un nouveau a été fourni
+            if ($form->has('plainPassword') && $plainPassword = $form->get('plainPassword')->getData()) {
+                $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
                 $user->setPassword($hashedPassword);
             }
-            // Si plainPassword est vide, le mot de passe existant n'est pas modifié
 
             $entityManager->flush();
-
             $this->addFlash('success', 'L\'utilisateur a été mis à jour avec succès.');
-
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_index');
         }
 
         return $this->render('user/edit.html.twig', [
             'user' => $user,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -101,10 +90,9 @@ class UserController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
-
             $this->addFlash('success', 'L\'utilisateur a été supprimé avec succès.');
         }
 
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_index');
     }
 }

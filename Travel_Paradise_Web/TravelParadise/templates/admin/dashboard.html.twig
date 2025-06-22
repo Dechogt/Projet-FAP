@@ -17,7 +17,6 @@
                     <div class="ml-5 w-0 flex-1">
                         <dt class="text-sm font-medium text-gray-500 truncate">Total Guides</dt>
                         <dd class="flex items-baseline">
-                            {# CORRECTION ICI : Accède à totalGuides via le tableau stats #}
                             <div class="text-2xl font-semibold text-gray-900">{{ stats.totalGuides }}</div>
                         </dd>
                     </div>
@@ -25,7 +24,7 @@
             </div>
             <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    <a href="{{ path('admin_guides') }}" class="font-medium text-blue-600 hover:text-blue-800">Voir tous les guides</a> {# Utilise la route nommée 'admin_guides' #}
+                    <a href="{{ path('admin_guides') }}" class="font-medium text-blue-600 hover:text-blue-800">Voir tous les guides</a>
                 </div>
             </div>
         </div>
@@ -40,7 +39,6 @@
                     <div class="ml-5 w-0 flex-1">
                         <dt class="text-sm font-medium text-gray-500 truncate">Total Visites</dt>
                         <dd class="flex items-baseline">
-                            {# CORRECTION ICI #}
                             <div class="text-2xl font-semibold text-gray-900">{{ stats.totalVisites }}</div>
                         </dd>
                     </div>
@@ -48,7 +46,7 @@
             </div>
             <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    <a href="{{ path('admin_visites') }}" class="font-medium text-blue-600 hover:text-blue-800">Voir toutes les visites</a> {# Utilise la route nommée 'admin_visites' #}
+                    <a href="{{ path('admin_visites') }}" class="font-medium text-blue-600 hover:text-blue-800">Voir toutes les visites</a>
                 </div>
             </div>
         </div>
@@ -63,7 +61,6 @@
                     <div class="ml-5 w-0 flex-1">
                         <dt class="text-sm font-medium text-gray-500 truncate">Total Utilisateurs</dt>
                         <dd class="flex items-baseline">
-                            {# CORRECTION ICI #}
                             <div class="text-2xl font-semibold text-gray-900">{{ stats.totalUsers }}</div>
                         </dd>
                     </div>
@@ -71,12 +68,11 @@
             </div>
             <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    <a href="{{ path('admin_users') }}" class="font-medium text-blue-600 hover:text-blue-800">Voir tous les utilisateurs</a> {# Utilise la route nommée 'admin_users' #}
+                    <a href="{{ path('admin_users') }}" class="font-medium text-blue-600 hover:text-blue-800">Voir tous les utilisateurs</a>
                 </div>
             </div>
         </div>
 
-        {# Ajoute les autres cartes pour les stats détaillées si tu veux les afficher ici #}
         {# Carte pour les Visiteurs #}
         <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
@@ -88,7 +84,6 @@
                     <div class="ml-5 w-0 flex-1">
                         <dt class="text-sm font-medium text-gray-500 truncate">Total Visiteurs</dt>
                         <dd class="flex items-baseline">
-                            {# CORRECTION ICI #}
                             <div class="text-2xl font-semibold text-gray-900">{{ stats.totalVisiteurs }}</div>
                         </dd>
                     </div>
@@ -96,8 +91,8 @@
             </div>
              <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    {# Si tu as une page pour lister les visiteurs, adapte la route #}
-                    <span class="font-medium text-gray-500">Statistique globale</span>
+                    {# C'EST ICI QU'IL FAUT AJOUTER LE LIEN #}
+                    <a href="{{ path('app_visiteur_index') }}" class="font-medium text-blue-600 hover:text-blue-800">Voir tous les visiteurs</a>
                 </div>
             </div>
         </div>
@@ -113,7 +108,6 @@
                     <div class="ml-5 w-0 flex-1">
                         <dt class="text-sm font-medium text-gray-500 truncate">Guides Actifs</dt>
                         <dd class="flex items-baseline">
-                            {# CORRECTION ICI #}
                             <div class="text-2xl font-semibold text-gray-900">{{ stats.guidesActifs }}</div>
                         </dd>
                     </div>
@@ -138,7 +132,6 @@
                     <div class="ml-5 w-0 flex-1">
                         <dt class="text-sm font-medium text-gray-500 truncate">Visites Aujourd'hui</dt>
                         <dd class="flex items-baseline">
-                            {# CORRECTION ICI #}
                             <div class="text-2xl font-semibold text-gray-900">{{ stats.visitesAujourdhui }}</div>
                         </dd>
                     </div>
@@ -163,7 +156,6 @@
                     <div class="ml-5 w-0 flex-1">
                         <dt class="text-sm font-medium text-gray-500 truncate">Visites Prochainement</dt>
                         <dd class="flex items-baseline">
-                            {# CORRECTION ICI #}
                             <div class="text-2xl font-semibold text-gray-900">{{ stats.visitesProchainement }}</div>
                         </dd>
                     </div>
@@ -188,7 +180,6 @@
                     <div class="ml-5 w-0 flex-1">
                         <dt class="text-sm font-medium text-gray-500 truncate">Taux de Présence</dt>
                         <dd class="flex items-baseline">
-                            {# CORRECTION ICI : Affiche le taux de présence #}
                             <div class="text-2xl font-semibold text-gray-900">{{ stats.tauxPresence|number_format(2) }}%</div> {# Affiche avec 2 décimales et un signe % #}
                         </dd>
                     </div>
@@ -209,14 +200,13 @@
         <div class="mt-8">
             <h3 class="text-lg font-medium leading-6 text-gray-900">Visites prévues aujourd'hui</h3>
             {# Affiche la liste des visites d'aujourd'hui ici #}
-            {# Exemple : une simple liste #}
             <ul class="mt-4 border-t border-gray-200 divide-y divide-gray-200">
                 {% for visite in visitesAujourdhuiList %}
                     <li class="py-4 flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="ml-3">
-                                <p class="text-sm font-medium text-gray-900">{{ visite.nom }}</p> {# Adapte si le nom de la visite est différent #}
-                                <p class="text-sm text-gray-500">{{ visite.date|date('H:i') }} avec {{ visite.guide.nom }}</p> {# Adapte si les propriétés sont différentes #}
+                                <p class="text-sm font-medium text-gray-900">{{ visite.lieu }}</p> {# Utilise le lieu #}
+                                <p class="text-sm text-gray-500">{{ visite.date|date('H:i') }} avec {{ visite.guide.nom }}</p> {# Utilise guide.nom #}
                             </div>
                         </div>
                         {# Ajoute un lien vers la page de détail de la visite si elle existe #}
@@ -236,8 +226,8 @@
                     <li class="py-4 flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="ml-3">
-                                <p class="text-sm font-medium text-gray-900">{{ visite.nom }}</p> {# Adapte si le nom de la visite est différent #}
-                                <p class="text-sm text-gray-500">{{ visite.date|date('Y-m-d H:i') }} avec {{ visite.guide.nom }}</p> {# Adapte si les propriétés sont différentes #}
+                                <p class="text-sm font-medium text-gray-900">{{ visite.lieu }}</p> {# Utilise le lieu #}
+                                <p class="text-sm text-gray-500">{{ visite.date|date('Y-m-d H:i') }} avec {{ visite.guide.nom }}</p> {# Utilise guide.nom #}
                             </div>
                         </div>
                         {# Ajoute un lien vers la page de détail de la visite si elle existe #}

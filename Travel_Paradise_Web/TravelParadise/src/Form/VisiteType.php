@@ -10,16 +10,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\DateType; // Pour la date
-use Symfony\Component\Form\Extension\Core\Type\TimeType; // Pour l'heure
-use Symfony\Component\Form\Extension\Core\Type\IntegerType; // Pour la durée (nombre entier)
-use Symfony\Component\Form\Extension\Core\Type\NumberType; // Pour le prix (nombre décimal)
-use Symfony\Component\Form\Extension\Core\Type\FileType; // Pour la photo
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\Validator\Constraints\NotBlank; // Exemple de contrainte si un champ est obligatoire
-use Symfony\Component\Validator\Constraints\PositiveOrZero; // Exemple de contrainte pour les nombres >= 0
-use Symfony\Component\Validator\Constraints\Positive; // Exemple de contrainte pour les nombres > 0
-
 
 class VisiteType extends AbstractType
 {
@@ -29,122 +25,90 @@ class VisiteType extends AbstractType
             ->add('pays', TextType::class, [
                 'label' => 'Pays',
                 'attr' => ['placeholder' => 'Ex: France'],
-                'required' => true, // Rends le champ obligatoire si nécessaire
-                'constraints' => [
-                    new NotBlank(['message' => 'Le pays est obligatoire.']),
-                ],
+                'required' => true,
             ])
             ->add('lieu', TextType::class, [
                 'label' => 'Lieu',
                 'attr' => ['placeholder' => 'Ex: Paris'],
-                'required' => true, // Rends le champ obligatoire si nécessaire
-                 'constraints' => [
-                    new NotBlank(['message' => 'Le lieu est obligatoire.']),
-                ],
+                'required' => true,
             ])
             ->add('date', DateType::class, [
                 'label' => 'Date',
-                'widget' => 'single_text', // Utilise un champ de date HTML5
-                'html5' => true,
-                'required' => true, // Rends le champ obligatoire si nécessaire
-                 'constraints' => [
-                    new NotBlank(['message' => 'La date est obligatoire.']),
-                ],
+                // CES DEUX LIGNES DOIVENT ÊTRE SUPPRIMÉES
+                // 'widget' => 'single_text',
+                // 'html5' => true,
+                'required' => true,
             ])
             ->add('heureDebut', TimeType::class, [
                 'label' => 'Heure de début',
-                'widget' => 'single_text', // Utilise un champ d'heure HTML5
-                'html5' => true,
-                'required' => true, // Rends le champ obligatoire si nécessaire
-                 'constraints' => [
-                    new NotBlank(['message' => "L'heure de début est obligatoire."]),
-                ],
+                // CES DEUX LIGNES DOIVENT ÊTRE SUPPRIMÉES
+                // 'widget' => 'single_text',
+                // 'html5' => true,
+                'required' => true,
             ])
-            ->add('duree', IntegerType::class, [ // Utilise IntegerType pour la durée (nombre entier)
-                'label' => 'Durée (en heures)', // Précise l'unité
-                'required' => true, // Rends le champ obligatoire si nécessaire
+            ->add('duree', IntegerType::class, [
+                'label' => 'Durée (en heures)',
+                'required' => true,
                 'attr' => [
                     'placeholder' => 'Ex: 3',
-                    'min' => 1, // Ajoute une contrainte HTML5 pour un minimum de 1 heure
-                ],
-                 'constraints' => [
-                    new NotBlank(['message' => 'La durée est obligatoire.']),
-                    new Positive(['message' => 'La durée doit être un nombre entier positif.']), // Contrainte Symfony pour un nombre > 0
+                    'min' => 1,
                 ],
             ])
-            // heureFin n'est pas ajoutée car elle est calculée dans l'entité ou ailleurs
             ->add('commentaire', TextareaType::class, [
                 'label' => 'Commentaire',
                 'attr' => ['placeholder' => 'Ajoutez un commentaire...'],
-                'required' => false, // Le commentaire n'est généralement pas obligatoire
+                'required' => false,
             ])
             ->add('guide', EntityType::class, [
                 'class' => GuideTouristique::class,
                 'choice_label' => function(GuideTouristique $guide) {
-                    // Assure-toi que getNom() et getPrenom() existent dans ton entité GuideTouristique
                     return $guide->getNom() . ' ' . $guide->getPrenom();
                 },
                 'placeholder' => 'Sélectionnez un guide',
                 'label' => 'Guide touristique',
-                'required' => true, // Rends le champ obligatoire si nécessaire
-                 'constraints' => [
-                    new NotBlank(['message' => 'Le guide est obligatoire.']),
-                ],
+                'required' => true,
             ])
-             ->add('photoFile', FileType::class, [ // Champ pour l'upload de photo
-                'label' => 'Photo (JPG, PNG, GIF)', // Ajout de GIF dans le label
-                'mapped' => false, // IMPORTANT : Ne mappe pas ce champ directement à l'entité
-                'required' => false, // Le champ n'est pas obligatoire
+             ->add('photoFile', FileType::class, [
+                'label' => 'Photo (JPG, PNG, GIF)',
+                'mapped' => false,
+                'required' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '2048k', // Taille maximale du fichier
-                        'mimeTypes' => [ // Types MIME autorisés
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
                             'image/jpeg',
                             'image/png',
-                            'image/gif', // Ajout de GIF
+                            'image/gif',
                         ],
-                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPG, PNG, GIF).', // Message mis à jour
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPG, PNG, GIF).',
                     ])
                 ],
             ])
-            // Ajoute d'autres champs si ton entité Visite en a (ex: prix, nombreMaxVisiteurs)
-            // Exemple pour le prix (utilise NumberType pour les décimaux)
             ->add('prix', NumberType::class, [
                 'label' => 'Prix',
-                'scale' => 2, // Nombre de décimales
+                'scale' => 2,
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Ex: 25.50',
-                    'min' => 0, // Le prix ne peut pas être négatif
-                    'step' => 0.01, // Permet les centimes
-                ],
-                 'constraints' => [
-                    new NotBlank(['message' => 'Le prix est obligatoire.']),
-                    new PositiveOrZero(['message' => 'Le prix doit être un nombre positif ou nul.']),
+                    'min' => 0,
+                    'step' => 0.01,
                 ],
             ])
-             // Exemple pour le nombre maximum de visiteurs
-            ->add('nombreMaxVisiteurs', IntegerType::class, [
+             ->add('nombreMaxVisiteurs', IntegerType::class, [
                 'label' => 'Nombre maximum de visiteurs',
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Max: 15',
-                    'min' => 1, // Au moins 1 visiteur max
-                    'max' => 15, // Au plus 15 visiteurs
+                    'min' => 1,
+                    'max' => 15,
                 ],
-                 'constraints' => [
-                    new NotBlank(['message' => 'Le nombre maximum de visiteurs est obligatoire.']),
-                    new Positive(['message' => 'Le nombre maximum de visiteurs doit être un nombre entier positif.']),
-                ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Visite::class,
-            // 'validation_groups' => ['Default'], // 'Default' est souvent implicite, tu peux le laisser ou l'enlever
         ]);
     }
 }

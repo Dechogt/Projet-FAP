@@ -8,11 +8,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType; // Pour les rôles
-use Symfony\Component\Form\Extension\Core\Type\PasswordType; // Pour le mot de passe
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType; // Pour la confirmation du mot de passe
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\FormInterface;
 
 class UserType extends AbstractType
 {
@@ -38,29 +39,29 @@ class UserType extends AbstractType
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
                     'Administrateur' => 'ROLE_ADMIN',
-                    // Ajoute d'autres rôles si tu en as
                 ],
-                'multiple' => true, // Permet de sélectionner plusieurs rôles
-                'expanded' => true, // Affiche les rôles comme des checkboxes
+                'multiple' => true,
+                'expanded' => true,
             ]);
 
-        // Ajoute le champ mot de passe seulement si on est en mode création (pas d'ID)
-        // ou si on est en mode édition et que le champ n'est pas mappé
-        if (!$options['is_edit'] || ($options['is_edit'] && !$options['data']->getId())) {
-             $builder->add('plainPassword', RepeatedType::class, [
+        // Ajout conditionnel du champ password
+        if ($options['is_password_required']) {
+            $builder->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'mapped' => false, // Ce champ n'est pas mappé à l'entité
-                'required' => $options['is_edit'] ? false : true, // Requis seulement en création
+                'mapped' => false,
+                'required' => $options['is_password_required'],
                 'first_options' => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Confirmer le mot de passe'],
                 'invalid_message' => 'Les mots de passe doivent correspondre.',
                 'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le mot de passe ne peut pas être vide.',
+                    ]),
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
-                        'max' => 4096, // Longueur max pour Symfony Security
+                        'max' => 4096,
                     ]),
-                    // NotBlank est géré par le groupe de validation 'registration' dans l'entité
                 ],
             ]);
         }
@@ -70,11 +71,14 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'validation_groups' => function (UserType $form) {
-                // Applique le groupe 'registration' si le champ plainPassword est présent
-                return $form->get('plainPassword')->isSubmitted() ? ['Default', 'registration'] : ['Default'];
+            'is_password_required' => true,
+            'validation_groups' => function (FormInterface $form) {
+                $groups = ['Default'];
+                if ($form->has('plainPassword') && $form->get('plainPassword')->getData()) {
+                    $groups[] = 'password';
+                }
+                return $groups;
             },
-            'is_edit' => false, // Option personnalisée pour savoir si on est en mode édition
         ]);
     }
 }

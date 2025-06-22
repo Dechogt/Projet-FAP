@@ -1,6 +1,67 @@
 {# templates/visiteur/_form.html.twig #}
 {# Ce template est un PARTIAL, il n'étend PAS de layout #}
 
-{{ form_start(form) }}
-    {{ form_widget(form) }}
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+
+    {# Affichage des champs du formulaire avec styles #}
+    <div>
+        {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+        <div class="mt-1">
+            {{ form_widget(form.nom, {'attr': {'class': 'shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'}}) }}
+        </div>
+        {% if form_errors(form.nom) %}
+            <p class="text-red-500 text-xs mt-1">{{ form_errors(form.nom) }}</p>
+        {% endif %}
+    </div>
+
+    <div>
+        {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+        <div class="mt-1">
+            {{ form_widget(form.prenom, {'attr': {'class': 'shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'}}) }}
+        </div>
+        {% if form_errors(form.prenom) %}
+            <p class="text-red-500 text-xs mt-1">{{ form_errors(form.prenom) }}</p>
+        {% endif %}
+    </div>
+
+    <div>
+        {{ form_label(form.present, 'Présent', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+        <div class="mt-1">
+            {{ form_widget(form.present, {'attr': {'class': 'focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded'}}) }}
+        </div>
+        {% if form_errors(form.present) %}
+            <p class="text-red-500 text-xs mt-1">{{ form_errors(form.present) }}</p>
+        {% endif %}
+    </div>
+
+    <div>
+        {{ form_label(form.commentaire, 'Commentaire', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+        <div class="mt-1">
+            {{ form_widget(form.commentaire, {'attr': {'class': 'shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md', 'rows': '3'}}) }}
+        </div>
+        {% if form_errors(form.commentaire) %}
+            <p class="text-red-500 text-xs mt-1">{{ form_errors(form.commentaire) }}</p>
+        {% endif %}
+    </div>
+
+    {# Champ pour la visite #}
+    <div>
+        {{ form_label(form.visite, 'Visite', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+        <div class="mt-1">
+            {{ form_widget(form.visite, {'attr': {'class': 'shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'}}) }}
+        </div>
+        {% if form_errors(form.visite) %}
+            <p class="text-red-500 text-xs mt-1">{{ form_errors(form.visite) }}</p>
+        {% endif %}
+    </div>
+
+    {# Boutons d'action #}
+    <div class="flex justify-end space-x-4">
+        {# Bouton Enregistrer #}
+        <button type="submit"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Enregistrer
+        </button>
+    </div>
+
 {{ form_end(form) }}

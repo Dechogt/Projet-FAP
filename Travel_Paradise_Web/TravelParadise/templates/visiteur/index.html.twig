@@ -1,87 +1,90 @@
-{# templates/visiteur/index.html.twig #}
-{% extends 'layout_app.html.twig' %} {# Étend le layout de l'application #}
+{% extends 'layout_app.html.twig' %}
 
-{% block app_title %}Visiteurs - TravelParadise{% endblock %} {# Titre dans la barre du navigateur #}
-{% block page_title %}Visiteurs{% endblock %} {# Titre affiché dans le header #}
+{% block app_title %}Liste des Visiteurs{% endblock %}
+{% block page_title %}Liste des Visiteurs{% endblock %}
 
-{% block content %} {# Renomme le bloc body en content #}
-
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Liste des Visiteurs</h2>
-        {# Bouton "Create New" #}
-        <a href="{{ path('app_visiteur_new') }}"
-           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
-            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-            Créer un nouveau Visiteur
+{% block content %}
+    <div class="flex justify-end mb-4">
+        {# Assure-toi que la route 'app_visiteur_new' existe pour le bouton d'ajout #}
+        <a href="{{ path('app_visiteur_new') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Ajouter un visiteur
         </a>
     </div>
 
-    {# Tableau des visiteurs #}
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    {# Adapte les en-têtes de colonne en fonction des propriétés de ton entité Visiteur #}
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ID
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nom
-                    </th>
-                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Prénom
-                    </th>
-                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Email
-                    </th>
-                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Téléphone
-                    </th>
-                    {# Ajoute d'autres en-têtes si nécessaire #}
-                    <th scope="col" class="relative px-6 py-3">
-                        <span class="sr-only">Actions</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                {% for visiteur in visiteurs %} {# Assure-toi que le nom de la variable est correct #}
-                    <tr>
-                        {# Adapte l'affichage des données en fonction des propriétés de ton entité Visiteur #}
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {{ visiteur.id }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ visiteur.nom }}
-                        </td>
-                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ visiteur.prenom }}
-                        </td>
-                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ visiteur.email }}
-                        </td>
-                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ visiteur.telephone }}
-                        </td>
-                        {# Ajoute d'autres cellules si nécessaire #}
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            {# Liens d'action #}
-                            <a href="{{ path('app_visiteur_show', {'id': visiteur.id}) }}"
-                               class="text-gray-600 hover:text-gray-900 mr-4">Show</a>
-                            <a href="{{ path('app_visiteur_edit', {'id': visiteur.id}) }}"
-                               class="text-teal-600 hover:text-teal-900 mr-4">Edit</a>
-                            {# Inclusion du formulaire de suppression (si tu veux le bouton ici) #}
-                            {% include 'visiteur/_delete_form.html.twig' with {'visiteur': visiteur} %}
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="6" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                            Aucun visiteur trouvé.
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <div class="overflow-x-auto">
+        <div class="align-middle inline-block min-w-full py-4">
+            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                ID
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Nom
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Prénom
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Présent
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Commentaire
+                            </th>
+                            {# Supprime les colonnes qui n'existent pas dans ton entité Visiteur #}
+                            {# <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Email
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Téléphone
+                            </th> #}
+                            <th scope="col" class="relative px-6 py-3">
+                                <span class="sr-only">Actions</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for visiteur in visiteurs %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ visiteur.id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ visiteur.nom }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ visiteur.prenom }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {# Affiche une icône ou un texte selon la valeur de 'present' #}
+                                    {% if visiteur.present %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Oui
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            Non
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ visiteur.commentaire }}</td>
 
+                                {# Supprime les lignes pour l'email et le téléphone #}
+                                {# <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ visiteur.email }}</td> #}
+                                {# <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ visiteur.telephone }}</td> #}
+
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    {# Assure-toi que la route 'app_visiteur_show' existe pour voir les détails #}
+                                    <a href="{{ path('app_visiteur_show', {'id': visiteur.id}) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
+                                    {# Assure-toi que la route 'app_visiteur_edit' existe pour modifier #}
+                                    <a href="{{ path('app_visiteur_edit', {'id': visiteur.id}) }}" class="text-indigo-600 hover:text-indigo-900 ml-4">Modifier</a>
+                                    {# Pour la suppression, il faut une route et une logique côté contrôleur #}
+                                    {# <a href="#" class="text-red-600 hover:text-red-900 ml-4">Supprimer</a> #}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">Aucun visiteur trouvé.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -57,6 +57,13 @@
                     Utilisateurs
                 </a>
             {% endif %}
+            <a href="{{ path('app_visiteur_index') }}"
+                class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors
+                {% if app.request.get('_route') starts with 'app_visiteur_' %}bg-gray-700 text-white{% endif %}">
+                    {# Icône pour les visiteurs #}
+                    <svg class="h-5 w-5 mr-3 text-gray-400 {% if app.request.get('_route') starts with 'app_visiteur_' %}text-gray-300{% else %}group-hover:text-gray-300{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                    Visiteurs
+            </a>
 
             <a href="{{ path('admin_statistics') }}"
                 class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors

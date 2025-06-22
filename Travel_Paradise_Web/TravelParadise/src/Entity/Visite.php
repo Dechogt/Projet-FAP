@@ -37,12 +37,12 @@ class Visite
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank(message: "La date ne peut pas être vide.")]
-    #[Assert\Date(message: "Veuillez saisir une date valide.")]
+    //#[Assert\Date(message: "Veuillez saisir une date valide.")]
     private ?\DateTimeInterface $date = null; // Utilise DateTimeInterface pour plus de flexibilité
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     #[Assert\NotBlank(message: "L'heure de début ne peut pas être vide.")]
-    #[Assert\Time(message: "Veuillez saisir une heure valide.")]
+    //#[Assert\Time(message: "Veuillez saisir une heure valide.")]
     private ?\DateTimeInterface $heureDebut = null; // Utilise DateTimeInterface
 
     #[ORM\Column]
@@ -230,22 +230,32 @@ class Visite
     #[ORM\PreUpdate]
     public function updateHeureFin(): void
     {
-        // Assure-toi que heureDebut est un objet DateTimeInterface et duree n'est pas null
         if ($this->heureDebut instanceof \DateTimeInterface && $this->duree !== null) {
-            // Clone l'objet DateTimeInterface pour éviter de modifier l'original
-            $heureFin = \DateTimeImmutable::createFromInterface($this->heureDebut);
-            // Ajoute la durée (en heures)
-            $this->heureFin = $heureFin->add(new \DateInterval("PT{$this->duree}H"));
+            // Crée une copie de l'heure de début en utilisant DateTime (pas DateTimeImmutable)
+            if ($this->heureDebut instanceof \DateTimeImmutable) {
+                // Crée un nouvel objet DateTime à partir de l'heure de début
+                $heureDebutDateTime = new \DateTime($this->heureDebut->format('Y-m-d H:i:s'));
+            } else {
+                // Si c'est déjà un DateTime, on l'utilise directement
+                $heureDebutDateTime = $this->heureDebut;
+            }
+
+            // Ajoute la durée (en heures) à l'objet DateTime
+            $heureFin = $heureDebutDateTime->add(new \DateInterval("PT{$this->duree}H"));
+
+            // *** AJOUT IMPORTANT ICI ***
+            // Assure-toi que $heureFin est un objet \DateTime et non \DateTimeImmutable
+            // pour correspondre au type TIME_MUTABLE de Doctrine.
+            if ($heureFin instanceof \DateTimeImmutable) {
+                $this->heureFin = new \DateTime($heureFin->format('Y-m-d H:i:s'));
+            } else {
+                $this->heureFin = $heureFin;
+            }
+
         } else {
-            $this->heureFin = null; // Met heureFin à null si heureDebut ou duree manquent
+            $this->heureFin = null;
         }
     }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
     // Pas de setter pour createdAt car il est initialisé dans le constructeur et ne devrait pas être modifié manuellement
 
     // --- Ajout de la propriété prix et de ses méthodes d'accès ---
