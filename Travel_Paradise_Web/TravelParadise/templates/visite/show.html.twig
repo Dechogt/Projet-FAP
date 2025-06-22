@@ -87,7 +87,7 @@
                 </dt>
                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                     {% if visite.photoFilename %} {# Utilise le nom correct ici aussi #}
-                        <img src="{{ asset('uploads/images/' ~ visite.photoFilename) }}" alt="Image de la visite {{ visite.lieu }}" class="h-48 w-auto object-cover shadow-md rounded">
+                        <img src="{{ asset('uploads/' ~ visite.photoFilename) }}" alt="Image de la visite {{ visite.lieu }}" class="h-48 w-auto object-cover shadow-md rounded">
                     {% else %}
                         Aucune image
                     {% endif %}

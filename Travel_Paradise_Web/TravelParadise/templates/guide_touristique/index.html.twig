@@ -87,7 +87,7 @@
                         </td>
                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {% if guide_touristique.photoFilename %}
-                                <img src="{{ asset('uploads/photos/' ~ guide_touristique.photoFilename) }}"
+                                <img src="{{ asset('uploads/' ~ guide_touristique.photoFilename) }}"
                                      alt="Photo de {{ guide_touristique.prenom }} {{ guide_touristique.nom }}"
                                      class="h-10 w-10 rounded-full object-cover">
                             {% else %}
