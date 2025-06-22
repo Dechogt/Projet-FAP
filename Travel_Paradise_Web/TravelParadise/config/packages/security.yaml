@@ -14,6 +14,7 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         main:
             lazy: true
             provider: app_user_provider
@@ -22,26 +23,29 @@ security:
                 check_path: app_login
                 enable_csrf: true
                 default_target_path: admin_dashboard
-                username_parameter: email   
-                password_parameter: password 
+                username_parameter: email
+                password_parameter: password
             logout:
                 path: app_logout
                 target: app_login
-            # Active le remember me (optionnel)
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800
-                path: /
-                always_remember_me: true
 
-    # Hiérarchie des rôles
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
 
     access_control:
+        # Accès public
         - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/admin, roles: ROLE_USER }
-        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/logout, roles: PUBLIC_ACCESS }
+
+        # 🛑 Dashboard et gestion utilisateurs = uniquement pour ROLE_ADMIN
+        - { path: ^/admin/?$, roles: ROLE_ADMIN }
+        - { path: ^/admin/user, roles: ROLE_ADMIN }
+        - { path: ^/admin/statistics, roles: ROLE_ADMIN }
+
+        # ✅ Routes accessibles à ROLE_USER (et donc aussi ROLE_ADMIN grâce à la hiérarchie)
+        - { path: ^/admin/guide_touristique, roles: ROLE_USER }
+        - { path: ^/admin/visite, roles: ROLE_USER }
+        - { path: ^/admin/affectation, roles: ROLE_USER }
 
 when@test:
     security:

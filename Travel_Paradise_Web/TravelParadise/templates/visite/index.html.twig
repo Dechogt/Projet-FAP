@@ -1,49 +1,122 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout_app.html.twig' %} {# Étend le layout de l'application #}
 
-{% block title %}Visite index{% endblock %}
+{% block app_title %}Visites - TravelParadise{% endblock %} {# Titre dans la barre du navigateur #}
+{% block page_title %}Visites{% endblock %} {# Titre affiché dans le header #}
 
-{% block body %}
-    <h1>Visite index</h1>
+{% block content %} {# Renomme le bloc body en content #}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Photo</th>
-                <th>Pays</th>
-                <th>Lieu</th>
-                <th>Date</th>
-                <th>HeureDebut</th>
-                <th>Duree</th>
-                <th>HeureFin</th>
-                <th>Commentaire</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for visite in visites %}
-            <tr>
-                <td>{{ visite.id }}</td>
-                <td>{{ visite.photo }}</td>
-                <td>{{ visite.pays }}</td>
-                <td>{{ visite.lieu }}</td>
-                <td>{{ visite.date ? visite.date|date('Y-m-d') : '' }}</td>
-                <td>{{ visite.heureDebut ? visite.heureDebut|date('H:i:s') : '' }}</td>
-                <td>{{ visite.duree }}</td>
-                <td>{{ visite.heureFin ? visite.heureFin|date('H:i:s') : '' }}</td>
-                <td>{{ visite.commentaire }}</td>
-                <td>
-                    <a href="{{ path('app_visite_show', {'id': visite.id}) }}">show</a>
-                    <a href="{{ path('app_visite_edit', {'id': visite.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Liste des Visites</h2>
+        {# Bouton "Create New" #}
+        <a href="{{ path('app_visite_new') }}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            Créer une nouvelle Visite
+        </a>
+    </div>
 
-    <a href="{{ path('app_visite_new') }}">Create new</a>
+    {# Tableau des visites #}
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    {# Adapte les en-têtes de colonne en fonction des propriétés de ton entité Visite #}
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        ID
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Lieu {# Changé de "Nom" à "Lieu" #}
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Commentaire {# Changé l'en-tête pour refléter le contenu #}
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Date
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Heure Début {# Précisé "Heure Début" pour plus de clarté #}
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Durée (heures) {# Précisé l'unité de la durée #}
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Prix
+                    </th>
+                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Guide
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Image
+                    </th>
+                    {# Ajoute d'autres en-têtes si nécessaire #}
+                    <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for visite in visites %} {# Assure-toi que le nom de la variable est correct #}
+                    <tr>
+                        {# Adapte l'affichage des données en fonction des propriétés de ton entité Visite #}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ visite.id }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ visite.lieu }} {# <-- CORRIGÉ : Utilisation de 'lieu' #}
+                        </td>
+                         <td class="px-6 py-4 text-sm text-gray-500"> {# Retire whitespace-nowrap pour le commentaire #}
+                            {# CORRIGÉ : Utilisation de 'commentaire' et ajustement de la logique d'affichage #}
+                            {% if visite.commentaire %}
+                                {{ visite.commentaire|length > 50 ? visite.commentaire|slice(0, 50) ~ '...' : visite.commentaire }}
+                            {% else %}
+                                Aucun commentaire
+                            {% endif %}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ visite.date ? visite.date|date('Y-m-d') : '' }} {# Formate la date #}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ visite.heureDebut ? visite.heureDebut|date('H:i') : '' }} {# Formate l'heure de début #}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ visite.duree }} {# Affiche la durée en heures #}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ visite.prix|format_currency('EUR', {fraction_digit: 2}) }} {# Formate le prix avec 2 décimales #}
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ visite.guide ? visite.guide.prenom ~ ' ' ~ visite.guide.nom : 'N/A' }} {# Affiche le nom du guide #}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {% if visite.photoFilename %}
+                                {# Utilise la fonction asset() pour générer l'URL de l'image #}
+                                <img src="{{ asset('uploads/images/' ~ visite.photoFilename) }}" {# Adapte le chemin #}
+                                    alt="Image de la visite {{ visite.lieu }}" {# Changé l'alt text pour utiliser 'lieu' #}
+                                    class="h-10 w-10 rounded object-cover"> {# Classes Tailwind pour styliser l'image #}
+                            {% else %}
+                                Aucune image
+                            {% endif %}
+                        </td>
+                        {# Ajoute d'autres cellules si nécessaire #}
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            {# Liens d'action #}
+                            <a href="{{ path('app_visite_show', {'id': visite.id}) }}"
+                               class="text-gray-600 hover:text-gray-900 mr-4">Show</a>
+                            <a href="{{ path('app_visite_edit', {'id': visite.id}) }}"
+                               class="text-teal-600 hover:text-teal-900 mr-4">Edit</a>
+                            {# Inclusion du formulaire de suppression (si tu veux le bouton ici) #}
+                            {% include 'visite/_delete_form.html.twig' with {'visite': visite} %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="10" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center"> {# Augmenté colspan pour couvrir toutes les colonnes #}
+                            Aucune visite trouvée.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 {% endblock %}

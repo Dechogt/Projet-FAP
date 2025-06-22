@@ -1,11 +1,18 @@
-{% extends 'base.html.twig' %}
+{# templates/guide_touristique/new.html.twig #}
+{% extends 'layout_app.html.twig' %}
 
-{% block title %}New GuideTouristique{% endblock %}
+{% block app_title %}Nouveau Guide - TravelParadise{% endblock %}
+{% block page_title %}Page d'inscription des guides{% endblock %}
 
-{% block body %}
-    <h1>Create new GuideTouristique</h1>
+{% block content %}
 
-    {{ include('guide_touristique/_form.html.twig') }}
+    <div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
 
-    <a href="{{ path('app_guide_touristique_index') }}">back to list</a>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Ajout d'un Guide Touristique</h2>
+
+        {# Inclusion du formulaire #}
+        {% include 'guide_touristique/_form.html.twig' with {'form': form} %}
+
+    </div>
+
 {% endblock %}

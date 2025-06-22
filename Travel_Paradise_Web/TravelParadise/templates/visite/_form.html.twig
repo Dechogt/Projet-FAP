@@ -1,4 +1,114 @@
+{# templates/visite/_form.html.twig #}
+
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+
+    {{ form_errors(form) }}
+
+    {# Conteneur principal de la grille #}
+    <div class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+
+        {# Champ Pays #}
+        <div class="sm:col-span-1">
+            {{ form_label(form.pays, 'Pays', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.pays, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.pays) }}
+        </div>
+
+        {# Champ Lieu #}
+        <div class="sm:col-span-1">
+            {{ form_label(form.lieu, 'Lieu', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.lieu, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.lieu) }}
+        </div>
+
+        {# Champ Date #}
+        <div class="sm:col-span-1">
+            {{ form_label(form.date, 'Date', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.date, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.date) }}
+        </div>
+
+        {# Champ Heure de début #}
+        <div class="sm:col-span-1">
+            {{ form_label(form.heureDebut, 'Heure de début', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.heureDebut, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.heureDebut) }}
+        </div>
+
+        {# Champ Durée #}
+        <div class="sm:col-span-1">
+            {{ form_label(form.duree, 'Durée (en heures)', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.duree, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.duree) }}
+        </div>
+
+        {# Champ Guide #}
+        <div class="sm:col-span-1">
+            {{ form_label(form.guide, 'Guide touristique', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.guide, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.guide) }}
+        </div>
+
+        {# Champ Commentaire (sur 2 colonnes) #}
+        <div class="sm:col-span-2">
+            {{ form_label(form.commentaire, 'Commentaire', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.commentaire, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.commentaire) }}
+        </div>
+
+        {# Champ Photo (sur 2 colonnes) #}
+        <div class="sm:col-span-2">
+            <label for="{{ form.photoFile.vars.id }}"
+                   class="cursor-pointer inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150 transform hover:-translate-y-1 hover:scale-105">
+                <svg class="-ml-1 mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                Choisir une image
+            </label>
+
+            {{ form_widget(form.photoFile, {'attr': {'class': 'sr-only'}}) }}
+            {{ form_errors(form.photoFile) }}
+
+            {# Afficher l'image existante si on est en mode édition et qu'une photo existe #}
+            {% if visite.photoFilename is not null %}
+                <div class="mt-4">
+                    <p class="block text-sm font-medium text-gray-700 mb-2">Image actuelle :</p>
+                    <img src="{{ asset('uploads/' ~ visite.photoFilename) }}" alt="Photo de la visite" class="h-32 w-32 object-cover rounded-md shadow-md">
+                </div>
+            {% endif %}
+        </div>
+
+        {# --- Ajout des champs Prix et Nombre maximum de visiteurs dans la grille --- #}
+        {# Ces champs seront sur une nouvelle ligne, chacun prenant une colonne #}
+        <div class="sm:col-span-1">
+            {{ form_label(form.prix, 'Prix', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.prix, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.prix) }}
+        </div>
+
+        <div class="sm:col-span-1">
+            {{ form_label(form.nombreMaxVisiteurs, 'Nombre maximum de visiteurs', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.nombreMaxVisiteurs, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.nombreMaxVisiteurs) }}
+        </div>
+        {# --- Fin de l'ajout --- #}
+
+    </div> {# Fin du conteneur principal de la grille #}
+
+
+    {# Conteneur pour les boutons #}
+    <div class="flex justify-end mt-6 space-x-4">
+
+        {# Bouton Retour à la liste #}
+        <a href="{{ path('app_visite_index') }}"
+           class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Retour à la liste
+        </a>
+
+        {# Bouton de soumission #}
+        <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Enregistrer
+        </button>
+
+    </div>
+
 {{ form_end(form) }}

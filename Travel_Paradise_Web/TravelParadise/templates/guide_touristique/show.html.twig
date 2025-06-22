@@ -1,42 +1,75 @@
-{% extends 'base.html.twig' %}
+{# templates/guide_touristique/show.html.twig #}
+{% extends 'layout_app.html.twig' %}
 
-{% block title %}GuideTouristique{% endblock %}
+{% block app_title %}Guide {{ guide_touristique.nom }} - TravelParadise{% endblock %}
+{% block page_title %}Détails du Guide Touristique{% endblock %}
 
-{% block body %}
-    <h1>GuideTouristique</h1>
+{% block content %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ guide_touristique.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ guide_touristique.nom }}</td>
-            </tr>
-            <tr>
-                <th>Prenom</th>
-                <td>{{ guide_touristique.prenom }}</td>
-            </tr>
-            <tr>
-                <th>Photo</th>
-                <td>{{ guide_touristique.photo }}</td>
-            </tr>
-            <tr>
-                <th>Statut</th>
-                <td>{{ guide_touristique.statut ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>PaysAffectation</th>
-                <td>{{ guide_touristique.paysAffectation }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
 
-    <a href="{{ path('app_guide_touristique_index') }}">back to list</a>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Détails du Guide Touristique</h2>
 
-    <a href="{{ path('app_guide_touristique_edit', {'id': guide_touristique.id}) }}">edit</a>
+        {# Afficher l'image si elle existe #}
+        {% if guide_touristique.photoFilename is not null %}
+            <div class="mb-6 text-center"> {# Centrer l'image #}
+                <img src="{{ asset('uploads/' ~ guide_touristique.photoFilename) }}" alt="Photo de {{ guide_touristique.nom }} {{ guide_touristique.prenom }}" class="h-48 w-48 object-cover rounded-full shadow-md mx-auto"> {# Image ronde et centrée #}
+            </div>
+        {% endif %}
 
-    {{ include('guide_touristique/_delete_form.html.twig') }}
+        {# Afficher les informations du guide #}
+        <div class="border-t border-gray-200 pt-4">
+            <dl class="divide-y divide-gray-200">
+                <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Nom</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ guide_touristique.nom }}</dd>
+                </div>
+                <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Prénom</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ guide_touristique.prenom }}</dd>
+                </div>
+                 <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Adresse e-mail</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ guide_touristique.email }}</dd>
+                </div>
+                 <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Téléphone</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ guide_touristique.telephone ?? 'N/A' }}</dd> {# Affiche N/A si le téléphone est null #}
+                </div>
+                <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Pays d'affectation</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ guide_touristique.paysAffectation }}</dd>
+                </div>
+                 <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Statut</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                        {% if guide_touristique.isStatut %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Actif</span>
+                        {% else %}
+                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inactif</span>
+                        {% endif %}
+                    </dd>
+                </div>
+            </dl>
+        </div>
+
+        {# Boutons d'action #}
+        <div class="mt-6 flex justify-end space-x-4">
+            <a href="{{ path('app_guide_touristique_index') }}"
+               class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Retour à la liste
+            </a>
+            <a href="{{ path('app_guide_touristique_edit', {'id': guide_touristique.id}) }}"
+               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z"></path></svg>
+                Modifier
+            </a>
+        </div>
+
+        {# Formulaire de suppression (souvent un petit formulaire POST) #}
+        {% include 'guide_touristique/_delete_form.html.twig' %}
+
+    </div>
+
 {% endblock %}

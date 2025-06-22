@@ -30,7 +30,6 @@ COPY package.json package-lock.json ./
 # Copie du reste des fichiers
 COPY . .
 
-# Rendre le script exécutable
 RUN chmod +x start.sh
 
 # Corriger le warning git ownership dans Docker
@@ -47,4 +46,9 @@ RUN set -e; \
 EXPOSE 8000
 
 # Commande par défaut
-CMD ["./start.sh"]
+# CMD ["./start.sh"]
+
+# Démarrer le serveur Symfony
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+# CMD ["bash","start.sh"]
+# CMD ["php-fpm"]

@@ -20,7 +20,27 @@ module.exports = {
           800: '#1e40af',
           900: '#1e3a8a',
         }
-      }
+      },
+      animation: {
+        blob: "blob 7s infinite", // Définit l'animation 'blob'
+      },
+      keyframes: {
+        blob: { // Définit les étapes de l'animation
+          "0%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+          "33%": {
+            transform: "translate(30px, -50px) scale(1.1)",
+          },
+          "66%": {
+            transform: "translate(-20px, 20px) scale(0.9)",
+          },
+          "100%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+        },
+      },
+
     },
   },
   plugins: [

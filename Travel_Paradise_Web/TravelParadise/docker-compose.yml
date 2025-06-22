@@ -1,3 +1,4 @@
+
 services:
   # Base de données PostgreSQL
   database:
@@ -54,7 +55,6 @@ services:
     networks:
       - travel_network
     restart: unless-stopped
-
 networks:
   travel_network:
     driver: bridge
