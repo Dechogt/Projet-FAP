@@ -26,7 +26,7 @@
                     Nom
                 </dt>
                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{ visite.nom }}
+                    {{ visite.lieu }}
                 </dd>
             </div>
              {# Exemple pour la Description #}
@@ -35,7 +35,7 @@
                     Description
                 </dt>
                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{ visite.description }}
+                    {{ visite.commentaire }}
                 </dd>
             </div>
              {# Exemple pour la Date #}
@@ -53,7 +53,7 @@
                     Heure
                 </dt>
                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{ visite.heure ? visite.heure|date('H:i') : '' }}
+                    {{ visite.heureDebut ? visite.heureDebut|date('H:i') : '' }}
                 </dd>
             </div>
              {# Exemple pour la Durée #}
@@ -61,9 +61,7 @@
                 <dt class="text-sm font-medium text-gray-500">
                     Durée (minutes)
                 </dt>
-                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{ visite.dureeMinutes }}
-                </dd>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ visite.duree }}</dd>
             </div>
              {# Exemple pour le Prix #}
              <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
@@ -88,10 +86,8 @@
                     Image
                 </dt>
                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {% if visite.imageFilename %}
-                        <img src="{{ asset('uploads/images/' ~ visite.imageFilename) }}" {# Adapte le chemin #}
-                            alt="Image de la visite {{ visite.nom }}"
-                            class="h-48 w-auto object-cover shadow-md rounded"> {# Classes Tailwind pour styliser l'image #}
+                    {% if visite.photoFilename %} {# Utilise le nom correct ici aussi #}
+                        <img src="{{ asset('uploads/images/' ~ visite.photoFilename) }}" alt="Image de la visite {{ visite.lieu }}" class="h-48 w-auto object-cover shadow-md rounded">
                     {% else %}
                         Aucune image
                     {% endif %}
