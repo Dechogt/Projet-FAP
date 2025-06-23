@@ -7,11 +7,11 @@
     {# Conteneur principal avec l'image d'arrière-plan #}
     {# L'image est appliquée ici, et le contenu est superposé #}
     <div class="flex h-screen overflow-hidden relative"
-         style="background-image: url('{{ asset('images/bg_img.jpg') }}'); background-size: cover; background-position: center;">
+         style="background-image: url('{{ asset('images/stats.jpg') }}'); background-size: cover; background-position: center;">
 
         {# Overlay pour le floutage et pour assombrir légèrement l'image #}
         {# Cet overlay permet de rendre le texte plus lisible #}
-        <div class="absolute inset-0 bg-black opacity-95 z-0"></div> {# Ajuste opacity pour plus ou moins de noirceur #}
+        <div class="absolute inset-0 bg-black opacity-50 z-0"></div> {# Ajuste opacity pour plus ou moins de noirceur #}
 
         {# Sidebar (Menu latéral) - Doit être au-dessus de l'overlay #}
         <aside class="w-64 bg-gradient-to-br from-gray-800 to-gray-900 text-white flex flex-col shadow-xl flex-shrink-0 z-10 relative"> {# z-10 pour être au-dessus de l'overlay #}
