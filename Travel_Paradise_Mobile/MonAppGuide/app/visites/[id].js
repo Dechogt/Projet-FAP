@@ -23,7 +23,7 @@ const VisiteDetailScreen = () => {
       try {
         setLoading(true);
         // Assure-toi que l'URL correspond à ta route API pour les détails
-        const response = await axios.get(`http://10.20.28.110:8000/api/guide/visites/${visiteId}`, {
+        const response = await axios.get(`http://192.168.0.228:8000/api/guide/visites/${visiteId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

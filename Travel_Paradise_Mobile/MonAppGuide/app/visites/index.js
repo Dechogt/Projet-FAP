@@ -20,7 +20,7 @@ const VisitesScreen = () => {
       }
 
       try {
-        const response = await axios.get('http://10.20.28.110:8000/api/guide/visites', {
+        const response = await axios.get('http://192.168.0.228:8000/api/guide/visites', {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

@@ -2,101 +2,79 @@
 
 namespace App\Controller;
 
-use App\Entity\GuideTouristique; // Assure-toi que le namespace est correct
-use App\Repository\VisiteRepository; // Assure-toi que ce repository existe
+use App\Entity\GuideTouristique;
+use App\Entity\Visite; // Assure-toi que Visite est importé
+use App\Repository\VisiteRepository;
+use App\Repository\VisiteurRepository;
+use Doctrine\ORM\EntityManagerInterface; // Importe l'interface EntityManagerInterface
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\User\UserInterface; // Pour typer le guide
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Contrôleur pour gérer les API liées aux visites, spécifiquement pour les guides.
  */
 class ApiVisiteController extends AbstractController
 {
-    // Injection du repository des visites via le constructeur
+    // Injection des repositories nécessaires ET de l'EntityManager
     public function __construct(
-        private VisiteRepository $visiteRepository
+        private VisiteRepository $visiteRepository,
+        private VisiteurRepository $visiteurRepository,
+        private EntityManagerInterface $entityManager // <-- EntityManager injecté ici
     ) {}
 
     /**
-     * Endpoint pour récupérer les visites d'un guide authentifié.
-     *
-     * Cette route est protégée et nécessite un token JWT valide dans l'en-tête `Authorization`.
-     * Elle retourne une liste des visites associées au guide authentifié.
-     *
-     * @return JsonResponse Une réponse JSON contenant la liste des visites ou un message d'erreur.
-     */
-    #[Route('/api/guide/visites', name: 'api_guide_visites', methods: ['GET'])]
-    public function getGuideVisites(): JsonResponse
-    {
-        // Récupère l'utilisateur actuellement authentifié.
-        // Si le firewall JWT est correctement configuré, $this->getUser() retournera
-        // l'objet GuideTouristique correspondant au token.
-        $guide = $this->getUser();
-
-        // Vérification de l'authentification et du type d'utilisateur.
-        // Si l'utilisateur n'est pas connecté ou n'est pas un GuideTouristique,
-        // on retourne une erreur 401 Unauthorized.
-        if (!$guide instanceof GuideTouristique) {
-            // Utilise JsonResponse::HTTP_UNAUTHORIZED pour le code 401
-            return $this->json(['message' => 'Authentification requise ou type d\'utilisateur invalide.'], JsonResponse::HTTP_UNAUTHORIZED);
-        }
-
-        // Récupère toutes les visites associées à ce guide.
-        // On utilise la méthode findBy du repository, en filtrant sur la relation 'guide'.
-        // Note : Si tu veux utiliser les méthodes plus spécifiques du VisiteRepository (ex: findVisitesByGuideAndStatus),
-        // tu devras les appeler ici. Pour l'instant, findBy est suffisant pour obtenir toutes les visites.
-        $visites = $this->visiteRepository->findBy(['guide' => $guide], ['date' => 'ASC', 'heureDebut' => 'ASC']); // Ajout d'un tri par défaut
-
-        // Prépare un tableau pour stocker les données des visites au format JSON.
-        $visitesData = [];
-        foreach ($visites as $visite) {
-            // Utilise les getters de l'entité Visite pour récupérer les données.
-            $visitesData[] = [
-                'id' => $visite->getId(),
-                'lieu' => $visite->getLieu(),
-                // Formate les dates et heures pour qu'elles soient lisibles en JSON.
-                // Utilise 'Y-m-d' pour la date et 'H:i:s' pour l'heure.
-                'date' => $visite->getDate() ? $visite->getDate()->format('Y-m-d') : null,
-                'heureDebut' => $visite->getHeureDebut() ? $visite->getHeureDebut()->format('H:i:s') : null,
-                'heureFin' => $visite->getHeureFin() ? $visite->getHeureFin()->format('H:i:s') : null,
-                'duree' => $visite->getDuree(),
-                'statut' => $visite->getStatut(), // Utilise le champ statut que nous avons ajouté
-                'prix' => $visite->getPrix(),
-                'nombreMaxVisiteurs' => $visite->getNombreMaxVisiteurs(),
-                // Tu peux ajouter ici d'autres informations utiles, par exemple :
-                // 'nombreVisiteursInscrits' => count($visite->getVisiteurs()), // Si tu veux le nombre de visiteurs inscrits
-            ];
-        }
-
-        // Retourne le tableau des visites au format JSON avec un code de succès 200 OK.
-        // Le `json()` de AbstractController gère automatiquement le Content-Type: application/json.
-        return $this->json($visitesData);
-    }
-
-    /**
-     * Endpoint pour récupérer une visite spécifique par son ID.
+     * Endpoint pour récupérer une visite spécifique par son ID, incluant ses visiteurs.
      *
      * @param int $id L'ID de la visite à récupérer.
-     * @return JsonResponse Une réponse JSON contenant les détails de la visite ou une erreur 404.
+     * @param Request $request L'objet Request pour gérer les requêtes OPTIONS (CORS).
+     * @return JsonResponse Une réponse JSON contenant les détails de la visite et ses visiteurs, ou une erreur.
      */
-    #[Route('/api/guide/visites/{id}', name: 'api_guide_visite_show', methods: ['GET'])]
-    public function getVisiteById(int $id): JsonResponse
+    #[Route('/api/guide/visites/{id}', name: 'api_guide_visite_show', methods: ['GET', 'OPTIONS'])]
+    public function getVisiteById(int $id, Request $request): JsonResponse
     {
+        // --- Gérer la requête OPTIONS pour le CORS ---
+        if ($request->isMethod('OPTIONS')) {
+            $response = new JsonResponse();
+            // Assure-toi que l'origine est correcte ou utilise '*' si nécessaire pour le développement
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+            return $response;
+        }
+        // --- Fin de la gestion CORS ---
+
         $visite = $this->visiteRepository->find($id);
 
-        // Si la visite n'est pas trouvée, retourne une erreur 404 Not Found.
         if (!$visite) {
             return $this->json(['message' => 'Visite non trouvée.'], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        // Vérifie si la visite appartient bien au guide authentifié.
-        // C'est une étape de sécurité importante pour s'assurer qu'un guide ne peut voir que ses propres visites.
         $guide = $this->getUser();
+        // Vérifie si l'utilisateur est un GuideTouristique et si la visite appartient bien à ce guide
         if (!$guide instanceof GuideTouristique || $visite->getGuide() !== $guide) {
-            return $this->json(['message' => 'Accès non autorisé à cette visite.'], JsonResponse::HTTP_FORBIDDEN); // 403 Forbidden
+            return $this->json(['message' => 'Accès non autorisé à cette visite.'], JsonResponse::HTTP_FORBIDDEN);
         }
+
+        // --- Récupérer les visiteurs associés à cette visite ---
+        // Utilise la méthode getVisiteurs() de l'entité Visite (qui vient de la relation OneToMany)
+        $visiteurs = $visite->getVisiteurs();
+
+        // Formater les données des visiteurs pour qu'elles correspondent à ce que l'app Expo attend
+        $visiteursData = [];
+        foreach ($visiteurs as $visiteur) {
+            $visiteursData[] = [
+                'id' => $visiteur->getId(),
+                'nom' => $visiteur->getNom(),
+                'prenom' => $visiteur->getPrenom(),
+                // Utilise les champs 'present' et 'commentaire' de ton entité Visiteur
+                'present' => $visiteur->isPresent(),
+                'commentaire' => $visiteur->getCommentaire(),
+            ];
+        }
+        // --- Fin de la récupération des visiteurs ---
 
         // Formate les données de la visite pour la réponse JSON.
         $visiteData = [
@@ -111,88 +89,123 @@ class ApiVisiteController extends AbstractController
             'statut' => $visite->getStatut(),
             'prix' => $visite->getPrix(),
             'nombreMaxVisiteurs' => $visite->getNombreMaxVisiteurs(),
-            // Tu peux ajouter ici des détails sur les visiteurs inscrits si nécessaire
-            // 'visiteurs' => $visite->getVisiteurs()->map(fn($v) => $v->getNom())->toArray(), // Exemple simple
+            // --- Ajoute la liste des visiteurs ici ---
+            'inscrits' => $visiteursData, // C'est la clé que ton app Expo attend !
         ];
 
-        return $this->json($visiteData);
+        // Crée la réponse JSON et ajoute les headers CORS
+        $response = $this->json($visiteData);
+        $response->headers->set('Access-Control-Allow-Origin', '*'); // Ou l'origine de ton app Expo
+        $response->headers->set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+        return $response;
     }
 
     /**
-     * Endpoint pour mettre à jour le statut d'une visite.
+     * Endpoint pour mettre à jour les présences et commentaires des visiteurs pour une visite donnée.
      *
-     * @param int $id L'ID de la visite à mettre à jour.
-     * @param Request $request L'objet Request contenant les données envoyées (le nouveau statut).
+     * @param Visite $visite L'entité Visite récupérée via le paramètre {id} de la route.
+     * @param Request $request L'objet Request contenant les données envoyées par l'application Expo.
      * @return JsonResponse Une réponse JSON indiquant le succès ou l'échec de l'opération.
      */
-    #[Route('/api/guide/visites/{id}/statut', name: 'api_guide_visite_update_statut', methods: ['PATCH'])]
-    public function updateVisiteStatut(int $id, \Symfony\Component\HttpFoundation\Request $request): JsonResponse
+    #[Route('/api/guide/visites/{id}/checkin', name: 'api_visite_checkin', methods: ['POST', 'OPTIONS'])]
+    public function updateVisiteCheckin(Visite $visite, Request $request): JsonResponse
     {
-        $visite = $this->visiteRepository->find($id);
-
-        if (!$visite) {
-            return $this->json(['message' => 'Visite non trouvée.'], JsonResponse::HTTP_NOT_FOUND);
+        // Gérer la requête OPTIONS pour le CORS (preflight request)
+        if ($request->isMethod('OPTIONS')) {
+            $response = new JsonResponse();
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+            return $response;
         }
 
+        // Sécuriser la route : vérifier que l'utilisateur est authentifié et est le bon guide
         $guide = $this->getUser();
         if (!$guide instanceof GuideTouristique || $visite->getGuide() !== $guide) {
             return $this->json(['message' => 'Accès non autorisé à cette visite.'], JsonResponse::HTTP_FORBIDDEN);
         }
 
-        // Récupère le corps de la requête (qui doit être du JSON)
+        // Récupérer les données envoyées par l'application Expo (format JSON)
         $data = json_decode($request->getContent(), true);
 
-        // Vérifie si le champ 'statut' est présent dans les données
-        if (!isset($data['statut']) || empty($data['statut'])) {
-            return $this->json(['message' => 'Le champ "statut" est manquant ou vide.'], JsonResponse::HTTP_BAD_REQUEST); // 400 Bad Request
+        // Valider les données reçues : s'assurer que 'inscrits' est présent et est un tableau
+        if (!isset($data['inscrits']) || !is_array($data['inscrits'])) {
+            return $this->json(['message' => 'Données des inscrits manquantes ou invalides.'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
-        $newStatut = $data['statut'];
-
-        // Optionnel : Valider le nouveau statut (par exemple, s'assurer qu'il fait partie d'une liste prédéfinie)
-        $validStatuts = ['à venir', 'en cours', 'terminée', 'annulée']; // Adapte selon tes besoins
-        if (!in_array($newStatut, $validStatuts)) {
-            return $this->json(['message' => 'Statut invalide. Statuts autorisés : ' . implode(', ', $validStatuts)], JsonResponse::HTTP_BAD_REQUEST);
+        // Créer une map des visiteurs de la visite pour un accès rapide par ID
+        $visiteursDeLaVisite = $visite->getVisiteurs();
+        $visiteursMap = [];
+        foreach ($visiteursDeLaVisite as $visiteur) {
+            $visiteursMap[$visiteur->getId()] = $visiteur;
         }
 
-        // Utilise la méthode du repository pour mettre à jour le statut
-        $rowsAffected = $this->visiteRepository->updateVisiteStatut($id, $newStatut);
+        // Parcourir les données des inscrits envoyées par l'application
+        foreach ($data['inscrits'] as $inscritData) {
+            $visiteurId = $inscritData['id'];
+            // Vérifier si le visiteur existe bien pour cette visite
+            if (isset($visiteursMap[$visiteurId])) {
+                $visiteur = $visiteursMap[$visiteurId];
 
-        if ($rowsAffected > 0) {
-            // Si la mise à jour a réussi, retourne un message de succès.
-            // On pourrait aussi retourner l'entité mise à jour si nécessaire.
-            return $this->json(['message' => 'Statut de la visite mis à jour avec succès.', 'statut' => $newStatut]);
-        } else {
-            // Si la mise à jour n'a rien affecté (ce qui est peu probable ici si la visite existe), retourne une erreur.
-            return $this->json(['message' => 'Échec de la mise à jour du statut.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR); // 500 Internal Server Error
+                // Mettre à jour le champ 'present' si présent dans les données reçues
+                if (isset($inscritData['present'])) {
+                    $visiteur->setPresent((bool) $inscritData['present']);
+                }
+
+                // Mettre à jour le champ 'commentaire' si présent dans les données reçues
+                if (isset($inscritData['commentaire'])) {
+                    $visiteur->setCommentaire($inscritData['commentaire']);
+                }
+            }
         }
+
+        // Mettre à jour le commentaire général de la visite si le champ existe dans l'entité Visite
+        // et s'il est présent dans les données reçues.
+        if (isset($data['commentaireGeneral']) && method_exists($visite, 'setCommentaireGeneral')) {
+             $visite->setCommentaireGeneral($data['commentaireGeneral']);
+        }
+
+        // Mettre à jour le statut de la visite si le champ existe dans l'entité Visite
+        // et s'il est présent dans les données reçues.
+        if (isset($data['statut']) && method_exists($visite, 'setStatut')) {
+             $visite->setStatut($data['statut']);
+        }
+
+        // Persister toutes les modifications dans la base de données
+        $this->entityManager->flush();
+
+        // Renvoyer une réponse de succès
+        $response = $this->json(['message' => 'Mise à jour de la visite réussie.']);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+        return $response;
     }
 
-    // --- Ajout d'une méthode pour récupérer les visites par statut ---
+    // --- Les autres méthodes (getGuideVisites, updateVisiteStatut, etc.) restent inchangées ---
+    // Si tu as d'autres méthodes dans ce contrôleur, assure-toi qu'elles sont bien présentes.
+    // Par exemple, si tu as getGuideVisites, il devrait ressembler à ceci :
 
     /**
-     * Endpoint pour récupérer les visites d'un guide, filtrées par statut.
+     * Endpoint pour récupérer les visites d'un guide authentifié.
      *
-     * Exemple d'appel : /api/guide/visites?statut=à venir
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request L'objet Request pour accéder aux paramètres de requête.
-     * @return JsonResponse Une réponse JSON contenant la liste des visites filtrées.
+     * @return JsonResponse Une réponse JSON contenant la liste des visites ou un message d'erreur.
      */
-    #[Route('/api/guide/visites', name: 'api_guide_visites_filtered', methods: ['GET'])]
-    public function getGuideVisitesFiltered( \Symfony\Component\HttpFoundation\Request $request): JsonResponse
+    #[Route('/api/guide/visites', name: 'api_guide_visites', methods: ['GET'])]
+    public function getGuideVisites(): JsonResponse
     {
         $guide = $this->getUser();
+
         if (!$guide instanceof GuideTouristique) {
             return $this->json(['message' => 'Authentification requise ou type d\'utilisateur invalide.'], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
-        // Récupère le paramètre 'statut' de la requête GET
-        $statut = $request->query->get('statut');
+        // Récupère toutes les visites associées à ce guide.
+        $visites = $this->visiteRepository->findBy(['guide' => $guide], ['date' => 'ASC', 'heureDebut' => 'ASC']);
 
-        // Utilise la méthode du repository pour filtrer par statut
-        $visites = $this->visiteRepository->findVisitesByGuideAndStatus($guide->getId(), $statut);
-
-        // Formate les données des visites comme dans getGuideVisites
         $visitesData = [];
         foreach ($visites as $visite) {
             $visitesData[] = [
@@ -209,5 +222,49 @@ class ApiVisiteController extends AbstractController
         }
 
         return $this->json($visitesData);
+    }
+
+    // Si tu as aussi la route pour mettre à jour le statut :
+    /**
+     * Endpoint pour mettre à jour le statut d'une visite.
+     *
+     * @param int $id L'ID de la visite à mettre à jour.
+     * @param Request $request L'objet Request contenant les données envoyées (le nouveau statut).
+     * @return JsonResponse Une réponse JSON indiquant le succès ou l'échec de l'opération.
+     */
+    #[Route('/api/guide/visites/{id}/statut', name: 'api_guide_visite_update_statut', methods: ['PATCH'])]
+    public function updateVisiteStatut(int $id, Request $request): JsonResponse
+    {
+        $visite = $this->visiteRepository->find($id);
+
+        if (!$visite) {
+            return $this->json(['message' => 'Visite non trouvée.'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $guide = $this->getUser();
+        if (!$guide instanceof GuideTouristique || $visite->getGuide() !== $guide) {
+            return $this->json(['message' => 'Accès non autorisé à cette visite.'], JsonResponse::HTTP_FORBIDDEN);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['statut']) || empty($data['statut'])) {
+            return $this->json(['message' => 'Le champ "statut" est manquant ou vide.'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $newStatut = $data['statut'];
+        $validStatuts = ['à venir', 'en cours', 'terminée', 'annulée']; // Adapte selon tes besoins
+
+        if (!in_array($newStatut, $validStatuts)) {
+            return $this->json(['message' => 'Statut invalide. Statuts autorisés : ' . implode(', ', $validStatuts)], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        // Utilise la méthode du repository pour mettre à jour le statut
+        // Assure-toi que VisiteRepository a une méthode updateVisiteStatut($id, $newStatut)
+        // Si ce n'est pas le cas, tu peux faire la mise à jour directement ici :
+        $visite->setStatut($newStatut);
+        $this->entityManager->flush(); // Utilise l'EntityManager injecté
+
+        return $this->json(['message' => 'Statut de la visite mis à jour avec succès.', 'statut' => $newStatut]);
     }
 }
