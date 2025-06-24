@@ -6,25 +6,32 @@ export default function Layout() {
     <Stack
       screenOptions={{
         headerShown: true,
+        headerStyle: {
+          backgroundColor: '#00796b',
+        },
+        headerTintColor: '#ffffff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
       }}
     >
-      {/* La route par défaut est maintenant le login */}
+      {/* Page d'accueil - PREMIÈRE PAGE (point d'entrée) */}
       <Stack.Screen
-        name="index" // Correspond à app/index.js (anciennement login.js)
-        options={{ title: 'Authentification' }}
+        name="index" // Correspond à app/index.js (page d'accueil)
+        options={{ title: 'Accueil', headerShown: false }}
       />
-      {/* La nouvelle page d'accueil */}
+      {/* Page de connexion - APRÈS avoir cliqué sur "Se connecter" */}
       <Stack.Screen
-        name="home" // Correspond à app/home.js
-        options={{ title: 'Accueil Guide' }}
+        name="login" // Correspond à app/login.js (page de connexion)
+        options={{ title: 'Connexion Guide', headerShown: false }}
       />
       <Stack.Screen
         name="visites/index"
-        options={{ title: 'Liste des Visites' }}
+        options={{ title: 'Mes Visites' }}
       />
       <Stack.Screen
         name="visites/[id]"
-        options={{ title: 'Détails de la Visite' }}
+        options={{ title: 'Détails Visite' }}
       />
     </Stack>
   );
