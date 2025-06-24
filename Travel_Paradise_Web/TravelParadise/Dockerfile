@@ -2,8 +2,6 @@ FROM php:8.3-cli
 
 # Installation des dépendances système
 RUN apt-get update && apt-get install -y \
-    nodejs \
-    npm \
     git \
     unzip \
     libpq-dev \
@@ -22,12 +20,10 @@ RUN apt-get update && apt-get install -y \
 # Installation de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /app
+# Définir le répertoire de travail
+WORKDIR /var/www/html
 
-# Copie des fichiers de dépendances Node.js
-COPY package.json package-lock.json ./
-
-# Copie du reste des fichiers
+# Copier les fichiers du projet
 COPY . .
 
 RUN chmod +x start.sh
@@ -36,17 +32,10 @@ RUN chmod +x start.sh
 RUN git config --global --add safe.directory /var/www/html
 
 # Installation des dépendances PHP
-RUN set -e; \
-    composer install --optimize-autoloader --no-dev || \
-    { [ -f .env ] || echo "APP_ENV=prod" > .env; } && \
-    composer install --optimize-autoloader --no-dev
+RUN composer install --optimize-autoloader
 
-# RUN npm install && npm run build
-
+# Exposer le port
 EXPOSE 8000
-
-# Commande par défaut
-# CMD ["./start.sh"]
 
 # Démarrer le serveur Symfony
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]

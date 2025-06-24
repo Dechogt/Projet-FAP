@@ -45,6 +45,7 @@ services:
     restart: unless-stopped
     working_dir: /var/www/html
 
+  # Adminer pour gérer la base de données (optionnel)
   adminer:
     image: adminer
     container_name: travel_paradise_adminer
