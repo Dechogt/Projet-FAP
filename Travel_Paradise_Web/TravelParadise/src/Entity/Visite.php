@@ -81,6 +81,8 @@ class Visite
     #[Assert\Positive(message: "Le nombre maximum de visiteurs doit être un nombre entier positif.")]
     private ?int $nombreMaxVisiteurs = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $statut = null;
 
     public function __construct()
     {
@@ -283,7 +285,17 @@ class Visite
 
         return $this;
     }
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
 
+    public function setStatut(?string $statut): static
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
     // --- Méthode pour obtenir la date et l'heure complètes (utile pour l'affichage) ---
     public function getDateTime(): ?\DateTimeImmutable
     {

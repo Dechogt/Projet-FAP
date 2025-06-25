@@ -1,57 +1,88 @@
 security:
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-        App\Entity\User:
-            algorithm: auto
+        App\Entity\User: 'auto'
+        App\Entity\GuideTouristique: 'auto'
 
     providers:
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+        guide_provider:
+            entity:
+                class: App\Entity\GuideTouristique
+                property: email
 
     firewalls:
+        # 🔧 Dev (doit toujours être en premier pour ne pas interférer)
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        # 🔐 API sécurisée par JWT pour les GUIDES (doit être avant 'main')
+        api_login:
+            pattern: ^/api/login
+            stateless: true
+            provider: guide_provider
+            json_login:
+                check_path: /api/login_check
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern: ^/api
+            stateless: true
+            provider: guide_provider
+            jwt: ~
+
+        # 🔐 Authentification par formulaire pour les ADMIN et USER (web)
         main:
+            # CHANGEMENT : Pattern élargi pour couvrir toutes les routes sauf API
+            pattern: ^/(?!api/)
             lazy: true
             provider: app_user_provider
             form_login:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                default_target_path: admin_dashboard
+                # CHANGEMENT : Redirection vers /admin après connexion
+                default_target_path: /admin
                 username_parameter: email
                 password_parameter: password
             logout:
                 path: app_logout
                 target: app_login
+            # AJOUT : Remember me pour maintenir la session
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 semaine
+                path: /
 
     role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
+        ROLE_ADMIN: [ROLE_USER]
+        ROLE_USER: []
 
     access_control:
-        # Accès public
+        # --- Accès PUBLICS ---
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/logout, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        
+        # AJOUT : Route racine accessible à tous
+        - { path: ^/$, roles: PUBLIC_ACCESS }
 
-        # 🛑 Dashboard et gestion utilisateurs = uniquement pour ROLE_ADMIN
-        - { path: ^/admin/?$, roles: ROLE_ADMIN }
+        # --- API GUIDES ---
+        - { path: ^/api/guide/visites, roles: ROLE_GUIDE }
+
+        # --- ADMINISTRATION WEB ---
         - { path: ^/admin/user, roles: ROLE_ADMIN }
         - { path: ^/admin/statistics, roles: ROLE_ADMIN }
-
-        # ✅ Routes accessibles à ROLE_USER (et donc aussi ROLE_ADMIN grâce à la hiérarchie)
+        
         - { path: ^/admin/guide_touristique, roles: ROLE_USER }
         - { path: ^/admin/visite, roles: ROLE_USER }
         - { path: ^/admin/affectation, roles: ROLE_USER }
-
-when@test:
-    security:
-        password_hashers:
-            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
-                algorithm: auto
-                cost: 4
-                time_cost: 3
-                memory_cost: 10
+        
+        # Dashboard d'accueil admin
+        - { path: ^/admin, roles: ROLE_USER }
