@@ -7,27 +7,29 @@ export default function Layout() {
       screenOptions={{
         headerShown: true,
         headerStyle: {
-          backgroundColor: '#00796b',
+          backgroundColor: '#5619e5',
         },
         headerTintColor: '#ffffff',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
+        headerTitle: 'TravelParadise', // 👈 Ajoutez cette ligne
       }}
     >
-      {/* Page d'accueil - PREMIÈRE PAGE (point d'entrée) */}
+      {/* Page d'accueil */}
       <Stack.Screen
-        name="index" // Correspond à app/index.js (page d'accueil)
+        name="index"
         options={{ title: 'Accueil', headerShown: false }}
       />
-      {/* Page de connexion - APRÈS avoir cliqué sur "Se connecter" */}
+      {/* Page de connexion */}
       <Stack.Screen
-        name="login" // Correspond à app/login.js (page de connexion)
+        name="login"
         options={{ title: 'Connexion Guide', headerShown: false }}
       />
+      {/* Autres pages */}
       <Stack.Screen
         name="visites/index"
-        options={{ title: 'Mes Visites' }}
+        options={{ title: 'Mes Visites' }} // Le titre spécifique remplacera "TravelParadise" ici
       />
       <Stack.Screen
         name="visites/[id]"

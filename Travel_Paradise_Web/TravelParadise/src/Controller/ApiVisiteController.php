@@ -210,6 +210,7 @@ class ApiVisiteController extends AbstractController
         foreach ($visites as $visite) {
             $visitesData[] = [
                 'id' => $visite->getId(),
+                'pays' => $visite->getPays(),
                 'lieu' => $visite->getLieu(),
                 'date' => $visite->getDate() ? $visite->getDate()->format('Y-m-d') : null,
                 'heureDebut' => $visite->getHeureDebut() ? $visite->getHeureDebut()->format('H:i:s') : null,
@@ -218,6 +219,7 @@ class ApiVisiteController extends AbstractController
                 'statut' => $visite->getStatut(),
                 'prix' => $visite->getPrix(),
                 'nombreMaxVisiteurs' => $visite->getNombreMaxVisiteurs(),
+                'photo_filename' => $visite->getPhotoFilename(),
             ];
         }
 
