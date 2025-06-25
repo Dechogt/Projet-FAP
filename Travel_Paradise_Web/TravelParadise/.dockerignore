@@ -1,12 +1,12 @@
-# .git
-# .env.local
-# .env.test.local
-# .env.dev.local
-# vendor/
-# node_modules/
-# var/cache/
-# var/log/
-# public/build/
-# public/assets/
-# .idea/
-# .vscode/
+.git
+.env.local
+.env.test.local
+.env.dev.local
+vendor/
+node_modules/
+var/cache/
+var/log/
+public/build/
+public/assets/
+.idea/
+.vscode/
