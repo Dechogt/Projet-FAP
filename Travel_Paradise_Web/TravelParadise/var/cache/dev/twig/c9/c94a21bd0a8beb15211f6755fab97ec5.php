@@ -218,12 +218,12 @@ class __TwigTemplate_9b773c2c0a81c7001c67655a185af472 extends Template
             // line 73
             yield "                                    <a href=\"";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_visiteur_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["visiteur"], "id", [], "any", false, false, false, 73)]), "html", null, true);
-            yield "\" class=\"text-blue-600 hover:text-blue-900\">Voir</a>
+            yield "\" class=\"text-blue-600 hover:text-blue-900\">Show</a>
                                     ";
             // line 75
             yield "                                    <a href=\"";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_visiteur_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["visiteur"], "id", [], "any", false, false, false, 75)]), "html", null, true);
-            yield "\" class=\"text-indigo-600 hover:text-indigo-900 ml-4\">Modifier</a>
+            yield "\" class=\"text-indigo-600 hover:text-indigo-900 ml-4\">Edit</a>
                                     ";
             // line 77
             yield "                                    ";
@@ -358,9 +358,9 @@ class __TwigTemplate_9b773c2c0a81c7001c67655a185af472 extends Template
 
                                 <td class=\"px-6 py-4 whitespace-nowrap text-right text-sm font-medium\">
                                     {# Assure-toi que la route 'app_visiteur_show' existe pour voir les détails #}
-                                    <a href=\"{{ path('app_visiteur_show', {'id': visiteur.id}) }}\" class=\"text-blue-600 hover:text-blue-900\">Voir</a>
+                                    <a href=\"{{ path('app_visiteur_show', {'id': visiteur.id}) }}\" class=\"text-blue-600 hover:text-blue-900\">Show</a>
                                     {# Assure-toi que la route 'app_visiteur_edit' existe pour modifier #}
-                                    <a href=\"{{ path('app_visiteur_edit', {'id': visiteur.id}) }}\" class=\"text-indigo-600 hover:text-indigo-900 ml-4\">Modifier</a>
+                                    <a href=\"{{ path('app_visiteur_edit', {'id': visiteur.id}) }}\" class=\"text-indigo-600 hover:text-indigo-900 ml-4\">Edit</a>
                                     {# Pour la suppression, il faut une route et une logique côté contrôleur #}
                                     {# <a href=\"#\" class=\"text-red-600 hover:text-red-900 ml-4\">Supprimer</a> #}
                                 </td>

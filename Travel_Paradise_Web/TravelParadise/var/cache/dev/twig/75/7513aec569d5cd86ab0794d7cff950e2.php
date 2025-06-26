@@ -34,8 +34,8 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
         $this->blocks = [
             'title' => [$this, 'block_title'],
             'stylesheets' => [$this, 'block_stylesheets'],
-            'javascripts' => [$this, 'block_javascripts'],
             'body' => [$this, 'block_body'],
+            'javascripts' => [$this, 'block_javascripts'],
         ];
     }
 
@@ -49,38 +49,39 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "base.html.twig"));
 
         // line 1
-        yield "<!DOCTYPE html>
-<html>
+        yield "
+<!DOCTYPE html>
+<html lang=\"fr\">
     <head>
         <meta charset=\"UTF-8\">
+        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
         <title>";
-        // line 5
+        // line 7
         yield from $this->unwrap()->yieldBlock('title', $context, $blocks);
         yield "</title>
-        ";
-        // line 7
-        yield "        <link rel=\"icon\" href=\"";
+
+        <link rel=\"icon\" href=\"";
+        // line 9
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("images/logo-favicon.png"), "html", null, true);
         yield "\">
-
-        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 
         ";
         // line 11
         yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
         // line 14
-        yield "
-        ";
-        // line 15
-        yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
-        // line 18
         yield "    </head>
+    <body class=\"bg-gray-50\">
 
-    <body>
+        ";
+        // line 17
+        yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
+        // line 19
+        yield "
+
         ";
         // line 21
-        yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
-        // line 22
+        yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
+        // line 24
         yield "    </body>
 </html>
 ";
@@ -93,7 +94,7 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
         yield from [];
     }
 
-    // line 5
+    // line 7
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -106,7 +107,7 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
 
-        yield "Welcome!";
+        yield "TravelParadise";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
 
@@ -132,9 +133,8 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
         // line 12
         yield "            ";
         yield $this->extensions['Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension']->renderWebpackLinkTags("app");
-        yield " ";
-        // line 13
-        yield "        ";
+        yield "
+        ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
 
@@ -144,24 +144,20 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
         yield from [];
     }
 
-    // line 15
+    // line 17
     /**
      * @return iterable<null|scalar|\Stringable>
      */
-    public function block_javascripts(array $context, array $blocks = []): iterable
+    public function block_body(array $context, array $blocks = []): iterable
     {
         $macros = $this->macros;
         $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
-        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 16
-        yield "            ";
-        yield $this->extensions['Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension']->renderWebpackScriptTags("app");
-        yield " ";
-        // line 17
+        // line 18
         yield "        ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -176,15 +172,20 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
     /**
      * @return iterable<null|scalar|\Stringable>
      */
-    public function block_body(array $context, array $blocks = []): iterable
+    public function block_javascripts(array $context, array $blocks = []): iterable
     {
         $macros = $this->macros;
         $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
-        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
+        // line 22
+        yield "            ";
+        yield $this->extensions['Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension']->renderWebpackScriptTags("app");
+        yield "
+        ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
 
@@ -215,32 +216,34 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  176 => 21,  165 => 17,  161 => 16,  148 => 15,  137 => 13,  133 => 12,  120 => 11,  97 => 5,  84 => 22,  82 => 21,  77 => 18,  75 => 15,  72 => 14,  70 => 11,  62 => 7,  58 => 5,  52 => 1,);
+        return array (  185 => 22,  172 => 21,  161 => 18,  148 => 17,  134 => 12,  121 => 11,  98 => 7,  85 => 24,  83 => 21,  79 => 19,  77 => 17,  72 => 14,  70 => 11,  65 => 9,  60 => 7,  52 => 1,);
     }
 
     public function getSourceContext(): Source
     {
-        return new Source("<!DOCTYPE html>
-<html>
+        return new Source("
+<!DOCTYPE html>
+<html lang=\"fr\">
     <head>
         <meta charset=\"UTF-8\">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Favicon simple #}
+        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+        <title>{% block title %}TravelParadise{% endblock %}</title>
+
         <link rel=\"icon\" href=\"{{ asset('images/logo-favicon.png') }}\">
 
-        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-
         {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }} {# Inclut Tailwind CSS #}
-        {% endblock %}
-
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }} {# Inclut les scripts #}
+            {{ encore_entry_link_tags('app') }}
         {% endblock %}
     </head>
+    <body class=\"bg-gray-50\">
 
-    <body>
-        {% block body %}{% endblock %}
+        {% block body %}
+        {% endblock %}
+
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
     </body>
 </html>
 ", "base.html.twig", "/var/www/html/templates/base.html.twig");

@@ -17,7 +17,7 @@ class MercureConfig implements \Symfony\Component\Config\Builder\ConfigBuilderIn
     private $defaultCookieLifetime;
     private $enableProfiler;
     private $_usedProperties = [];
-
+    
     public function hub(string $name, array $value = []): \Symfony\Config\Mercure\HubConfig
     {
         if (!isset($this->hubs[$name])) {
@@ -26,10 +26,10 @@ class MercureConfig implements \Symfony\Component\Config\Builder\ConfigBuilderIn
         } elseif (1 < \func_num_args()) {
             throw new InvalidConfigurationException('The node created by "hub()" has already been initialized. You cannot pass values the second time you call hub().');
         }
-
+    
         return $this->hubs[$name];
     }
-
+    
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -39,10 +39,10 @@ class MercureConfig implements \Symfony\Component\Config\Builder\ConfigBuilderIn
     {
         $this->_usedProperties['defaultHub'] = true;
         $this->defaultHub = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * Default lifetime of the cookie containing the JWT, in seconds. Defaults to the value of "framework.session.cookie_lifetime".
      * @default null
@@ -53,10 +53,10 @@ class MercureConfig implements \Symfony\Component\Config\Builder\ConfigBuilderIn
     {
         $this->_usedProperties['defaultCookieLifetime'] = true;
         $this->defaultCookieLifetime = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * Enable Symfony Web Profiler integration.
      * @default null
@@ -68,15 +68,15 @@ class MercureConfig implements \Symfony\Component\Config\Builder\ConfigBuilderIn
     {
         $this->_usedProperties['enableProfiler'] = true;
         $this->enableProfiler = $value;
-
+    
         return $this;
     }
-
+    
     public function getExtensionAlias(): string
     {
         return 'mercure';
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('hubs', $value)) {
@@ -84,30 +84,30 @@ class MercureConfig implements \Symfony\Component\Config\Builder\ConfigBuilderIn
             $this->hubs = array_map(fn ($v) => new \Symfony\Config\Mercure\HubConfig($v), $value['hubs']);
             unset($value['hubs']);
         }
-
+    
         if (array_key_exists('default_hub', $value)) {
             $this->_usedProperties['defaultHub'] = true;
             $this->defaultHub = $value['default_hub'];
             unset($value['default_hub']);
         }
-
+    
         if (array_key_exists('default_cookie_lifetime', $value)) {
             $this->_usedProperties['defaultCookieLifetime'] = true;
             $this->defaultCookieLifetime = $value['default_cookie_lifetime'];
             unset($value['default_cookie_lifetime']);
         }
-
+    
         if (array_key_exists('enable_profiler', $value)) {
             $this->_usedProperties['enableProfiler'] = true;
             $this->enableProfiler = $value['enable_profiler'];
             unset($value['enable_profiler']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -123,7 +123,7 @@ class MercureConfig implements \Symfony\Component\Config\Builder\ConfigBuilderIn
         if (isset($this->_usedProperties['enableProfiler'])) {
             $output['enable_profiler'] = $this->enableProfiler;
         }
-
+    
         return $output;
     }
 

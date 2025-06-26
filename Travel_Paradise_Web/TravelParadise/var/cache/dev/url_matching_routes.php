@@ -20,6 +20,7 @@ return [
         '/admin/visites' => [[['_route' => 'admin_visites', '_controller' => 'App\\Controller\\AdminController::visites'], null, null, null, false, false, null]],
         '/admin/users' => [[['_route' => 'admin_users', '_controller' => 'App\\Controller\\AdminController::users'], null, null, null, false, false, null]],
         '/admin/statistics' => [[['_route' => 'admin_statistics', '_controller' => 'App\\Controller\\AdminController::statistics'], null, null, null, false, false, null]],
+        '/api/guide/visites' => [[['_route' => 'api_guide_visites', '_controller' => 'App\\Controller\\ApiVisiteController::getGuideVisites'], null, ['GET' => 0], null, false, false, null]],
         '/admin/guide_touristique' => [[['_route' => 'app_guide_touristique_index', '_controller' => 'App\\Controller\\GuideTouristiqueController::index'], null, ['GET' => 0], null, true, false, null]],
         '/admin/guide_touristique/new' => [[['_route' => 'app_guide_touristique_new', '_controller' => 'App\\Controller\\GuideTouristiqueController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/' => [[['_route' => 'app_home', '_controller' => 'App\\Controller\\HomeController::index'], null, null, null, false, false, null]],
@@ -31,6 +32,7 @@ return [
         '/admin/visite/new' => [[['_route' => 'app_visite_new', '_controller' => 'App\\Controller\\VisiteController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/visiteur' => [[['_route' => 'app_visiteur_index', '_controller' => 'App\\Controller\\VisiteurController::index'], null, ['GET' => 0], null, false, false, null]],
         '/visiteur/new' => [[['_route' => 'app_visiteur_new', '_controller' => 'App\\Controller\\VisiteurController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/api/login_check' => [[['_route' => 'api_login', '_controller' => 'lexik_jwt_authentication.controller.authentication'], null, ['POST' => 0], null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
@@ -52,27 +54,36 @@ return [
                         .')'
                     .')'
                 .')'
-                .'|/admin/(?'
-                    .'|guide_touristique/([^/]++)(?'
-                        .'|(*:241)'
-                        .'|/edit(*:254)'
-                        .'|(*:262)'
+                .'|/a(?'
+                    .'|pi/guide/visites/([^/]++)(?'
+                        .'|(*:235)'
+                        .'|/(?'
+                            .'|checkin(*:254)'
+                            .'|statut(*:268)'
+                        .')'
                     .')'
-                    .'|user/([^/]++)(?'
-                        .'|(*:287)'
-                        .'|/edit(*:300)'
-                        .'|(*:308)'
-                    .')'
-                    .'|visite/([^/]++)(?'
-                        .'|(*:335)'
-                        .'|/edit(*:348)'
-                        .'|(*:356)'
+                    .'|dmin/(?'
+                        .'|guide_touristique/([^/]++)(?'
+                            .'|(*:315)'
+                            .'|/edit(*:328)'
+                            .'|(*:336)'
+                        .')'
+                        .'|user/([^/]++)(?'
+                            .'|(*:361)'
+                            .'|/edit(*:374)'
+                            .'|(*:382)'
+                        .')'
+                        .'|visite/([^/]++)(?'
+                            .'|(*:409)'
+                            .'|/edit(*:422)'
+                            .'|(*:430)'
+                        .')'
                     .')'
                 .')'
                 .'|/visiteur/([^/]++)(?'
-                    .'|(*:387)'
-                    .'|/edit(*:400)'
-                    .'|(*:408)'
+                    .'|(*:462)'
+                    .'|/edit(*:475)'
+                    .'|(*:483)'
                 .')'
             .')/?$}sDu',
     ],
@@ -85,18 +96,21 @@ return [
         168 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
         181 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
         191 => [[['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null]],
-        241 => [[['_route' => 'app_guide_touristique_show', '_controller' => 'App\\Controller\\GuideTouristiqueController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        254 => [[['_route' => 'app_guide_touristique_edit', '_controller' => 'App\\Controller\\GuideTouristiqueController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        262 => [[['_route' => 'app_guide_touristique_delete', '_controller' => 'App\\Controller\\GuideTouristiqueController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        287 => [[['_route' => 'app_user_show', '_controller' => 'App\\Controller\\UserController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        300 => [[['_route' => 'app_user_edit', '_controller' => 'App\\Controller\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        308 => [[['_route' => 'app_user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        335 => [[['_route' => 'app_visite_show', '_controller' => 'App\\Controller\\VisiteController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        348 => [[['_route' => 'app_visite_edit', '_controller' => 'App\\Controller\\VisiteController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        356 => [[['_route' => 'app_visite_delete', '_controller' => 'App\\Controller\\VisiteController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        387 => [[['_route' => 'app_visiteur_show', '_controller' => 'App\\Controller\\VisiteurController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        400 => [[['_route' => 'app_visiteur_edit', '_controller' => 'App\\Controller\\VisiteurController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        408 => [
+        235 => [[['_route' => 'api_guide_visite_show', '_controller' => 'App\\Controller\\ApiVisiteController::getVisiteById'], ['id'], ['GET' => 0, 'OPTIONS' => 1], null, false, true, null]],
+        254 => [[['_route' => 'api_visite_checkin', '_controller' => 'App\\Controller\\ApiVisiteController::updateVisiteCheckin'], ['id'], ['POST' => 0, 'OPTIONS' => 1], null, false, false, null]],
+        268 => [[['_route' => 'api_guide_visite_update_statut', '_controller' => 'App\\Controller\\ApiVisiteController::updateVisiteStatut'], ['id'], ['PATCH' => 0], null, false, false, null]],
+        315 => [[['_route' => 'app_guide_touristique_show', '_controller' => 'App\\Controller\\GuideTouristiqueController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        328 => [[['_route' => 'app_guide_touristique_edit', '_controller' => 'App\\Controller\\GuideTouristiqueController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        336 => [[['_route' => 'app_guide_touristique_delete', '_controller' => 'App\\Controller\\GuideTouristiqueController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        361 => [[['_route' => 'app_user_show', '_controller' => 'App\\Controller\\UserController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        374 => [[['_route' => 'app_user_edit', '_controller' => 'App\\Controller\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        382 => [[['_route' => 'app_user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        409 => [[['_route' => 'app_visite_show', '_controller' => 'App\\Controller\\VisiteController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        422 => [[['_route' => 'app_visite_edit', '_controller' => 'App\\Controller\\VisiteController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        430 => [[['_route' => 'app_visite_delete', '_controller' => 'App\\Controller\\VisiteController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        462 => [[['_route' => 'app_visiteur_show', '_controller' => 'App\\Controller\\VisiteurController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        475 => [[['_route' => 'app_visiteur_edit', '_controller' => 'App\\Controller\\VisiteurController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        483 => [
             [['_route' => 'app_visiteur_delete', '_controller' => 'App\\Controller\\VisiteurController::delete'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

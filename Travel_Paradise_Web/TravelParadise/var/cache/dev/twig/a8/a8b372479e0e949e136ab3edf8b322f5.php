@@ -124,7 +124,7 @@ class __TwigTemplate_f037f7e19fd58f4b1f6767d3cdbd3c54 extends Template
         // line 7
         yield "
     <div class=\"flex justify-between items-center mb-6\">
-        <h2 class=\"text-2xl font-bold text-gray-800\">Liste des Visites</h2>
+        <h2 class=\"text-2xl font-bold text-white-800\">Liste des Visites</h2>
         ";
         // line 11
         yield "        <a href=\"";
@@ -142,30 +142,22 @@ class __TwigTemplate_f037f7e19fd58f4b1f6767d3cdbd3c54 extends Template
         <table class=\"min-w-full divide-y divide-gray-200\">
             <thead class=\"bg-gray-50\">
                 <tr>
-                    ";
-        // line 24
-        yield "                    <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
+
+                    <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
                         ID
                     </th>
                     <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
-                        Lieu ";
-        // line 29
-        yield "                    </th>
-                     <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
-                        Commentaire ";
-        // line 32
-        yield "                    </th>
+                        Lieu
+                    </th>
+
                      <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
                         Date
                     </th>
                      <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
-                        Heure Début ";
-        // line 38
-        yield "                    </th>
+                        Heure Début
                      <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
-                        Durée (heures) ";
-        // line 41
-        yield "                    </th>
+                        Durée (heures)
+                    </th>
                      <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
                         Prix
                     </th>
@@ -175,18 +167,17 @@ class __TwigTemplate_f037f7e19fd58f4b1f6767d3cdbd3c54 extends Template
                     <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
                         Image
                     </th>
-                    ";
-        // line 52
-        yield "                    <th scope=\"col\" class=\"relative px-6 py-3\">
+                   
+                    <th scope=\"col\" class=\"relative px-6 py-3\">
                         <span class=\"sr-only\">Actions</span>
                     </th>
                 </tr>
             </thead>
             <tbody class=\"bg-white divide-y divide-gray-200\">
                 ";
-        // line 58
+        // line 55
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["visites"]) || array_key_exists("visites", $context) ? $context["visites"] : (function () { throw new RuntimeError('Variable "visites" does not exist.', 58, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["visites"]) || array_key_exists("visites", $context) ? $context["visites"] : (function () { throw new RuntimeError('Variable "visites" does not exist.', 55, $this->source); })()));
         $context['_iterated'] = false;
         $context['loop'] = [
           'parent' => $context['_parent'],
@@ -203,120 +194,120 @@ class __TwigTemplate_f037f7e19fd58f4b1f6767d3cdbd3c54 extends Template
         }
         foreach ($context['_seq'] as $context["_key"] => $context["visite"]) {
             yield " ";
-            // line 59
+            // line 56
             yield "                    <tr>
                         ";
-            // line 61
+            // line 58
             yield "                        <td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900\">
                             ";
-            // line 62
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "id", [], "any", false, false, false, 62), "html", null, true);
+            // line 59
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "id", [], "any", false, false, false, 59), "html", null, true);
             yield "
                         </td>
                         <td class=\"px-6 py-4 whitespace-nowrap text-sm text-gray-500\">
                             ";
-            // line 65
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "lieu", [], "any", false, false, false, 65), "html", null, true);
+            // line 62
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "lieu", [], "any", false, false, false, 62), "html", null, true);
             yield " ";
-            // line 66
+            // line 63
             yield "                        </td>
                          <td class=\"px-6 py-4 text-sm text-gray-500\"> ";
-            // line 68
+            // line 65
             yield "                            ";
-            // line 69
+            // line 66
             yield "                            ";
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "commentaire", [], "any", false, false, false, 69)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 70
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "commentaire", [], "any", false, false, false, 66)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 67
                 yield "                                ";
-                yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "commentaire", [], "any", false, false, false, 70)) > 50)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "commentaire", [], "any", false, false, false, 70), 0, 50) . "..."), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "commentaire", [], "any", false, false, false, 70), "html", null, true)));
+                yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "commentaire", [], "any", false, false, false, 67)) > 50)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "commentaire", [], "any", false, false, false, 67), 0, 50) . "..."), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "commentaire", [], "any", false, false, false, 67), "html", null, true)));
                 yield "
                             ";
             } else {
-                // line 72
+                // line 69
                 yield "                                Aucun commentaire
                             ";
             }
+            // line 71
+            yield "                        </td>
+                         <td class=\"px-6 py-4 whitespace-nowrap text-sm text-gray-500\">
+                            ";
+            // line 73
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "date", [], "any", false, false, false, 73)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "date", [], "any", false, false, false, 73), "Y-m-d"), "html", null, true)) : (""));
+            yield " ";
             // line 74
             yield "                        </td>
                          <td class=\"px-6 py-4 whitespace-nowrap text-sm text-gray-500\">
                             ";
             // line 76
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "date", [], "any", false, false, false, 76)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "date", [], "any", false, false, false, 76), "Y-m-d"), "html", null, true)) : (""));
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "heureDebut", [], "any", false, false, false, 76)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "heureDebut", [], "any", false, false, false, 76), "H:i"), "html", null, true)) : (""));
             yield " ";
             // line 77
             yield "                        </td>
                          <td class=\"px-6 py-4 whitespace-nowrap text-sm text-gray-500\">
                             ";
             // line 79
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "heureDebut", [], "any", false, false, false, 79)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "heureDebut", [], "any", false, false, false, 79), "H:i"), "html", null, true)) : (""));
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "duree", [], "any", false, false, false, 79), "html", null, true);
             yield " ";
             // line 80
             yield "                        </td>
                          <td class=\"px-6 py-4 whitespace-nowrap text-sm text-gray-500\">
                             ";
             // line 82
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "duree", [], "any", false, false, false, 82), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extra\Intl\IntlExtension']->formatCurrency(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "prix", [], "any", false, false, false, 82), "EUR", ["fraction_digit" => 2]), "html", null, true);
             yield " ";
             // line 83
             yield "                        </td>
                          <td class=\"px-6 py-4 whitespace-nowrap text-sm text-gray-500\">
                             ";
             // line 85
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extra\Intl\IntlExtension']->formatCurrency(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "prix", [], "any", false, false, false, 85), "EUR", ["fraction_digit" => 2]), "html", null, true);
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "guide", [], "any", false, false, false, 85)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "guide", [], "any", false, false, false, 85), "prenom", [], "any", false, false, false, 85) . " ") . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "guide", [], "any", false, false, false, 85), "nom", [], "any", false, false, false, 85)), "html", null, true)) : ("N/A"));
             yield " ";
             // line 86
             yield "                        </td>
-                         <td class=\"px-6 py-4 whitespace-nowrap text-sm text-gray-500\">
-                            ";
-            // line 88
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "guide", [], "any", false, false, false, 88)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "guide", [], "any", false, false, false, 88), "prenom", [], "any", false, false, false, 88) . " ") . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "guide", [], "any", false, false, false, 88), "nom", [], "any", false, false, false, 88)), "html", null, true)) : ("N/A"));
-            yield " ";
-            // line 89
-            yield "                        </td>
                         <td class=\"px-6 py-4 whitespace-nowrap text-sm text-gray-500\">
                             ";
-            // line 91
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "photoFilename", [], "any", false, false, false, 91)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 92
+            // line 88
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "photoFilename", [], "any", false, false, false, 88)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 89
                 yield "                                ";
-                // line 93
+                // line 90
                 yield "                                <img src=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/" . CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "photoFilename", [], "any", false, false, false, 93))), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/" . CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "photoFilename", [], "any", false, false, false, 90))), "html", null, true);
                 yield "\" ";
-                // line 94
+                // line 91
                 yield "                                    alt=\"Image de la visite ";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "lieu", [], "any", false, false, false, 94), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "lieu", [], "any", false, false, false, 91), "html", null, true);
                 yield "\" ";
-                // line 95
+                // line 92
                 yield "                                    class=\"h-10 w-10 rounded object-cover\"> ";
-                // line 96
+                // line 93
                 yield "                            ";
             } else {
-                // line 97
+                // line 94
                 yield "                                Aucune image
                             ";
             }
-            // line 99
+            // line 96
             yield "                        </td>
                         ";
-            // line 101
+            // line 98
             yield "                        <td class=\"px-6 py-4 whitespace-nowrap text-right text-sm font-medium\">
                             ";
-            // line 103
+            // line 100
             yield "                            <a href=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_visite_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "id", [], "any", false, false, false, 103)]), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_visite_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "id", [], "any", false, false, false, 100)]), "html", null, true);
             yield "\"
                                class=\"text-gray-600 hover:text-gray-900 mr-4\">Show</a>
                             <a href=\"";
-            // line 105
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_visite_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "id", [], "any", false, false, false, 105)]), "html", null, true);
+            // line 102
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_visite_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["visite"], "id", [], "any", false, false, false, 102)]), "html", null, true);
             yield "\"
                                class=\"text-teal-600 hover:text-teal-900 mr-4\">Edit</a>
                             ";
-            // line 108
+            // line 105
             yield "                            ";
-            yield from $this->load("visite/_delete_form.html.twig", 108)->unwrap()->yield(CoreExtension::merge($context, ["visite" => $context["visite"]]));
-            // line 109
+            yield from $this->load("visite/_delete_form.html.twig", 105)->unwrap()->yield(CoreExtension::merge($context, ["visite" => $context["visite"]]));
+            // line 106
             yield "                        </td>
                     </tr>
                 ";
@@ -330,12 +321,12 @@ class __TwigTemplate_f037f7e19fd58f4b1f6767d3cdbd3c54 extends Template
                 $context['loop']['last'] = 0 === $context['loop']['revindex0'];
             }
         }
-        // line 111
+        // line 108
         if (!$context['_iterated']) {
-            // line 112
+            // line 109
             yield "                    <tr>
                         <td colspan=\"10\" class=\"px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center\"> ";
-            // line 114
+            // line 111
             yield "                            Aucune visite trouvée.
                         </td>
                     </tr>
@@ -344,7 +335,7 @@ class __TwigTemplate_f037f7e19fd58f4b1f6767d3cdbd3c54 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['visite'], $context['_parent'], $context['_iterated'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 118
+        // line 115
         yield "            </tbody>
         </table>
     </div>
@@ -380,7 +371,7 @@ class __TwigTemplate_f037f7e19fd58f4b1f6767d3cdbd3c54 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  348 => 118,  339 => 114,  336 => 112,  334 => 111,  320 => 109,  317 => 108,  312 => 105,  306 => 103,  303 => 101,  300 => 99,  296 => 97,  293 => 96,  291 => 95,  287 => 94,  283 => 93,  281 => 92,  279 => 91,  275 => 89,  272 => 88,  268 => 86,  265 => 85,  261 => 83,  258 => 82,  254 => 80,  251 => 79,  247 => 77,  244 => 76,  240 => 74,  236 => 72,  230 => 70,  227 => 69,  225 => 68,  222 => 66,  219 => 65,  213 => 62,  210 => 61,  207 => 59,  188 => 58,  180 => 52,  168 => 41,  164 => 38,  157 => 32,  153 => 29,  147 => 24,  141 => 19,  130 => 11,  125 => 7,  111 => 6,  88 => 4,  65 => 3,  42 => 1,);
+        return array (  339 => 115,  330 => 111,  327 => 109,  325 => 108,  311 => 106,  308 => 105,  303 => 102,  297 => 100,  294 => 98,  291 => 96,  287 => 94,  284 => 93,  282 => 92,  278 => 91,  274 => 90,  272 => 89,  270 => 88,  266 => 86,  263 => 85,  259 => 83,  256 => 82,  252 => 80,  249 => 79,  245 => 77,  242 => 76,  238 => 74,  235 => 73,  231 => 71,  227 => 69,  221 => 67,  218 => 66,  216 => 65,  213 => 63,  210 => 62,  204 => 59,  201 => 58,  198 => 56,  179 => 55,  141 => 19,  130 => 11,  125 => 7,  111 => 6,  88 => 4,  65 => 3,  42 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -393,7 +384,7 @@ class __TwigTemplate_f037f7e19fd58f4b1f6767d3cdbd3c54 extends Template
 {% block content %} {# Renomme le bloc body en content #}
 
     <div class=\"flex justify-between items-center mb-6\">
-        <h2 class=\"text-2xl font-bold text-gray-800\">Liste des Visites</h2>
+        <h2 class=\"text-2xl font-bold text-white-800\">Liste des Visites</h2>
         {# Bouton \"Create New\" #}
         <a href=\"{{ path('app_visite_new') }}\"
            class=\"inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500\">
@@ -407,24 +398,21 @@ class __TwigTemplate_f037f7e19fd58f4b1f6767d3cdbd3c54 extends Template
         <table class=\"min-w-full divide-y divide-gray-200\">
             <thead class=\"bg-gray-50\">
                 <tr>
-                    {# Adapte les en-têtes de colonne en fonction des propriétés de ton entité Visite #}
+
                     <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
                         ID
                     </th>
                     <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
-                        Lieu {# Changé de \"Nom\" à \"Lieu\" #}
+                        Lieu
                     </th>
-                     <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
-                        Commentaire {# Changé l'en-tête pour refléter le contenu #}
-                    </th>
+
                      <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
                         Date
                     </th>
                      <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
-                        Heure Début {# Précisé \"Heure Début\" pour plus de clarté #}
-                    </th>
+                        Heure Début
                      <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
-                        Durée (heures) {# Précisé l'unité de la durée #}
+                        Durée (heures)
                     </th>
                      <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
                         Prix
@@ -435,7 +423,7 @@ class __TwigTemplate_f037f7e19fd58f4b1f6767d3cdbd3c54 extends Template
                     <th scope=\"col\" class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">
                         Image
                     </th>
-                    {# Ajoute d'autres en-têtes si nécessaire #}
+                   
                     <th scope=\"col\" class=\"relative px-6 py-3\">
                         <span class=\"sr-only\">Actions</span>
                     </th>

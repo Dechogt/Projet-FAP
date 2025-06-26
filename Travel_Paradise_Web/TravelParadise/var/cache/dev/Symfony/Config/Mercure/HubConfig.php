@@ -18,7 +18,7 @@ class HubConfig
     private $jwtProvider;
     private $bus;
     private $_usedProperties = [];
-
+    
     /**
      * URL of the hub's publish endpoint
      * @example https://demo.mercure.rocks/.well-known/mercure
@@ -30,10 +30,10 @@ class HubConfig
     {
         $this->_usedProperties['url'] = true;
         $this->url = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * URL of the hub's public endpoint
      * @example https://demo.mercure.rocks/.well-known/mercure
@@ -45,10 +45,10 @@ class HubConfig
     {
         $this->_usedProperties['publicUrl'] = true;
         $this->publicUrl = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @template TValue
      * @param TValue $value
@@ -61,20 +61,20 @@ class HubConfig
         if (!\is_array($value)) {
             $this->_usedProperties['jwt'] = true;
             $this->jwt = $value;
-
+    
             return $this;
         }
-
+    
         if (!$this->jwt instanceof \Symfony\Config\Mercure\HubConfig\JwtConfig) {
             $this->_usedProperties['jwt'] = true;
             $this->jwt = new \Symfony\Config\Mercure\HubConfig\JwtConfig($value);
         } elseif (0 < \func_num_args()) {
             throw new InvalidConfigurationException('The node created by "jwt()" has already been initialized. You cannot pass values the second time you call jwt().');
         }
-
+    
         return $this->jwt;
     }
-
+    
     /**
      * The ID of a service to call to generate the JSON Web Token.
      * @default null
@@ -86,10 +86,10 @@ class HubConfig
     {
         $this->_usedProperties['jwtProvider'] = true;
         $this->jwtProvider = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * Name of the Messenger bus where the handler for this hub must be registered. Default to the default bus if Messenger is enabled.
      * @default null
@@ -100,10 +100,10 @@ class HubConfig
     {
         $this->_usedProperties['bus'] = true;
         $this->bus = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('url', $value)) {
@@ -111,36 +111,36 @@ class HubConfig
             $this->url = $value['url'];
             unset($value['url']);
         }
-
+    
         if (array_key_exists('public_url', $value)) {
             $this->_usedProperties['publicUrl'] = true;
             $this->publicUrl = $value['public_url'];
             unset($value['public_url']);
         }
-
+    
         if (array_key_exists('jwt', $value)) {
             $this->_usedProperties['jwt'] = true;
             $this->jwt = \is_array($value['jwt']) ? new \Symfony\Config\Mercure\HubConfig\JwtConfig($value['jwt']) : $value['jwt'];
             unset($value['jwt']);
         }
-
+    
         if (array_key_exists('jwt_provider', $value)) {
             $this->_usedProperties['jwtProvider'] = true;
             $this->jwtProvider = $value['jwt_provider'];
             unset($value['jwt_provider']);
         }
-
+    
         if (array_key_exists('bus', $value)) {
             $this->_usedProperties['bus'] = true;
             $this->bus = $value['bus'];
             unset($value['bus']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -159,7 +159,7 @@ class HubConfig
         if (isset($this->_usedProperties['bus'])) {
             $output['bus'] = $this->bus;
         }
-
+    
         return $output;
     }
 

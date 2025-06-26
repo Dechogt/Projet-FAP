@@ -127,7 +127,7 @@ class __TwigTemplate_6437e92ac3a509df5bff274e483497e9 extends Template
         yield "    <div class=\"max-w-3xl mx-auto px-4 py-8\"> ";
         // line 11
         yield "        <div class=\"bg-white shadow-xl rounded-lg overflow-hidden border border-gray-200\">
-            <div class=\"px-6 py-5 bg-gradient-to-r from-blue-500 to-blue-600 text-white\"> ";
+            <div class=\"px-6 py-5 bg-gradient-to-r from-gray-500 to-gray-600 text-white\"> ";
         // line 13
         yield "                <h2 class=\"text-xl font-semibold\"> Nouveau Visiteur</h2>
             </div>
@@ -312,7 +312,7 @@ class __TwigTemplate_6437e92ac3a509df5bff274e483497e9 extends Template
     {# Conteneur principal pour le formulaire, centré et avec une ombre #}
     <div class=\"max-w-3xl mx-auto px-4 py-8\"> {# J'ai réduit la largeur pour un formulaire plus simple #}
         <div class=\"bg-white shadow-xl rounded-lg overflow-hidden border border-gray-200\">
-            <div class=\"px-6 py-5 bg-gradient-to-r from-blue-500 to-blue-600 text-white\"> {# Changement de couleur pour différencier #}
+            <div class=\"px-6 py-5 bg-gradient-to-r from-gray-500 to-gray-600 text-white\"> {# Changement de couleur pour différencier #}
                 <h2 class=\"text-xl font-semibold\"> Nouveau Visiteur</h2>
             </div>
 
