@@ -14,7 +14,7 @@ const HomeScreen = () => {
       <View style={styles.overlay}>
         <View style={styles.contentContainer}>
           <Text style={styles.title}>Welcome to TravelParadise 🌴</Text>
-          <Text style={styles.slogan}>🌍 Votre monde. 🧭 Votre parcours. 👥 Vos visiteurs.</Text>
+          <Text style={styles.slogan}>Votre monde.Votre parcours.Vos visiteurs.</Text>
 
           <View style={styles.buttonGroup}>
             <TouchableOpacity
