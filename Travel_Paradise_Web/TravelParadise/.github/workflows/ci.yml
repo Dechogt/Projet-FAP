@@ -40,36 +40,11 @@ jobs:
       - name: Build assets with Webpack Encore
         run: npm run build # Exécute la commande build de votre package.json
 
-      - name: Run Doctrine migrations (dry run)
-        # Nous faisons un dry-run pour vérifier que les migrations sont valides sans les appliquer réellement
-        # Vous aurez besoin de configurer les variables d'environnement pour la base de données ici
-        # Pour l'instant, nous allons juste vérifier la syntaxe.
-        # Si vous avez une base de données de test, vous pouvez adapter cette étape.
-        run: |
-          echo "Skipping migration dry-run for now as DB setup is complex in CI without dedicated service."
-          echo "Consider adding a database service (e.g., PostgreSQL) to your workflow if needed."
-          # Exemple si vous aviez une base de données configurée :
-          # docker compose exec app php bin/console doctrine:migrations:migrate --dry-run
-
+      # --- Étape de test ---
+      # Pour l'instant, nous allons nous concentrer sur les tests PHPUnit.
+      # Si vous avez des tests qui nécessitent une base de données, nous les ajouterons plus tard.
       - name: Run PHPUnit tests
         # Assurez-vous que PHPUnit est installé via Composer
         # Vous devrez peut-être configurer votre fichier phpunit.xml.dist pour l'environnement CI
+        # Si vous avez un fichier .env.test, il sera utilisé automatiquement par Symfony si vous le configurez correctement.
         run: vendor/bin/phpunit --configuration phpunit.xml.dist
-
-      # Si vous avez des tests d'intégration qui nécessitent une base de données,
-      # vous devrez configurer un service de base de données dans le workflow.
-      # Exemple avec PostgreSQL :
-      # - name: Setup PostgreSQL
-      #   uses: ankane/setup-postgres@v1
-      #   with:
-      #     version: 15
-      #     locale: en_US.UTF-8
-      #   env:
-      #     POSTGRES_USER: testuser
-      #     POSTGRES_DB: testdb
-      #     POSTGRES_PASSWORD: testpassword
-      #
-      # - name: Run integration tests
-      #   env:
-      #     DATABASE_URL: postgresql://testuser:testpassword@localhost:5432/testdb
-      #   run: vendor/bin/phpunit --configuration phpunit.xml.dist --group integration
