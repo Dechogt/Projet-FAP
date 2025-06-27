@@ -1,0 +1,75 @@
+name: CI for TravelParadise Web
+
+on:
+  push:
+    branches:
+      - 'Decho/initialisation' # Votre branche actuelle
+      - 'franck'               # Votre nouvelle branche de développement
+  pull_request:
+    branches:
+      - 'Decho/initialisation'
+      - 'franck'
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest # Utilise un runner Ubuntu récent
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Récupère le code de votre dépôt
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3' # Assurez-vous que cela correspond à votre version PHP locale
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql, zip # Extensions PHP nécessaires
+          coverage: none # Pas besoin de couverture de code pour l'instant
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest # Installe les dépendances PHP
+
+      - name: Install Node.js dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Ou la version Node.js que vous utilisez
+          cache: 'npm' # Utilise le cache npm pour accélérer les installations
+
+      - name: Install npm dependencies
+        run: npm install # Installe les dépendances JavaScript
+
+      - name: Build assets with Webpack Encore
+        run: npm run build # Exécute la commande build de votre package.json
+
+      - name: Run Doctrine migrations (dry run)
+        # Nous faisons un dry-run pour vérifier que les migrations sont valides sans les appliquer réellement
+        # Vous aurez besoin de configurer les variables d'environnement pour la base de données ici
+        # Pour l'instant, nous allons juste vérifier la syntaxe.
+        # Si vous avez une base de données de test, vous pouvez adapter cette étape.
+        run: |
+          echo "Skipping migration dry-run for now as DB setup is complex in CI without dedicated service."
+          echo "Consider adding a database service (e.g., PostgreSQL) to your workflow if needed."
+          # Exemple si vous aviez une base de données configurée :
+          # docker compose exec app php bin/console doctrine:migrations:migrate --dry-run
+
+      - name: Run PHPUnit tests
+        # Assurez-vous que PHPUnit est installé via Composer
+        # Vous devrez peut-être configurer votre fichier phpunit.xml.dist pour l'environnement CI
+        run: vendor/bin/phpunit --configuration phpunit.xml.dist
+
+      # Si vous avez des tests d'intégration qui nécessitent une base de données,
+      # vous devrez configurer un service de base de données dans le workflow.
+      # Exemple avec PostgreSQL :
+      # - name: Setup PostgreSQL
+      #   uses: ankane/setup-postgres@v1
+      #   with:
+      #     version: 15
+      #     locale: en_US.UTF-8
+      #   env:
+      #     POSTGRES_USER: testuser
+      #     POSTGRES_DB: testdb
+      #     POSTGRES_PASSWORD: testpassword
+      #
+      # - name: Run integration tests
+      #   env:
+      #     DATABASE_URL: postgresql://testuser:testpassword@localhost:5432/testdb
+      #   run: vendor/bin/phpunit --configuration phpunit.xml.dist --group integration
