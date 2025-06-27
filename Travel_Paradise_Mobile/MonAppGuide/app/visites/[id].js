@@ -39,7 +39,7 @@ const VisiteDetailScreen = () => {
 
       try {
         setLoading(true);
-        const response = await axios.get(`http://192.168.0.228:8000/api/guide/visites/${visiteId}`, {
+        const response = await axios.get(`http://10.2.101.9:8000/api/guide/visites/${visiteId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -110,7 +110,7 @@ const VisiteDetailScreen = () => {
     };
 
     try {
-      await axios.post(`http://192.168.0.228:8000/api/guide/visites/${visiteId}/checkin`, payload, {
+      await axios.post(`http://10.2.101.9:8000/api/guide/visites/${visiteId}/checkin`, payload, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

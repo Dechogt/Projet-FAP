@@ -69,7 +69,7 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/logout, roles: PUBLIC_ACCESS }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        
+
         # AJOUT : Route racine accessible à tous
         - { path: ^/$, roles: PUBLIC_ACCESS }
 
@@ -79,10 +79,10 @@ security:
         # --- ADMINISTRATION WEB ---
         - { path: ^/admin/user, roles: ROLE_ADMIN }
         - { path: ^/admin/statistics, roles: ROLE_ADMIN }
-        
+
         - { path: ^/admin/guide_touristique, roles: ROLE_USER }
         - { path: ^/admin/visite, roles: ROLE_USER }
         - { path: ^/admin/affectation, roles: ROLE_USER }
-        
+
         # Dashboard d'accueil admin
         - { path: ^/admin, roles: ROLE_USER }

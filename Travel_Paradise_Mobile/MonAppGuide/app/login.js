@@ -18,7 +18,7 @@ const LoginScreen = () => {
 
     setIsLoading(true);
     try {
-      const response = await axios.post('http://192.168.0.228:8000/api/login_check', {
+      const response = await axios.post('http://10.2.101.9:8000/api/login_check', {
         email: email,
         password: password,
       });
@@ -118,7 +118,7 @@ const LoginScreen = () => {
 
           {/* Back Button */}
           <TouchableOpacity style={styles.backButton} onPress={() => router.push('/')}>
-            <Text style={styles.backButtonText}>← Retour à l'accueil</Text>
+            <Text style={styles.backButtonText}>← Retour</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

@@ -1,103 +1,94 @@
-{# templates/layout_app.html.twig - Layout avec Image d'Arrière-plan Floutée #}
+{# templates/layout_app.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{% block app_title %}TravelParadise{% endblock %}{% endblock %}
 
 {% block body %}
-    {# Conteneur principal avec l'image d'arrière-plan #}
-    {# L'image est appliquée ici, et le contenu est superposé #}
+
     <div class="flex h-screen overflow-hidden relative"
-         style="background-image: url('{{ asset('images/bg_img.jpg') }}'); background-size: cover; background-position: center;">
+         style="background-image: url('{{ asset('images/stats.jpg') }}'); background-size: cover; background-position: center;">
 
-        {# Overlay pour le floutage et pour assombrir légèrement l'image #}
-        {# Cet overlay permet de rendre le texte plus lisible #}
-        <div class="absolute inset-0 bg-black opacity-95 z-0"></div> {# Ajuste opacity pour plus ou moins de noirceur #}
+        <div class="absolute inset-0 bg-black opacity-30 z-0"></div>
 
-        {# Sidebar (Menu latéral) - Doit être au-dessus de l'overlay #}
-        <aside class="w-64 bg-gradient-to-br from-gray-800 to-gray-900 text-white flex flex-col shadow-xl flex-shrink-0 z-10 relative"> {# z-10 pour être au-dessus de l'overlay #}
-            {# ... (Contenu de la sidebar comme précédemment) ... #}
-            {# Logo ou titre de l'application dans la sidebar #}
-            <div class="flex items-center justify-center h-20 border-b border-gray-700 px-4">
-                 <div class="h-10 w-10 bg-teal-500 rounded-full flex items-center justify-center shadow-lg">
-                    <img src="{{ asset('images/logo-transparent.png') }}" alt="Travel Paradise Logo" class="h-6 w-6">
+        <aside class="w-64 bg-gradient-to-br from-black to-white text-white flex flex-col shadow-xl flex-shrink-0 z-10 relative">
+
+            <div class="flex items-center justify-center h-20 border-b border-white-700 px-4">
+                <div class="h-10 w-10 rounded-full flex items-center justify-center shadow-lg bg-transparent border-2 border-white">
+                    <img src="{{ asset('images/tp-logo.png') }}" alt="Travel Paradise Logo" class="h-6 w-6">
                 </div>
-                <span class="ml-3 text-xl font-bold text-teal-300 tracking-wide">TravelParadise</span>
+                <span class="ml-3 text-xl font-bold tracking-wide">TravelParadise</span>
             </div>
-            {# Navigation principale #}
-            <nav class="flex-1 px-3 py-6 space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
-                {# Liens de navigation #}
+
+            <nav class="flex-1 px-3 py-6 space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-700 scrollbar-track-blue-800">
                 <a href="{{ path('admin_dashboard') }}"
-                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
-                   {% if app.request.get('_route') starts with 'admin_dashboard' %}bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md{% endif %}">
+                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-blue-700 hover:text-white transition-colors duration-200 ease-in-out
+                   {% if app.request.get('_route') starts with 'admin_dashboard' %}bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md{% endif %}">
                     <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l7 7M19 10v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     Dashboard
                 </a>
 
                 {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('app_guide_touristique_index') }}"
-                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
-                   {% if app.request.get('_route') starts with 'app_guide_touristique_index' %}bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md{% endif %}">
-                    <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                    </svg>
-                    Guides
-                </a>
+                    <a href="{{ path('app_guide_touristique_index') }}"
+                       class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-blue-700 hover:text-white transition-colors duration-200 ease-in-out
+                       {% if app.request.get('_route') starts with 'app_guide_touristique_index' %}bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md{% endif %}">
+                        <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                        </svg>
+                        Guides
+                    </a>
 
-                <a href="{{ path('app_visite_index') }}"
-                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
-                   {% if app.request.get('_route') starts with 'admin_visites' %}bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md{% endif %}">
-                    <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    Visites
-                </a>
+                    <a href="{{ path('app_visite_index') }}"
+                       class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-blue-700 hover:text-white transition-colors duration-200 ease-in-out
+                       {% if app.request.get('_route') starts with 'admin_visites' %}bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md{% endif %}">
+                        <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Visites
+                    </a>
 
-                <a href="{{ path('app_user_index') }}"
-                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
-                   {% if app.request.get('_route') starts with 'admin_users' %}bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md{% endif %}">
-                    <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.291M12 4a4 4 0 100 8 4 4 0 000-8z"></path>
-                    </svg>
-                    Utilisateurs
-                </a>
-            {% endif %}
-            <a href="{{ path('app_visiteur_index') }}"
-                class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
-                {% if app.request.get('_route') starts with 'app_visiteur_' %}bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md{% endif %}">
-                    <svg class="h-6 w-6 mr-4 flex-shrink-0 {% if app.request.get('_route') starts with 'app_visiteur_' %}text-white{% else %}text-gray-400 group-hover:text-gray-300{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                    <a href="{{ path('app_user_index') }}"
+                       class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-blue-700 hover:text-white transition-colors duration-200 ease-in-out
+                       {% if app.request.get('_route') starts with 'admin_users' %}bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md{% endif %}">
+                        <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.291M12 4a4 4 0 100 8 4 4 0 000-8z"></path>
+                        </svg>
+                        Utilisateurs
+                    </a>
+                {% endif %}
+
+                <a href="{{ path('app_visiteur_index') }}"
+                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-blue-700 hover:text-white transition-colors duration-200 ease-in-out
+                   {% if app.request.get('_route') starts with 'app_visiteur_' %}bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md{% endif %}">
+                    <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                     Visiteurs
-            </a>
+                </a>
 
-            <a href="{{ path('admin_statistics') }}"
-                class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ease-in-out
-                {% if app.request.get('_route') starts with 'admin_statistics' %}bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md{% endif %}">
+                <a href="{{ path('admin_statistics') }}"
+                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-blue-700 hover:text-white transition-colors duration-200 ease-in-out
+                   {% if app.request.get('_route') starts with 'admin_statistics' %}bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md{% endif %}">
                     <svg class="h-6 w-6 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                     Statistiques
-            </a>
+                </a>
             </nav>
-            {# Pied de page de la sidebar #}
-            <div class="p-5 text-center text-gray-500 text-xs border-t border-gray-700 flex-shrink-0">
+
+            <div class="p-5 text-center text-gray-300 text-xs border-t border-blue-700 flex-shrink-0">
                 © {{ 'now'|date('Y') }} TravelParadise
             </div>
         </aside>
 
-        {# Contenu principal (Header + Main Content) #}
-        <div class="flex-1 flex flex-col overflow-hidden"> {# flex-1 pour prendre l'espace restant, overflow-hidden pour gérer le défilement #}
+        <div class="flex-1 flex flex-col overflow-hidden">
 
-            {# Header (En-tête) #}
-            <header class="flex items-center justify-between h-20 bg-white bg-opacity-80 border-b border-gray-200 px-6 shadow-sm flex-shrink-0 backdrop-blur-sm"> {# Header semi-transparent avec flou #}
-                {# Titre de la page actuelle #}
+            <header class="flex items-center justify-between h-20 bg-white bg-opacity-80 border-b border-gray-200 px-6 shadow-sm flex-shrink-0 backdrop-blur-sm">
                 <div class="text-2xl font-bold text-gray-800">
-                    {% block page_title %}{% endblock %}
+                    {% block page_title %}Tableau de bord{% endblock %}
                 </div>
-                {# Profil utilisateur ou actions #}
+
                 <div class="flex items-center space-x-6">
-                    {# Avatar ou nom de l'utilisateur #}
                     <div class="flex items-center space-x-3">
-                         <div class="h-10 w-10 bg-blue-200 rounded-full flex items-center justify-center shadow-inner">
+                        <div class="h-10 w-10 bg-blue-200 rounded-full flex items-center justify-center shadow-inner">
                             <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
@@ -114,8 +105,7 @@
                         </div>
                     </div>
 
-                    {# Bouton de déconnexion #}
-                    <a href="{{ path('app_logout') }}"
+                    <a href="{{ path('app_logout') }}" id="logout-button"
                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ease-in-out">
                         <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
@@ -125,23 +115,107 @@
                 </div>
             </header>
 
-            {# Contenu principal de la page #}
-            <main class="flex-1 overflow-y-auto bg-transparent p-8 relative z-10"> {# bg-transparent pour laisser passer l'arrière-plan, z-10 pour être au-dessus de l'overlay #}
-                {# Affichage des messages flash #}
+            <main class="flex-1 overflow-y-auto bg-transparent p-8 relative z-10">
+
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
                         <div class="mb-6">
-                            <div class="alert alert-{{ label }} bg-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-100 border border-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-400 text-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-700 px-6 py-4 rounded-lg shadow-md">
+                            <div class="alert bg-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-100 border border-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-400 text-{{ label == 'error' ? 'red' : (label == 'success' ? 'green' : 'blue') }}-700 px-6 py-4 rounded-lg shadow-md">
                                 {{ message }}
                             </div>
                         </div>
                     {% endfor %}
                 {% endfor %}
 
-                {# Ici sera injecté le contenu spécifique de chaque page #}
                 {% block content %}{% endblock %}
             </main>
 
         </div>
     </div>
+
+    <div id="logout-modal"
+        class="fixed inset-0 z-50 items-center justify-center overflow-y-auto hidden transition-opacity duration-300 ease-in-out">
+
+        <div class="fixed inset-0 bg-black opacity-50"></div>
+
+        <div class="relative bg-white rounded-lg shadow-xl max-w-md mx-auto p-6">
+
+            <button id="close-modal-button" type="button" class="absolute top-3 right-3 text-gray-400 hover:text-gray-500 transition-colors duration-200">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            {# Message de déconnexion #}
+            <div class="text-center">
+                <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 class="mt-4 text-lg font-medium text-gray-900">Au revoir !</h3>
+                <p class="mt-2 text-sm text-gray-500">
+                    À très bientôt sur TravelParadise !
+                </p>
+            </div>
+
+            {# Bouton pour fermer le modal #}
+            <div class="mt-6 flex justify-center">
+                <button id="confirm-logout-button"
+                        class="inline-flex justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200 ease-in-out">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutButton = document.getElementById('logout-button');
+            const logoutModal = document.getElementById('logout-modal');
+            const closeModalButton = document.getElementById('close-modal-button');
+            const confirmLogoutButton = document.getElementById('confirm-logout-button');
+
+            const logoutLink = "{{ path('app_logout') }}";
+
+            function showLogoutModal() {
+                logoutModal.classList.remove('hidden');
+                logoutModal.classList.add('flex');
+            }
+
+            function hideLogoutModal() {
+                logoutModal.classList.remove('flex');
+                logoutModal.classList.add('hidden');
+            }
+
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    showLogoutModal();
+                });
+            }
+
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', function() {
+                    hideLogoutModal();
+                });
+            }
+
+            if (confirmLogoutButton) {
+                confirmLogoutButton.addEventListener('click', function() {
+
+                    setTimeout(function() {
+                        window.location.href = logoutLink;
+                    }, 3000);
+                    hideLogoutModal();
+                });
+            }
+            // window.addEventListener('click', function(event) {
+
+            //     if (event.target === logoutModal) {
+            //         hideLogoutModal();
+            //     }
+            // });
+        });
+    </script>
+
 {% endblock %}

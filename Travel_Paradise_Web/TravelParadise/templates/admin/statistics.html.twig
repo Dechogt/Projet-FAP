@@ -1,31 +1,71 @@
 {% extends 'layout_app.html.twig' %}
 
 {% block app_title %}Statistiques - TravelParadise{% endblock %}
-{% block page_title %}Statistiques détaillées{% endblock %}
+{% block page_title %}Statistiques{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <!-- Optionnel: styles additionnels pour les graphiques -->
+    <style>
+        .chart-container {
+            position: relative;
+            height: 40vh;
+            width: 100%;
+        }
+        .no-data-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40vh;
+            color: #6b7280;
+            font-style: italic;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
 
     <div class="bg-white overflow-hidden shadow rounded-lg p-6">
-        <h2 class="text-lg font-medium leading-6 text-gray-900 mb-4">Graphiques et Analyses</h2>
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <h3 class="text-xl font-semibold mt-6 mb-2">Visites par mois</h3>
-            <div class="chart-container" style="position: relative; height:40vh; width:80vw"> {# Ajoute un conteneur pour contrôler la taille #}
-                <canvas id="visitsChart"></canvas>
+            {# Visites par mois #}
+            <div class="col-span-1">
+                <h3 class="text-xl font-semibold mt-6 mb-2">Visites par mois</h3>
+                <div class="chart-container">
+                    <canvas id="visitsChart"></canvas>
+                    <div id="visitsChartNoData" class="no-data-message" style="display: none;">
+                        Aucune donnée de visite disponible.
+                    </div>
+                </div>
             </div>
 
-            <h3 class="text-xl font-semibold mt-6 mb-2">Visites par pays</h3>
-            <div class="chart-container" style="position: relative; height:40vh; width:80vw">
-                <canvas id="countryChart"></canvas>
+            {# Visites par pays #}
+            <div class="col-span-1">
+                <h3 class="text-xl font-semibold mt-6 mb-2">Visites par pays</h3>
+                <div class="chart-container">
+                    <canvas id="countryChart"></canvas>
+                    <div id="countryChartNoData" class="no-data-message" style="display: none;">
+                        Aucune donnée de visite disponible.
+                    </div>
+                </div>
             </div>
 
-            <h2 class="text-xl font-semibold mt-6 mb-2">Top Guides</h2>
-            {# Tu peux afficher cette liste sous forme de tableau simple si un graphique n'est pas idéal #}
-            <ul>
-                {% for stat in visitsByGuide %}
-                    <li>{{ stat.guide }}: {{ stat.total }} visites</li>
-                {% endfor %}
-            </ul>
+            {# Top Guides #}
+            <div class="col-span-1 lg:col-span-2">
+                <h2 class="text-xl font-semibold mt-6 mb-2">Top Guides</h2>
+                {% if visitsByGuide is defined and visitsByGuide|length > 0 %}
+                    <ul class="space-y-2">
+                        {% for stat in visitsByGuide %}
+                            <li class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                <span class="font-medium">{{ stat.guide_nom }} {{ stat.guide_prenom }}</span>
+                                <span class="text-blue-600 font-semibold">{{ stat.total }} visites</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-gray-500 italic">Aucun guide trouvé.</p>
+                {% endif %}
+            </div>
         </div>
 
     </div>
@@ -33,75 +73,130 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }} {# Inclut les scripts parents si ton layout_app.html.twig en a #}
+    {{ parent() }}
+
+    {# Charger Chart.js depuis CDN #}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
     <script>
-        // Récupère les données passées par Symfony
-        const visitsPerMonthData = {{ visitsPerMonth|json_encode|raw }};
-        const visitsByCountryData = {{ visitsByCountry|json_encode|raw }};
+        // Debug: Afficher les données reçues du contrôleur
+        console.log('Données reçues:');
+        console.log('visitsPerMonth:', {{ visitsPerMonth|default('{}')|json_encode|raw }});
+        console.log('visitsByCountry:', {{ visitsByCountry|default('{}')|json_encode|raw }});
 
-        // Initialise le graphique des visites par mois
-        const visitsCtx = document.getElementById('visitsChart').getContext('2d');
-        const visitsChart = new Chart(visitsCtx, {
-            type: 'bar', // Type de graphique (barres)
-            data: {
-                labels: visitsPerMonthData.labels, // Utilise les labels du contrôleur
-                datasets: [{
-                    label: 'Nombre de visites',
-                    data: visitsPerMonthData.data, // Utilise les données du contrôleur
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Couleur bleue
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true, // Rend le graphique responsive
-                scales: {
-                    y: {
-                        beginAtZero: true // Commence l'axe Y à zéro
-                    }
-                }
-            }
-        });
+        // Récupération des données
+        const visitsPerMonthData = {{ visitsPerMonth|default('{}')|json_encode|raw }};
+        const visitsByCountryData = {{ visitsByCountry|default('{}')|json_encode|raw }};
 
-        // Initialise le graphique de répartition par pays
-        const countryCtx = document.getElementById('countryChart').getContext('2d');
-        const countryChart = new Chart(countryCtx, {
-            type: 'pie', // Type de graphique (camembert)
-            data: {
-                labels: visitsByCountryData.labels, // Utilise les labels du contrôleur
-                datasets: [{
-                    label: 'Nombre de visites',
-                    data: visitsByCountryData.data, // Utilise les données du contrôleur
-                    backgroundColor: [ // Couleurs pour chaque segment
-                        'rgba(255, 99, 132, 0.5)', // Rouge
-                        'rgba(54, 162, 235, 0.5)', // Bleu
-                        'rgba(255, 206, 86, 0.5)', // Jaune
-                        'rgba(75, 192, 192, 0.5)', // Vert
-                        'rgba(153, 102, 255, 0.5)', // Violet
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                 responsive: true,
-                 plugins: {
-                    legend: {
-                        position: 'top', // Position de la légende
+        // Fonction pour vérifier si les données sont valides
+        function hasValidData(data) {
+            return data &&
+                   typeof data === 'object' &&
+                   data.labels &&
+                   Array.isArray(data.labels) &&
+                   data.labels.length > 0 &&
+                   data.data &&
+                   Array.isArray(data.data) &&
+                   data.data.length > 0;
+        }
+
+        // Création du graphique des visites par mois
+        if (hasValidData(visitsPerMonthData)) {
+            const visitsCtx = document.getElementById('visitsChart').getContext('2d');
+            const visitsChart = new Chart(visitsCtx, {
+                type: 'bar',
+                data: {
+                    labels: visitsPerMonthData.labels,
+                    datasets: [{
+                        label: 'Nombre de visites',
+                        data: visitsPerMonthData.data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
                     },
-                    title: {
-                        display: true,
-                        text: 'Répartition des visites par pays' // Titre du graphique
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Visites par mois'
+                        },
+                        legend: {
+                            display: false
+                        }
                     }
                 }
-            }
-        });
+            });
+            console.log('Graphique des visites par mois créé avec succès');
+        } else {
+            console.warn('Aucune donnée valide pour le graphique "Visites par mois"');
+            document.getElementById('visitsChart').style.display = 'none';
+            document.getElementById('visitsChartNoData').style.display = 'flex';
+        }
+
+        // Création du graphique des visites par pays
+        if (hasValidData(visitsByCountryData)) {
+            const countryCtx = document.getElementById('countryChart').getContext('2d');
+            const countryChart = new Chart(countryCtx, {
+                type: 'pie',
+                data: {
+                    labels: visitsByCountryData.labels,
+                    datasets: [{
+                        label: 'Nombre de visites',
+                        data: visitsByCountryData.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)',
+                            'rgba(255, 159, 64, 0.8)',
+                            'rgba(199, 199, 199, 0.8)',
+                            'rgba(83, 102, 255, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(199, 199, 199, 1)',
+                            'rgba(83, 102, 255, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Répartition des visites par pays'
+                        }
+                    }
+                }
+            });
+            console.log('Graphique des visites par pays créé avec succès');
+        } else {
+            console.warn('Aucune donnée valide pour le graphique "Visites par pays"');
+            document.getElementById('countryChart').style.display = 'none';
+            document.getElementById('countryChartNoData').style.display = 'flex';
+        }
+
     </script>
 {% endblock %}

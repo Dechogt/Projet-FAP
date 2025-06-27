@@ -21,7 +21,7 @@ const VisitesScreen = () => {
       }
 
       try {
-        const response = await axios.get('http://192.168.0.228:8000/api/guide/visites', {
+        const response = await axios.get('http://10.2.101.9:8000/api/guide/visites', {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -122,7 +122,7 @@ const VisitesScreen = () => {
   const getImageUrl = (photoFilename) => {
   if (!photoFilename) return null;
   if (photoFilename.startsWith('http')) return photoFilename;
-  return `http://192.168.0.228:8000/uploads/${photoFilename}`;
+  return `http://10.2.101.9:8000/uploads/${photoFilename}`;
 };
 
 
@@ -325,7 +325,7 @@ const VisitesScreen = () => {
             // Relancer la récupération des données
             setTimeout(async () => {
               try {
-                const response = await axios.get('http://192.168.0.228:8000/api/guide/visites', {
+                const response = await axios.get('http://10.2.101.9:8000/api/guide/visites', {
                   headers: {
                     'Authorization': `Bearer ${token}`,
                   },

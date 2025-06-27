@@ -1,0 +1,50 @@
+name: CI for TravelParadise Web
+
+on:
+  push:
+    branches:
+      - 'Decho/initialisation' # Votre branche actuelle
+      - 'franck'               # Votre nouvelle branche de développement
+  pull_request:
+    branches:
+      - 'Decho/initialisation'
+      - 'franck'
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest # Utilise un runner Ubuntu récent
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Récupère le code de votre dépôt
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3' # Assurez-vous que cela correspond à votre version PHP locale
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql, zip # Extensions PHP nécessaires
+          coverage: none # Pas besoin de couverture de code pour l'instant
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest # Installe les dépendances PHP
+
+      - name: Install Node.js dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Ou la version Node.js que vous utilisez
+          cache: 'npm' # Utilise le cache npm pour accélérer les installations
+
+      - name: Install npm dependencies
+        run: npm install # Installe les dépendances JavaScript
+
+      - name: Build assets with Webpack Encore
+        run: npm run build # Exécute la commande build de votre package.json
+
+      # --- Étape de test ---
+      # Pour l'instant, nous allons nous concentrer sur les tests PHPUnit.
+      # Si vous avez des tests qui nécessitent une base de données, nous les ajouterons plus tard.
+      - name: Run PHPUnit tests
+        # Assurez-vous que PHPUnit est installé via Composer
+        # Vous devrez peut-être configurer votre fichier phpunit.xml.dist pour l'environnement CI
+        # Si vous avez un fichier .env.test, il sera utilisé automatiquement par Symfony si vous le configurez correctement.
+        run: vendor/bin/phpunit --configuration phpunit.xml.dist
