@@ -48,3 +48,4 @@ jobs:
         # Vous devrez peut-être configurer votre fichier phpunit.xml.dist pour l'environnement CI
         # Si vous avez un fichier .env.test, il sera utilisé automatiquement par Symfony si vous le configurez correctement.
         run: vendor/bin/phpunit --configuration phpunit.xml.dist
+         # Test push.
