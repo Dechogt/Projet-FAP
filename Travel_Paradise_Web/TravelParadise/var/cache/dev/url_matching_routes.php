@@ -19,7 +19,7 @@ return [
         '/admin/guides' => [[['_route' => 'admin_guides', '_controller' => 'App\\Controller\\AdminController::guides'], null, null, null, false, false, null]],
         '/admin/visites' => [[['_route' => 'admin_visites', '_controller' => 'App\\Controller\\AdminController::visites'], null, null, null, false, false, null]],
         '/admin/users' => [[['_route' => 'admin_users', '_controller' => 'App\\Controller\\AdminController::users'], null, null, null, false, false, null]],
-        '/admin/statistics' => [[['_route' => 'admin_statistics', '_controller' => 'App\\Controller\\AdminController::statistics'], null, null, null, false, false, null]],
+        '/admin/statistiques' => [[['_route' => 'admin_statistics', '_controller' => 'App\\Controller\\AdminController::statistics'], null, null, null, false, false, null]],
         '/api/guide/visites' => [[['_route' => 'api_guide_visites', '_controller' => 'App\\Controller\\ApiVisiteController::getGuideVisites'], null, ['GET' => 0], null, false, false, null]],
         '/admin/guide_touristique' => [[['_route' => 'app_guide_touristique_index', '_controller' => 'App\\Controller\\GuideTouristiqueController::index'], null, ['GET' => 0], null, true, false, null]],
         '/admin/guide_touristique/new' => [[['_route' => 'app_guide_touristique_new', '_controller' => 'App\\Controller\\GuideTouristiqueController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],

@@ -81,7 +81,7 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
         ";
         // line 21
         yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
-        // line 24
+        // line 26
         yield "    </body>
 </html>
 ";
@@ -185,6 +185,8 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
         yield "            ";
         yield $this->extensions['Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension']->renderWebpackScriptTags("app");
         yield "
+            <script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>
+
         ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -216,7 +218,7 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  185 => 22,  172 => 21,  161 => 18,  148 => 17,  134 => 12,  121 => 11,  98 => 7,  85 => 24,  83 => 21,  79 => 19,  77 => 17,  72 => 14,  70 => 11,  65 => 9,  60 => 7,  52 => 1,);
+        return array (  185 => 22,  172 => 21,  161 => 18,  148 => 17,  134 => 12,  121 => 11,  98 => 7,  85 => 26,  83 => 21,  79 => 19,  77 => 17,  72 => 14,  70 => 11,  65 => 9,  60 => 7,  52 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -243,6 +245,8 @@ class __TwigTemplate_2acaf7e77ec9e6e7362bd31668db3741 extends Template
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
+            <script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>
+
         {% endblock %}
     </body>
 </html>

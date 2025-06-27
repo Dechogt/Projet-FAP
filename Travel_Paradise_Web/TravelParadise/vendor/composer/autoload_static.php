@@ -18,12 +18,13 @@ class ComposerStaticInit67c045f73e7e82020c8a61294e38d101
         'ffecb95d45175fd40f75be8a23b34f90' => __DIR__ . '/..' . '/twig/twig/src/Resources/debug.php',
         'c7baa00073ee9c61edf148c51917cfb4' => __DIR__ . '/..' . '/twig/twig/src/Resources/escaper.php',
         'f844ccf1d25df8663951193c3fc307c8' => __DIR__ . '/..' . '/twig/twig/src/Resources/string_loader.php',
+        '9d2b9fc6db0f153a0a149fefb182415e' => __DIR__ . '/..' . '/symfony/polyfill-php84/bootstrap.php',
         '2203a247e6fda86070a5e4e07aed533a' => __DIR__ . '/..' . '/symfony/clock/Resources/now.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
-        '9d2b9fc6db0f153a0a149fefb182415e' => __DIR__ . '/..' . '/symfony/polyfill-php84/bootstrap.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
+        '3722f872abd441c379baeab7b88038ba' => __DIR__ . '/..' . '/nelmio/alice/src/deep_clone.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
     );
 
@@ -134,6 +135,7 @@ class ComposerStaticInit67c045f73e7e82020c8a61294e38d101
         'N' => 
         array (
             'Nelmio\\CorsBundle\\' => 18,
+            'Nelmio\\Alice\\' => 13,
         ),
         'M' => 
         array (
@@ -151,6 +153,10 @@ class ComposerStaticInit67c045f73e7e82020c8a61294e38d101
             'Knp\\Component\\' => 14,
             'Knp\\Bundle\\PaginatorBundle\\' => 27,
         ),
+        'F' => 
+        array (
+            'Faker\\' => 6,
+        ),
         'E' => 
         array (
             'Egulias\\EmailValidator\\' => 23,
@@ -166,9 +172,11 @@ class ComposerStaticInit67c045f73e7e82020c8a61294e38d101
             'Doctrine\\Deprecations\\' => 22,
             'Doctrine\\DBAL\\' => 14,
             'Doctrine\\Common\\Lexer\\' => 22,
+            'Doctrine\\Common\\DataFixtures\\' => 29,
             'Doctrine\\Common\\Collections\\' => 28,
             'Doctrine\\Common\\' => 16,
             'Doctrine\\Bundle\\MigrationsBundle\\' => 33,
+            'Doctrine\\Bundle\\FixturesBundle\\' => 31,
             'Doctrine\\Bundle\\DoctrineBundle\\' => 31,
             'DoctrineExtensions\\' => 19,
             'DeepCopy\\' => 9,
@@ -543,6 +551,10 @@ class ComposerStaticInit67c045f73e7e82020c8a61294e38d101
         array (
             0 => __DIR__ . '/..' . '/nelmio/cors-bundle',
         ),
+        'Nelmio\\Alice\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nelmio/alice/src',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
@@ -570,6 +582,10 @@ class ComposerStaticInit67c045f73e7e82020c8a61294e38d101
         'Knp\\Bundle\\PaginatorBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src',
+        ),
+        'Faker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fakerphp/faker/src/Faker',
         ),
         'Egulias\\EmailValidator\\' => 
         array (
@@ -611,6 +627,10 @@ class ComposerStaticInit67c045f73e7e82020c8a61294e38d101
         array (
             0 => __DIR__ . '/..' . '/doctrine/lexer/src',
         ),
+        'Doctrine\\Common\\DataFixtures\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/data-fixtures/src',
+        ),
         'Doctrine\\Common\\Collections\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/collections/src',
@@ -622,6 +642,10 @@ class ComposerStaticInit67c045f73e7e82020c8a61294e38d101
         'Doctrine\\Bundle\\MigrationsBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src',
+        ),
+        'Doctrine\\Bundle\\FixturesBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/doctrine-fixtures-bundle/src',
         ),
         'Doctrine\\Bundle\\DoctrineBundle\\' => 
         array (

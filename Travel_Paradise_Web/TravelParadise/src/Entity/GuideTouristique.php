@@ -168,6 +168,18 @@ class GuideTouristique implements UserInterface, PasswordAuthenticatedUserInterf
         return $this;
     }
 
+     public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
 
     /**
      * @see UserInterface
@@ -249,6 +261,17 @@ class GuideTouristique implements UserInterface, PasswordAuthenticatedUserInterf
             }
         }
 
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
         return $this;
     }
 }

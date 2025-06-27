@@ -299,7 +299,10 @@ class __TwigTemplate_fff1c1a1674bbc85e4678000ff456bc7 extends Template
                         </div>
                     </div>
 
-                    <a href=\"#\" id=\"logout-button\"
+                    <a href=\"";
+        // line 108
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
+        yield "\" id=\"logout-button\"
                        class=\"inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ease-in-out\">
                         <svg class=\"h-4 w-4 mr-1\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
                             <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1\"/>
@@ -360,7 +363,7 @@ class __TwigTemplate_fff1c1a1674bbc85e4678000ff456bc7 extends Template
     </div>
 
     <div id=\"logout-modal\"
-        class=\"fixed inset-0 z-50 flex items-center justify-center overflow-y-auto hidden transition-opacity duration-300 ease-in-out\">
+        class=\"fixed inset-0 z-50 items-center justify-center overflow-y-auto hidden transition-opacity duration-300 ease-in-out\">
 
         <div class=\"fixed inset-0 bg-black opacity-50\"></div>
 
@@ -396,6 +399,7 @@ class __TwigTemplate_fff1c1a1674bbc85e4678000ff456bc7 extends Template
     </div>
 
     <script>
+
         document.addEventListener('DOMContentLoaded', function() {
             const logoutButton = document.getElementById('logout-button');
             const logoutModal = document.getElementById('logout-modal');
@@ -403,15 +407,17 @@ class __TwigTemplate_fff1c1a1674bbc85e4678000ff456bc7 extends Template
             const confirmLogoutButton = document.getElementById('confirm-logout-button');
 
             const logoutLink = \"";
-        // line 177
+        // line 178
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
         yield "\";
 
             function showLogoutModal() {
                 logoutModal.classList.remove('hidden');
+                logoutModal.classList.add('flex');
             }
 
             function hideLogoutModal() {
+                logoutModal.classList.remove('flex');
                 logoutModal.classList.add('hidden');
             }
 
@@ -433,7 +439,7 @@ class __TwigTemplate_fff1c1a1674bbc85e4678000ff456bc7 extends Template
 
                     setTimeout(function() {
                         window.location.href = logoutLink;
-                    }, 1000);
+                    }, 3000);
                     hideLogoutModal();
                 });
             }
@@ -522,7 +528,7 @@ class __TwigTemplate_fff1c1a1674bbc85e4678000ff456bc7 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  483 => 130,  460 => 86,  407 => 177,  389 => 161,  377 => 150,  357 => 131,  355 => 130,  352 => 129,  346 => 128,  336 => 124,  328 => 123,  325 => 122,  320 => 121,  316 => 120,  298 => 104,  294 => 102,  290 => 100,  288 => 99,  281 => 97,  269 => 87,  267 => 86,  256 => 78,  242 => 69,  237 => 67,  227 => 62,  222 => 60,  219 => 59,  207 => 52,  202 => 50,  189 => 42,  184 => 40,  172 => 33,  166 => 31,  164 => 30,  154 => 25,  149 => 23,  140 => 17,  129 => 9,  125 => 7,  112 => 6,  67 => 4,  44 => 2,);
+        return array (  489 => 130,  466 => 86,  411 => 178,  392 => 161,  380 => 150,  360 => 131,  358 => 130,  355 => 129,  349 => 128,  339 => 124,  331 => 123,  328 => 122,  323 => 121,  319 => 120,  304 => 108,  298 => 104,  294 => 102,  290 => 100,  288 => 99,  281 => 97,  269 => 87,  267 => 86,  256 => 78,  242 => 69,  237 => 67,  227 => 62,  222 => 60,  219 => 59,  207 => 52,  202 => 50,  189 => 42,  184 => 40,  172 => 33,  166 => 31,  164 => 30,  154 => 25,  149 => 23,  140 => 17,  129 => 9,  125 => 7,  112 => 6,  67 => 4,  44 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -634,7 +640,7 @@ class __TwigTemplate_fff1c1a1674bbc85e4678000ff456bc7 extends Template
                         </div>
                     </div>
 
-                    <a href=\"#\" id=\"logout-button\"
+                    <a href=\"{{ path('app_logout') }}\" id=\"logout-button\"
                        class=\"inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ease-in-out\">
                         <svg class=\"h-4 w-4 mr-1\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
                             <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1\"/>
@@ -663,7 +669,7 @@ class __TwigTemplate_fff1c1a1674bbc85e4678000ff456bc7 extends Template
     </div>
 
     <div id=\"logout-modal\"
-        class=\"fixed inset-0 z-50 flex items-center justify-center overflow-y-auto hidden transition-opacity duration-300 ease-in-out\">
+        class=\"fixed inset-0 z-50 items-center justify-center overflow-y-auto hidden transition-opacity duration-300 ease-in-out\">
 
         <div class=\"fixed inset-0 bg-black opacity-50\"></div>
 
@@ -697,6 +703,7 @@ class __TwigTemplate_fff1c1a1674bbc85e4678000ff456bc7 extends Template
     </div>
 
     <script>
+
         document.addEventListener('DOMContentLoaded', function() {
             const logoutButton = document.getElementById('logout-button');
             const logoutModal = document.getElementById('logout-modal');
@@ -707,9 +714,11 @@ class __TwigTemplate_fff1c1a1674bbc85e4678000ff456bc7 extends Template
 
             function showLogoutModal() {
                 logoutModal.classList.remove('hidden');
+                logoutModal.classList.add('flex');
             }
 
             function hideLogoutModal() {
+                logoutModal.classList.remove('flex');
                 logoutModal.classList.add('hidden');
             }
 
@@ -731,7 +740,7 @@ class __TwigTemplate_fff1c1a1674bbc85e4678000ff456bc7 extends Template
 
                     setTimeout(function() {
                         window.location.href = logoutLink;
-                    }, 1000);
+                    }, 3000);
                     hideLogoutModal();
                 });
             }

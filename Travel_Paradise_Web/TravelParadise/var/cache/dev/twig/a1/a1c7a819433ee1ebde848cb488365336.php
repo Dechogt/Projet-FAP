@@ -106,24 +106,20 @@ class __TwigTemplate_ff4c60906a62ef9bd68b8874af246b31 extends Template
         // line 11
         yield "    <div class=\"relative z-10 text-center p-8 max-w-3xl mx-auto\"> ";
         // line 12
-        yield "        ";
-        // line 13
-        yield "        <h1 class=\"text-6xl md:text-7xl font-extrabold mb-6 text-teal-400 animate-fade-in-down\"> ";
+        yield "        
+        <h1 class=\"text-6xl md:text-7xl font-extrabold mb-6 text-teal-400 animate-fade-in-down\"> ";
         // line 14
         yield "            Travel Paradise
         </h1>
-        ";
-        // line 17
-        yield "        <p class=\"text-xl md:text-2xl mb-10 text-gray-300 animate-fade-in-up\"> ";
+
+        <p class=\"text-xl md:text-2xl mb-10 text-gray-300 animate-fade-in-up\"> ";
         // line 18
         yield "            Discover breathtaking destinations and unforgettable experiences.
             Your journey to paradise starts here.
         </p>
-        ";
+
+        <a href=\"";
         // line 22
-        yield "        ";
-        // line 23
-        yield "        <a href=\"";
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_login");
         yield "\" class=\"inline-block bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700 text-white font-bold py-4 px-10 rounded-full transition duration-300 ease-in-out shadow-xl transform hover:scale-105\">
             Get Started
@@ -161,7 +157,7 @@ class __TwigTemplate_ff4c60906a62ef9bd68b8874af246b31 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  126 => 23,  124 => 22,  119 => 18,  117 => 17,  113 => 14,  111 => 13,  109 => 12,  107 => 11,  100 => 7,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  123 => 22,  117 => 18,  112 => 14,  109 => 12,  107 => 11,  100 => 7,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -177,17 +173,16 @@ class __TwigTemplate_ff4c60906a62ef9bd68b8874af246b31 extends Template
 
     {# Contenu centré au-dessus de l'overlay #}
     <div class=\"relative z-10 text-center p-8 max-w-3xl mx-auto\"> {# mx-auto pour centrer horizontalement #}
-        {# Titre avec animation subtile #}
+        
         <h1 class=\"text-6xl md:text-7xl font-extrabold mb-6 text-teal-400 animate-fade-in-down\"> {# animate-fade-in-down nécessite une configuration d'animation dans Tailwind #}
             Travel Paradise
         </h1>
-        {# Paragraphe avec animation subtile #}
+
         <p class=\"text-xl md:text-2xl mb-10 text-gray-300 animate-fade-in-up\"> {# animate-fade-in-up nécessite une configuration d'animation dans Tailwind #}
             Discover breathtaking destinations and unforgettable experiences.
             Your journey to paradise starts here.
         </p>
-        {# Bouton stylisé et animé #}
-        {# Assure-toi que la route 'app_login' est bien définie dans security.yaml et SecurityController #}
+
         <a href=\"{{ path('app_login') }}\" class=\"inline-block bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700 text-white font-bold py-4 px-10 rounded-full transition duration-300 ease-in-out shadow-xl transform hover:scale-105\">
             Get Started
         </a>
